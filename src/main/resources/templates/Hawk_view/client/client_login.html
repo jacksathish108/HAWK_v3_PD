@@ -1,0 +1,170 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1"> 
+ <title>Hawk | Log in</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+  <link href="<c:url value="/css/all.min.css"/>"  rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link href="<c:url value="/css/main.css"/>"  rel="stylesheet" type="text/css" />
+  <link href="<c:url value="/css/icheck-bootstrap.min.css"/>"  rel="stylesheet" type="text/css" />
+  <link href="<c:url value="/css/adminlte.min.css"/>"  rel="stylesheet" type="text/css" />
+  <link href="<c:url value="/css/jquery.bdt.css"/>"  rel="stylesheet" type="text/css" />
+    <link href="<c:url value="/css/bootstrap-multiselect.css"/>"  rel="stylesheet" type="text/css" />
+     <link href="<c:url value="/css/select2.min.css"/>"  rel="stylesheet" type="text/css" />
+    <link href="<c:url value="/css/daterangepicker.css"/>"  rel="stylesheet" type="text/css" />
+
+</head>
+<body class="hold-transition login-page">
+
+
+
+
+
+
+
+<div>
+    <h2>Please Login</h2>
+    <br/>
+</div>
+<div>
+    <h4><a th:href="/@{/oauth2/authorization/google}">Login with Google</a></h4>   
+</div>
+<div><p>OR</p></div>
+     
+<form th:action="@{/login}" method="post" style="max-width: 400px; margin: 0 auto;">
+<div class="border border-secondary rounded p-3">
+    <div th:if="${param.error}">
+        <p class="text-danger">Invalid username or password.</p>
+    </div>
+    <div th:if="${param.logout}">
+        <p class="text-warning">You have been logged out.</p>
+    </div>
+    <div>
+        <p><input type="email" name="email" required class="form-control" placeholder="E-mail" /></p>
+    </div>
+    <div>
+        <p><input type="password" name="pass" required class="form-control" placeholder="Password" /></p>
+    </div>
+    <div>
+        <p><input type="submit" value="Login" class="btn btn-primary" /></p>
+    </div>
+</div>
+</form>
+
+
+
+
+
+
+
+
+
+<div class="login-box">
+  <div class="login-logo">
+    <a ><b>Hawk Fitness Studio</b></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Sign in to start your session</p>
+
+      <form name="login_form" method="post">
+        <div class="input-group mb-3">
+           <input type="text" name="user_name" class="form-control" placeholder="Mobile No">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" name="user_pwd" class="form-control" placeholder="Password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        </form>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                Remember Me
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit"  onclick="login();" class="btn btn-primary btn-block">Sign In</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      
+
+      <div class="social-auth-links text-center mb-3">
+        <p>- OR -</p>
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
+
+      <p class="mb-1">
+        <a href="forgot-password.html">I forgot my password</a>
+      </p>
+      <p class="mb-0">
+        <a href="register.html" class="text-center">Register a new membership</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+
+<script>
+var request = new XMLHttpRequest();
+
+function login()
+{
+	var formElement = document.forms.namedItem("login_form");
+	request.open("POST", base_path+"/Hawk_api_01/client_login/");
+	var formData = new FormData();
+var  oData = new FormData(formElement);
+alert(oData);
+request.responseType = 'json';
+request.send(oData);
+request.onload = function() {
+	alert(this.response);
+	var result=this.response;	
+	 /*     if(result.status==='0')
+	    	 {
+	    	 alert("Invalid Login...");
+	    	 }
+	     else if(result.status==='1')
+	    	 {
+	    	 sessionStorage.setItem("client_Name", result.data.client_Name);
+	    	 sessionStorage.setItem("client_id", result.data.client_id);
+	    		window.location.replace(base_path+result.view);
+	    	 }	  */
+	  }
+
+}
+</script>
+  <script type="text/javascript" src="<c:url value="/js/common_properties.js"/>"></script> 
+  <script type="text/javascript" src="<c:url value="/js/jquery.min.js"/>"></script> 
+   <script type="text/javascript" src="<c:url value="/js/bootstrap.bundle.min.js"/>"></script> 
+ 
+</body>
+</html>

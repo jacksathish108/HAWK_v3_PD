@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title id="title">Hawk</title>
+<body>
+	<div th:insert="fragments/adminHeader :: header"></div>
+	<script src="/hawkJs/adminHome.js"></script>
+	<div id="dashboardDetailsConatainer">
+		<!-- Content Header (Page header) -->
+		<!-- Main content -->
+		<div class="col-md-12">
+			<div class="card card-secondary">
+				<div class="card-body table-responsive ">
+					<div class="row" id="dashBoardContainerDiv"></div>
+				</div>
+			</div>
+		</div>
+		<!-- /.card -->
+	</div>
+	<script>
+		try {
+			//progressBar(true);
+			rendar(1);
+			//getAdminDashBoardViewerDetails(true);
+		} catch (err) {
+			errorTost(err);
+			console.log("ERROR :  " + err);
+		} finally {
+			progressBar(false);
+		}
+	</script>
+	<!-- ///////////// -->
+	<!-- Modal -->
+	<!-- modal start -->
+
+
+
+	<!-- Page specific script -->
+</body>
+</html>

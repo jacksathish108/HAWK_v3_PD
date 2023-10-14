@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hawk Soft | Registration</title>
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link href="/css/loaders-css/loader-1.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition register-page">
+	<div class="register-box">
+		<div class="register-logo">
+			<a href="/index2"><b>Hawk</b>Soft</a>
+		</div>
+		<div class="card">
+			<div class="card-body register-card-body">
+				<p class="login-box-msg">Register a new membership</p>
+				<form name="registration">
+					<div class="input-group mb-3">
+						<input type="text" name="name" class="form-control"
+							value="sathishkumar" placeholder="Full name">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-user"></span>
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input name="mobileNo" type="tel" class="form-control" value="9095027108"
+							placeholder="Mobile No" pattern="^\d{10}$">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-mobile"></span>
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input name="email" type="email" value="sat@mail.com"
+							class="form-control" placeholder="Email">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-envelope"></span>
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input type="password" name="pwd" class="form-control"
+							value="12345" placeholder="Password">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-lock"></span>
+							</div>
+						</div>
+					</div>
+					<div class="input-group mb-3">
+						<input type="password" class="form-control" value="12345"
+							placeholder="Retype password">
+						<div class="input-group-append">
+							<div class="input-group-text">
+								<span class="fas fa-lock"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-8">
+							<div class="icheck-primary">
+								<input type="checkbox" id="agreeTerms" name="terms"
+									value="agree"> <label for="agreeTerms"> I agree
+									to the <a href="#">terms</a>
+								</label>
+							</div>
+						</div>
+						</div>
+						<!-- /.col -->
+				</form>
+				<div class="col-4">
+					<button type="button" onclick="register();"
+						class="btn btn-primary btn-block">Register</button>
+				</div>
+				<!-- /.col -->
+			</div>
+
+			<a href="/login" class="text-center">I already have a membership</a>
+		</div>
+		<!-- /.form-box -->
+	</div>
+	<!-- /.card -->
+	<!-- /.register-box -->
+
+	<!-- jQuery -->
+	<script src="/plugins/jquery/jquery.min.js"></script>
+	<script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
+		<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="/plugins/toastr/toastr.min.js"></script>
+	<script src="/hawkJs/commonUtils.js"></script>
+	<script src="/hawkJs/tost.js"></script>
+	<script src="/dist/js/adminlte.min.js"></script>
+	<script>
+		function register() {
+			progressBar(true);
+			try {
+				var request = new XMLHttpRequest();
+				var formElement = document.forms.namedItem("registration");
+				request.open("POST", "/userRegistration");
+				var oData = new FormData(formElement);
+				request.responseType = 'json';
+				request.send(oData);
+				request.onload = function() {
+					var response = (this.response);
+					if(response.statusCode==200)
+						successTost(response.message);
+					else
+						errorTost(response.message);
+					if (response.sessionStatus) {
+						window.location.href = response.view;
+					}
+					progressBar(false);
+				}
+			} catch (err) {
+				errorTost(err);
+				progressBar(false);
+			}
+			// }
+			//window.location.reload();
+			//alert(JSON.stringify(request));;
+		}
+
+		//onload();
+	</script>
+	<div class="loader-wrapper" id="loader-1">
+		<div id="loader"></div>
+	</div>
+</body>
+</html>
