@@ -9,11 +9,11 @@
 		<version>3.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-		<groupId>HC</groupId>
-	<artifactId>HC</artifactId>
+		<groupId>HPD</groupId>
+	<artifactId>HPD</artifactId>
 	<version>0.2</version>
 	<name>hawk</name>
-	<description>HAWK CONFIGURATOR</description>
+	<description>HAWK PRODUCT DESINER</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
