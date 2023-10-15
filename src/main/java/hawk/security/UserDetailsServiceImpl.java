@@ -12,11 +12,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UsersInfoRepository usersInfoRepository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UsersInfo user = usersInfoRepository.findByUser(username,0);
-		System.out.println("user    >>>>>>>>>>>>>>"+user.getPwd());
+		UsersInfo user = usersInfoRepository.findByUser(username, 0);
 		if (user == null) {
 			throw new UsernameNotFoundException("Could not find user");
 		}

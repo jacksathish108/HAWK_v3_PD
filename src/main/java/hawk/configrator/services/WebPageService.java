@@ -1,9 +1,8 @@
-package hawk.services;
+package hawk.configrator.services;
 
+import hawk.configrator.dtos.WebPageInfoDTO;
+import hawk.configrator.entities.WebPageInfo;
 import hawk.dtos.ResultMapper;
-import hawk.dtos.WebPageInfoDTO;
-import hawk.entities.WebPageInfo;
-
 public interface WebPageService {
 	ResultMapper setWebPage(WebPageInfoDTO webPageInfoDTO);
 	ResultMapper getWebPage();

@@ -62,21 +62,33 @@ var actionUrl={
 1451:{'requestUrl':'/deleteCalendarEvent','requestType':'POST','onSuccess':'getCalendarEventsDetails(true)'},
 
 
+1600:{'requestUrl':'/getFeedbackTemplates','requestType':'GET','onSuccess':'fillFeedbackTemplateDetails(response)'},
+1650:{'requestUrl':'/setFeedbackTemplateDetails','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
+1651:{'requestUrl':'/deleteFeedbackTemplate','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
+
+//////////////////////////////
+
+
 
 1500:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillWebPageDetails(response)'},
 1550:{'requestUrl':'/setWebPage','requestType':'POST','onSuccess':'getAllWebPageDetails(true)'},
 1551:{'requestUrl':'/deleteWebPage','requestType':'POST','onSuccess':'getAllWebPageDetails(true)'},
 
-
-1600:{'requestUrl':'/getFeedbackTemplates','requestType':'GET','onSuccess':'fillFeedbackTemplateDetails(response)'},
-1650:{'requestUrl':'/setFeedbackTemplateDetails','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
-1651:{'requestUrl':'/deleteFeedbackTemplate','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
-
+2000:{'requestUrl':'/getAllQuestion','requestType':'GET','onSuccess':'fillQuestionDetails(response)'},
+2050:{'requestUrl':'/setQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
+2051:{'requestUrl':'/deleteQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 
 
 
-1300:{'requestUrl':'/getAdminDashbord','requestType':'GET','onSuccess':'fillAdminDashBoardViewerDetails(response)'},
-2000:{'requestUrl':'/getSupperAdminDashbord','requestType':'GET','onSuccess':'fillSupperAdminDashBoardViewerDetails(response)'},
+//////////////////////////
+10000:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillmenuItems(response)'},
+
+
+
+
+
+//1300:{'requestUrl':'/getAdminDashbord','requestType':'GET','onSuccess':'fillAdminDashBoardViewerDetails(response)'},
+//2000:{'requestUrl':'/getSupperAdminDashbord','requestType':'GET','onSuccess':'fillSupperAdminDashBoardViewerDetails(response)'},
 
 
 

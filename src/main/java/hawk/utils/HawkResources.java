@@ -12,6 +12,7 @@ public class HawkResources {
 	public static final List TRAINERS = new ArrayList<Integer>(Arrays.asList(21, 22));
 	public static final List CLIENTS = new ArrayList<Integer>(Arrays.asList(11, 12));
 	public static final List GUESTS = new ArrayList<Integer>(Arrays.asList(0, 1, 2));
+	public static final List PD_ADMIN = new ArrayList<Integer>(Arrays.asList(900));
 	
 	public static final int CLIENT_USER_ROLE =11;
 	public static final String SUPPERUSER="SUPPERUSER";
@@ -19,6 +20,7 @@ public class HawkResources {
 	public static final String TRAINER="TRAINER";
 	public static final String CLIENT="CLIENT";
 	public static final String GUEST="GUEST";
+	public static final String PDADMIN="PD_ADMIN";
 	public static final String INVALID_USER="INVALID";
 	
 	public static final String WEBSITE_ENQUIRY="WEBSITE";
@@ -64,6 +66,8 @@ public class HawkResources {
 			return CLIENT;
 		else if (GUESTS.contains(groupId))
 			return GUEST;
+		else if (PD_ADMIN.contains(groupId))
+			return PDADMIN;
 		else
 			return INVALID_USER;
 	}

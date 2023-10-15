@@ -1,7 +1,7 @@
 /*
  * 
  */
-package hawk.controllers;
+package hawk.configrator.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import hawk.configrator.dtos.WebPageInfoDTO;
+import hawk.configrator.services.WebPageService;
 import hawk.dtos.ResultMapper;
-import hawk.dtos.WebPageInfoDTO;
-import hawk.services.WebPageService;
 
 @RestController
 @RequestMapping("${ApiVersion}")

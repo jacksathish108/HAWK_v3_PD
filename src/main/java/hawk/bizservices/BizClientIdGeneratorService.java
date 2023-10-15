@@ -30,17 +30,17 @@ public class BizClientIdGeneratorService implements ClientIdGeneratorService {
 	ResultMapper resultMapper;
 
 	@Override
-	public String genarateClientId(String WebPageCode) {
+	public String genarateClientId(String branchCode) {
 		String clientId = null;
-		logger.info("genarateClientId method called..." + WebPageCode);
+		logger.info("genarateClientId method called..." + branchCode);
 		try {
 			resultMapper = clientService.getuserSession();
-			if (WebPageCode != null && resultMapper.isSessionStatus()
+			if (branchCode != null && resultMapper.isSessionStatus()
 					&& (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 							|| HawkResources.ADMIN.equals(resultMapper.getUserRole()))) {
 				Calendar now = Calendar.getInstance();
-						ClientIdGenerator clientIdGenerator = clientIdGeneratorRepository.saveAndFlush(new ClientIdGenerator(new Timestamp(System.currentTimeMillis()), resultMapper.getBy(), WebPageCode));						
-						clientIdGenerator.setClientId("HF" +WebPageCode+String.format("%ty", now) +String.format("%tm", now)+String.format("%02d",(clientIdGenerator.getId())));
+						ClientIdGenerator clientIdGenerator = clientIdGeneratorRepository.saveAndFlush(new ClientIdGenerator(new Timestamp(System.currentTimeMillis()), resultMapper.getBy(), branchCode));						
+						clientIdGenerator.setClientId("HF" +branchCode+String.format("%ty", now) +String.format("%tm", now)+String.format("%02d",(clientIdGenerator.getId())));
 						clientIdGenerator = clientIdGeneratorRepository.saveAndFlush(clientIdGenerator);
 						return clientIdGenerator.getClientId();
 			}

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package hawk.entities;
+package hawk.configrator.entities;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

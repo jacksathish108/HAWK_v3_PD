@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import hawk.entities.UsersInfo;
-import hawk.utils.HawkResources;
 
 public class MyUserDetails implements UserDetails {
 

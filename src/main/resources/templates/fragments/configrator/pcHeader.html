@@ -203,19 +203,28 @@
 
 			<!-- Sidebar -->
 			<div class="sidebar">
-				<!-- SidebarSearch Form -->
-				<!-- Sidebar Menu -->
 				<nav class="mt-2">
 					<ul class="nav nav-pills nav-sidebar flex-column"
 						data-widget="treeview" role="menu" data-accordion="false">
 						<!-- webPagees -->
 						<li class="nav-item"><a onclick="redirectTo('/webPage')"
 							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>WebPage</p>
+								<p>WebPages</p>
 						</a></li>
 					</ul>
 				</nav>
-				<!-- /.sidebar-menu -->
+			</div>
+			<div class="sidebar">
+				<nav class="mt-2">
+					<ul class="nav nav-pills nav-sidebar flex-column"
+						data-widget="treeview" role="menu" data-accordion="false">
+						<!-- webPagees -->
+						<li class="nav-item"><a onclick="redirectTo('/question')"
+							class="nav-link"> <i class="far fa-circle nav-icon"></i>
+								<p>Questions</p>
+						</a></li>
+					</ul>
+				</nav>
 			</div>
 			<!-- /.sidebar -->
 		</aside>
@@ -345,10 +354,9 @@
 	<script
 		src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 
-	<script src="/js/calendar_main.js"></script>
-	<script src="/js/day_calendar_main.js"></script>
+	<script src="/dist/js/calendar_main.js"></script>
+	<script src="/dist/js/day_calendar_main.js"></script>
 	<script src="/hawkJs/tost.js"></script>
-	<script src="/hawkJs/adminPageRendar.js"></script>
 	<script src="/hawkJs/commonUtils.js"></script>
 	<script src="/hawkJs/pageNavigation.js"></script>
 	<script src="/hawkJs/apiUrlActions.js"></script>

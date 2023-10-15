@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import hawk.entities.WebPageInfo;
 import hawk.entities.UsersInfo;
 
 // TODO: Auto-generated Javadoc

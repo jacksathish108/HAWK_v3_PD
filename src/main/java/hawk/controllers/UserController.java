@@ -72,7 +72,10 @@ public class UserController {
 				HawkResources.SUPPERUSER.equals(userService.getuserSession().getUserRole())) {
 			modelAndView.setViewName("redirect:"+ viewVersion+"/home");
 			return modelAndView;
-		} else {
+		}  else if (HawkResources.PDADMIN.equals(userService.getuserSession().getUserRole())) {
+			modelAndView.setViewName(base_path + "configrator/pcHome");
+			return modelAndView;
+		}else {
 			SecurityContextHolder.getContext().setAuthentication(null);
 			modelAndView.setViewName("redirect:login");
 			return modelAndView ;
@@ -95,6 +98,9 @@ public class UserController {
 				HawkResources.ADMIN.equals(userService.getuserSession().getUserRole())) {
 			modelAndView.setViewName("redirect:"+ viewVersion+"/home");
 			return modelAndView ;
+		} else if (HawkResources.PDADMIN.equals(userService.getuserSession().getUserRole())) {
+			modelAndView.setViewName(base_path + "configrator/pcHome");
+			return modelAndView;
 		} else {
 			SecurityContextHolder.getContext().setAuthentication(null);
 			modelAndView.setViewName("redirect:login");

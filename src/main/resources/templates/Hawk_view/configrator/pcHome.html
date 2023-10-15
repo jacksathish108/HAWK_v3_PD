@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title id="title">Hawk admin page</title>
+<title id="title">Hawk</title>
 <body>
-	<div th:insert="fragments/admin/adminHeader :: header"></div>
-	<script src="/hawkJs/admin/adminHome.js"></script>
+	<div th:insert="fragments/configrator/pcHeader :: header"></div>
+	<script src="/hawkJs/configrator/pcHome.js"></script>
 	<div id="dashboardDetailsConatainer">
 		<!-- Content Header (Page header) -->
 		<!-- Main content -->
@@ -23,8 +23,7 @@
 	<script>
 		try {
 			//progressBar(true);
-	DashboardRendar("Dashboard","dashboardDetailsConatainer")
-			getMenuItems(true);
+			DashboardRendar("Dashboard","dashboardDetailsConatainer")
 			//getAdminDashBoardViewerDetails(true);
 		} catch (err) {
 			errorTost(err);

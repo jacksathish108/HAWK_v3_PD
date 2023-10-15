@@ -1,12 +1,12 @@
 /*
  * 
  */
-package hawk.dtos;
+package hawk.configrator.dtos;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import hawk.entities.WebPageInfo;
+import hawk.configrator.entities.WebPageInfo;
 import lombok.Getter;
 import lombok.Setter;
 
