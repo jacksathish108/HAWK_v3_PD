@@ -14,9 +14,19 @@ function setWebPageDetails() {
 	doApiAction(1550, oData);
 }
 
+
+
+function getAllViewDetails(status) {
+	if (status)
+		doApiAction(1501, null);
+}
+
+
+
+
 function fillWebPageDetails(response) {
 	try {
-		if (response&&response.responceList) {
+		if (response && response.responceList) {
 			formResetById(webPageDetailsForm);
 			progressBar(true);
 			webPageResponseData = response.responceList;
@@ -37,7 +47,7 @@ function fillWebPageDetails(response) {
 			$("#" + webPageReportDiv + " thead").append(tableHeaderMaker(columns));
 			var webPageOptions;
 			$.each(webPageResponseData, function(index, row) {
-				
+
 
 				var fields = [];
 				var actions = "<div class='btn-group btn-group-sm'>";
@@ -73,6 +83,25 @@ function fillWebPageDetails(response) {
 		progressBar(false);
 	}
 }
+function fillAllViewDetails(response) {
+	try {
+		if (response && response.responceObject) {
+			progressBar(true);
+			$.each(response.responceObject, function(key, val) {
+				$("#applicableViewList").append("<option class='option' value=" + key + ">" + (key + "-" + val) + "</option>");
+			});
+			$("#applicableViewList").bootstrapDualListbox('refresh');
+		}
+	}
+	catch (err) {
+		errorTost(err);
+		console.log("ERROR :  " + err);
+	}
+	finally {
+		progressBar(false);
+	}
+}
+
 function setFocus(id) {
 	$("#" + id).focus();
 }
@@ -99,12 +128,21 @@ function loadWebPageEditModal(pageCode) {
 	try {
 		$("[name=webPageDetailsForm]").trigger("reset");
 		preFill();
+		$("#applicableViewList  option").each(function() {
+			this.selected = false;
+		});
 		$("input[name=id]").val("");
 		if (pageCode) {
 
-			fillDetailsByName(webPageResponseData, 'pageCode', pageCode, webPageDetailsForm);
-
+			var singleObject = fillDetailsByName(webPageResponseData, 'pageCode', pageCode, webPageDetailsForm);
+			if (singleObject) {
+				$.each(singleObject.applicableViews, function(key, val) {
+					console.log("key val : " + key + ":::" + val)
+					$("#applicableViewList").find("option[value='" + key + "']").prop("selected", "selected");
+				});
+			}
 		}
+		$("#applicableViewList").bootstrapDualListbox('refresh');
 		$('#webPageDetailsModal').modal();
 		setFocus('name');
 	}
@@ -114,21 +152,5 @@ function loadWebPageEditModal(pageCode) {
 	}
 	finally {
 		progressBar(false);
-	}
-	function preFill()
-	{
-		var number = 1 + Math.floor(Math.random() * 6);
-		const inputElements = document.getElementsByTagName('input');
-		for (let i = 0; i < inputElements.length; i++) {
-			inputElements[i].value=(inputElements[i].name)+number;
-}		const textareaElements = document.getElementsByTagName('textarea');
-		for (let i = 0; i < textareaElements.length; i++) {
-			textareaElements[i].value=(textareaElements[i].name)+number;
-}
-
-
-
-
-
 	}
 }

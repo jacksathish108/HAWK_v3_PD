@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -54,8 +55,11 @@ public class SpringSecurity {
 			.successHandler(new CustomSuccessHandler(userService)).permitAll().
 			and().logout().addLogoutHandler(new LogoutSuccessHandler(userService))
 			.permitAll();
+//    	http.sessionManagement((session) -> session
+//    	            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) );
 //    	 http
 //         .csrf().disable();
+    	
         return http.build();
     }
 

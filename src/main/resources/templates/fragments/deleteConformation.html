@@ -29,6 +29,8 @@
 	function deleteConformation(btnDelete) {
 		$("#deleteName").html(btnDelete.getAttribute("rowName"));
 		$('#btn_delete').attr("rowId", btnDelete.getAttribute("rowId"));
+		$('#btn_delete').attr("pageId", btnDelete.getAttribute("pageId"));
+		$('#btn_delete').attr("viewId", btnDelete.getAttribute("viewId"));
 		$('#btn_delete').attr('onClick',btnDelete.getAttribute("onConform")+"(this)");
 		$("#deleteConformationModal").modal();
 	}

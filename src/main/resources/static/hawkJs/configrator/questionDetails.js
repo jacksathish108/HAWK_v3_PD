@@ -31,8 +31,7 @@ function fillQuestionDetails(response) {
 			columns.push("Name");
 			columns.push("Description");
 			columns.push("Status");
-			columns.push("AnswerType");
-			columns.push("TrigerAction");
+			columns.push("Requied");
 			columns.push("Style");
 
 
@@ -58,11 +57,10 @@ function fillQuestionDetails(response) {
 				fields.push(row.name);
 				fields.push("<p  style='max-width: 150px;'>" + row.description + "</p>");
 				fields.push(row.status);
-				fields.push(row.answerType);
-				fields.push(row.trigerAction);
+				fields.push(row.required);
 				fields.push("<p  style='max-width: 150px;'>" + row.style + "</p>");
 
-$("#" + questionReportTable + " tbody").append(tableRowMaker(fields));
+				$("#" + questionReportTable + " tbody").append(tableRowMaker(fields));
 
 			});
 			tableRendaring(questionReportTable);
@@ -101,8 +99,8 @@ function questionDelete(btnDelete) {
 function loadQuestionEditModal(qtag) {
 	progressBar(true);
 	try {
-		$("[name="+questionDetailsForm+"]").trigger("reset");
-		preFill();
+		$("[name=" + questionDetailsForm + "]").trigger("reset");
+		//preFill();
 		$("input[name=id]").val("");
 		if (qtag) {
 
@@ -119,19 +117,14 @@ function loadQuestionEditModal(qtag) {
 	finally {
 		progressBar(false);
 	}
-	function preFill() {
-		var number = 1 + Math.floor(Math.random() * 6);
-		const inputElements = document.getElementsByTagName('input');
-		for (let i = 0; i < inputElements.length; i++) {
-			inputElements[i].value = (inputElements[i].name) + number;
-		} const textareaElements = document.getElementsByTagName('textarea');
-		for (let i = 0; i < textareaElements.length; i++) {
-			textareaElements[i].value = (textareaElements[i].name) + number;
-		}
-
-
-
-
-
-	}
 }
+$('#elementType').on('change', function() {
+	if (this.value == "select") {
+		$("#options").prop('disabled', false);
+	} else {
+		$("#options").val("");
+		$("#options").prop('disabled', true);
+	}
+
+});
+

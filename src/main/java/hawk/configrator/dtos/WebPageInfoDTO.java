@@ -4,8 +4,13 @@
 package hawk.configrator.dtos;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import hawk.configrator.entities.ViewInfo;
 import hawk.configrator.entities.WebPageInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +33,9 @@ public class WebPageInfoDTO {
 	String title;
 	String description;
 	int status;
+	private Map<String, ViewDTO> applicableViews = new HashMap<>();
+	
+	List<Long> applicableViewList;
 	// List clientInfo;
 
 	public WebPageInfoDTO(WebPageInfo newWebPageInfo) {
@@ -51,6 +59,10 @@ public class WebPageInfoDTO {
 			this.title = newWebPageInfo.getTitle();
 			this.description = newWebPageInfo.getDescription();
 			this.status = newWebPageInfo.getStatus();
+			if (newWebPageInfo != null && newWebPageInfo.getApplicableViews() != null)
+				newWebPageInfo.getApplicableViews().forEach(view -> {
+					this.applicableViews.put(String.valueOf(view.getId()), new ViewDTO(view));
+				});
 
 		}
 	}
@@ -83,6 +95,25 @@ public class WebPageInfoDTO {
 			webPageInfo.setDescription(description);
 		if (Objects.nonNull(status))
 			webPageInfo.setStatus(status);
+		if (Objects.nonNull(applicableViewList)) {
+			List<ViewInfo> views = new ArrayList<>();
+
+			applicableViewList.forEach(k -> {
+				views.add(new ViewDTO(k).viewDetailsDTO());
+			});
+			webPageInfo.setApplicableViews(views);
+		}
+
 		return webPageInfo;
+	}
+
+	public WebPageInfoDTO(String name, String pageCode) {
+		super();
+		this.name = name;
+		this.pageCode = pageCode;
+	}
+
+	protected WebPageInfoDTO() {
+		super();
 	}
 }

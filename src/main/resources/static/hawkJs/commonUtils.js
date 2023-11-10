@@ -1,92 +1,83 @@
-var months=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var changeHistoryReportDiv_0 = "changeHistoryReportDiv";
 var changeHistoryReportTable_0 = "changeHistoryReportTable";
 var calendarEventDatesList = [];
 /**
  * 
  */
- var base_path="";
-  var apiPrifix="/Hawk_api_01";
-  var ViewVersion="/pages/v1";
- var video_link_prefix='https://www.youtube.com/embed/';
- 
- 
- 
-  function GetFormattedDate(date) {
-  if(date)
-  {
-  try
-  {
-	    const d_date = new Date(date);
-	    const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d_date)
-	    const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d_date)
-	    const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d_date)
+var base_path = "";
+var apiPrifix = "/Hawk_api_01";
+var ViewVersion = "/pages/v1";
+var video_link_prefix = 'https://www.youtube.com/embed/';
 
-	    return (year + "-" + month + "-" + day);
-	    }
-			 catch (err) {
-				console.log(date+" :: ERROR :  "+err);
-				 return date;
-					} 
-}
-	}
-	
-	
-	  function GetFormattedDateDDMMYY(date) {
-  if(date)
-  {
-	    const d_date =date;
-	    const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d_date)
-	    const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d_date)
-	    const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d_date)
-	     return (day + "/" + month + "/" +year );
-}
-	}
-		
-	
-	  function GetFormattedDate_DDMMYY_to_YYMMDD(date) {
-	  if(date)
-	  {
-var parts =date.split('/');
-var str_date=parts[2]+"-"+(parts[1])+"-"+ parts[0];
-console.log("str_date   "+str_date)
-	    return new Date(str_date);
-	    }
-	}
-	
-  function isObject(val) {
-	    if (val === null) { return false;}
-	    return ( (typeof val === 'function') || (typeof val === 'object') );
-	}
-  function checkTextField(field) {
-	    return (field.value === "") ? false : true;
-	}
-	
-	
-	function progressBar(status)
-	{
-		var loaders = document.getElementById("loader-1");
-		if(status)
-		{
-			loaders.style.display="inherit";
+
+
+function GetFormattedDate(date) {
+	if (date) {
+		try {
+			const d_date = new Date(date);
+			const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d_date)
+			const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d_date)
+			const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d_date)
+
+			return (year + "-" + month + "-" + day);
 		}
-		else
-		{
-			loaders.style.display="none";
+		catch (err) {
+			console.log(date + " :: ERROR :  " + err);
+			return date;
 		}
-		
 	}
-	function redirectTo(pageName)
-	{
-		progressBar(true);
-		console.log(pageName)
-		 window.location.href = ViewVersion+pageName;
-		 progressBar(false);
+}
+
+
+function GetFormattedDateDDMMYY(date) {
+	if (date) {
+		const d_date = date;
+		const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d_date)
+		const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d_date)
+		const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d_date)
+		return (day + "/" + month + "/" + year);
 	}
-	function oauthLogin()
-{
+}
+
+
+function GetFormattedDate_DDMMYY_to_YYMMDD(date) {
+	if (date) {
+		var parts = date.split('/');
+		var str_date = parts[2] + "-" + (parts[1]) + "-" + parts[0];
+		console.log("str_date   " + str_date)
+		return new Date(str_date);
+	}
+}
+
+function isObject(val) {
+	if (val === null) { return false; }
+	return ((typeof val === 'function') || (typeof val === 'object'));
+}
+function checkTextField(field) {
+	return (field.value === "") ? false : true;
+}
+
+
+function progressBar(status) {
+	var loaders = document.getElementById("loader-1");
+	if (status) {
+		loaders.style.display = "inherit";
+	}
+	else {
+		loaders.style.display = "none";
+	}
+
+}
+function redirectTo(pageName) {
 	progressBar(true);
-location.href = location.origin + "/oauth2/authorization/google";
+	console.log(pageName)
+	window.location.href = ViewVersion + pageName;
+	progressBar(false);
+}
+function oauthLogin() {
+	progressBar(true);
+	location.href = location.origin + "/oauth2/authorization/google";
 }
 /*function logout()
 {
@@ -98,7 +89,7 @@ location.href = location.origin + "/oauth2/authorization/google";
 		 window.location.href = "/login";
 	  }
 	}*/
-	
+
 function formValidation(formName) {
 	var validationStatus = true;
 	var errorMsg;
@@ -112,13 +103,12 @@ function formValidation(formName) {
 						if (field.value == "") {
 							validationStatus = false;
 							errorMsg = (field.name + " must be filled out");
-							 $(field).addClass('is-invalid');
+							$(field).addClass('is-invalid');
 							return false;
 						}
-						else
-						 {
-							  $(field).removeClass('is-invalid');
-						 }
+						else {
+							$(field).removeClass('is-invalid');
+						}
 					}
 
 				});
@@ -412,10 +402,8 @@ function fillDetailsById(responseData, key, value) {
 	}
 }
 function fillDetailsByName(responseData, key, value, formName) {
-	//console.log("fillDetailsByName key::"+key)
-	//console.log(JSON.stringify(responseData))
 	if (key) {
-		//	console.log("fillDetailsByName key::" + key + "::" + value)
+		var Object = getObjects(responseData, key, value);
 		$.each(getObjects(responseData, key, value), function(key, val) {
 			if (key.includes("Date")/*||key.includes("date")*/) {
 				//console.log(key + ":::" + val)
@@ -426,6 +414,7 @@ function fillDetailsByName(responseData, key, value, formName) {
 			}
 		});
 		setFocus('name');
+		return Object;
 	}
 }
 function callChangeHistoryReport() {
@@ -474,4 +463,15 @@ function fillReport(response) {
 
 function locationReplace(target) {
 	window.location.replace(target);
+}
+/////only for test
+function preFill() {
+	var number = 1 + Math.floor(Math.random() * 6);
+	const inputElements = document.getElementsByTagName('input');
+	for (let i = 0; i < inputElements.length; i++) {
+		inputElements[i].value = (inputElements[i].name) + number;
+	} const textareaElements = document.getElementsByTagName('textarea');
+	for (let i = 0; i < textareaElements.length; i++) {
+		textareaElements[i].value = (textareaElements[i].name) + number;
+	}
 }

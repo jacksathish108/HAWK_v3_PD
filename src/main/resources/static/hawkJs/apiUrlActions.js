@@ -1,43 +1,4 @@
 var actionUrl={
-1:{'requestUrl':'/getClientDetails','requestType':'GET','onSuccess':'getclientsEntrysFill(response)'},
-2:{'requestUrl':'/getPendingDueDetails','requestType':'GET','onSuccess':'getclientsEntrysFillForPendingDue(response)'},
-3:{'requestUrl':'/getPendingDueDetails','requestType':'GET','onSuccess':'getclientsEntrysFillForPendingDue(response)'},
-4:{'requestUrl':'/getRenewalDetails','requestType':'GET','onSuccess':'getclientsEntrysFill(response)'},
-5:{'requestUrl':'/getFeedBackDetails','requestType':'GET','onSuccess':'fillFeedbackDetailsForClient(response)'},
-6:{'requestUrl':'/getAttandanceDetails','requestType':'GET','onSuccess':'getclientsEntrysFill(response)'},
-50:{'requestUrl':'/setClientDetails','requestType':'POST','onSuccess':'loadClientsDetails(true,1)'},
-51:{'requestUrl':'/deleteclients','requestType':'POST','onSuccess':'loadClientsDetails(true,1)'},
-52:{'requestUrl':'/setPendingDue','requestType':'POST','onSuccess':'loadClientsDetails(true,2)'},
-53:{'requestUrl':'/setFeedBackDetails','requestType':'POST','onSuccess':'fillFeedbackDetailsForClient(response)'},
-54:{'requestUrl':'/asginWorkoutChart','requestType':'POST','onSuccess':'loadClientsDetails(true,1)'},
-100:{'requestUrl':'/getEnquiry/0','requestType':'GET','onSuccess':'getEnquiryEntrysFill(response)'},
-101:{'requestUrl':'/getEnquiryHistory','requestType':'GET','onSuccess':'getEnquiryHistoryFill(response)'},
-150:{'requestUrl':'/setEnquiry','requestType':'POST','onSuccess':'getEnquiryEntrys(true,100)'},
-151:{'requestUrl':'/deleteEnquiry','requestType':'POST','onSuccess':'getEnquiryEntrys(true,100)'},
-200:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'getWebPageEntrysFill(response)'},
-300:{'requestUrl':'/getPaymentHistoryDetails','requestType':'GET','onSuccess':'fillPaymentHistoryDetails(response)'},
-301:{'requestUrl':'/getPaymentHistoryDetails','requestType':'GET','onSuccess':'fillPaymentHistoryDetails(response)'},
-350:{'requestUrl':'/setPaymentHistoryDetails','requestType':'POST','onSuccess':'doApiAction(300)'},
-
-400:{'requestUrl':'/getPackages','requestType':'GET','onSuccess':'fillPackageDetailsForClientRegistration(response)'},
-401:{'requestUrl':'/getPackages','requestType':'GET','onSuccess':'getPackageEntrysFill(response)'},
-450:{'requestUrl':'/setPackageDetails','requestType':'POST','onSuccess':'getPackageDetails(true,400)'},
-451:{'requestUrl':'/deletePackage','requestType':'POST','onSuccess':'getPackageDetails(true,400)'},
-452:{'requestUrl':'/setClonePackageDetails','requestType':'POST','onSuccess':'getPackageDetails(true,400)'},
-
-600:{'requestUrl':'/getWorkoutChartDetails','requestType':'GET','onSuccess':'fillWorkoutChartDetails(response)'},
-601:{'requestUrl':'/getWorkoutChartDetails','requestType':'GET','onSuccess':'fillWorkoutChartDetailsforClientDetails(response)'},
-602:{'requestUrl':'/getWorkoutChartDetailsByPlanner','requestType':'GET','onSuccess':'fillWorkoutChartByPlanner(response)'},
-
-
-650:{'requestUrl':'/setWorkoutChartDetails','requestType':'POST','onSuccess':'getWorkoutChartDetails(true)'},
-651:{'requestUrl':'/deleteWorkoutChartDetails','requestType':'POST','onSuccess':'getWorkoutChartDetails(true)'},
-
-
-800:{'requestUrl':'/getActivitysDetails','requestType':'GET','onSuccess':'fillActivityDetails(response)'},
-850:{'requestUrl':'/setActivityDetails','requestType':'POST','onSuccess':'getActivityDetails(true)'},
-
-
 500:{'requestUrl':'/getAllUsers','requestType':'GET','onSuccess':'getUsersEntrysFill(response)'},
 550:{'requestUrl':'/setUserDetails','requestType':'POST','onSuccess':'getUsersDetails(true,500)'},
 551:{'requestUrl':'/deleteUser','requestType':'POST','onSuccess':'getUsersDetails(true,500)'},
@@ -45,45 +6,48 @@ var actionUrl={
 901:{'requestUrl':'/logout','requestType':'POST','onSuccess':"redirectTo('')"},
 
 
-1100:{'requestUrl':'/getAssessmentTemplateDetails','requestType':'GET','onSuccess':'fillAssessmentTemplate(response)'},
-1101:{'requestUrl':'/getAssessmentTemplateDetails','requestType':'GET','onSuccess':'assementTemplateBuilder(response)'},
-1150:{'requestUrl':'/setAssessmentTemplateDetails','requestType':'POST','onSuccess':'getAssessmentTemplateDetails(true)'},
-1151:{'requestUrl':'/deleteAssessmentTemplate','requestType':'POST','onSuccess':'getAssessmentTemplateDetails(true)'},
-
-
-1200:{'requestUrl':'/getAssessmentDetails','requestType':'GET','onSuccess':'fillAssessmentDetails(response)'},
-1201:{'requestUrl':'/getAssessmentDetails','requestType':'GET','onSuccess':'fillAssessmentViewerDetails(response)'},
-1250:{'requestUrl':'/setAssessmentDetails','requestType':'POST','onSuccess':'getAssessmentDetails(true)'},
-1251:{'requestUrl':'/deleteAssessment','requestType':'POST','onSuccess':'getAssessmentDetails(true)'},
-
 
 1400:{'requestUrl':'/getCalendarEvents','requestType':'GET','onSuccess':'fillCalendarEventsDetails(response)'},
 1450:{'requestUrl':'/setCalendarEvent','requestType':'POST','onSuccess':'getCalendarEventsDetails(true)'},
 1451:{'requestUrl':'/deleteCalendarEvent','requestType':'POST','onSuccess':'getCalendarEventsDetails(true)'},
 
 
-1600:{'requestUrl':'/getFeedbackTemplates','requestType':'GET','onSuccess':'fillFeedbackTemplateDetails(response)'},
-1650:{'requestUrl':'/setFeedbackTemplateDetails','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
-1651:{'requestUrl':'/deleteFeedbackTemplate','requestType':'POST','onSuccess':'getFeedbackTemplateDetails(true)'},
-
 //////////////////////////////
 
 
 
 1500:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillWebPageDetails(response)'},
+1501:{'requestUrl':'/getAllViewName','requestType':'GET','onSuccess':'fillAllViewDetails(response)'},
+
+
 1550:{'requestUrl':'/setWebPage','requestType':'POST','onSuccess':'getAllWebPageDetails(true)'},
 1551:{'requestUrl':'/deleteWebPage','requestType':'POST','onSuccess':'getAllWebPageDetails(true)'},
 
 2000:{'requestUrl':'/getAllQuestion','requestType':'GET','onSuccess':'fillQuestionDetails(response)'},
+2001:{'requestUrl':'/getAllQtag','requestType':'GET','onSuccess':'fillQtagDetails(response)'},
+
 2050:{'requestUrl':'/setQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 2051:{'requestUrl':'/deleteQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
+
+3000:{'requestUrl':'/getAllView','requestType':'GET','onSuccess':'fillViewDetails(response)'},
+3050:{'requestUrl':'/setView','requestType':'POST','onSuccess':'getAllViewDetails(true)'},
+3051:{'requestUrl':'/deleteView','requestType':'POST','onSuccess':'getAllViewDetails(true)'},
 
 
 
 //////////////////////////
-10000:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillmenuItems(response)'},
+10000:{'requestUrl':'/getAllMenuItems','requestType':'GET','onSuccess':'fillmenuItems(response)'},
+10001:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillWebPage(response)'},
+
+////////////////PRODUCT API
+//11000:{'requestUrl':'/getAnswersByViewId','requestType':'GET','onSuccess':'fillAnswerDetails(response)'},
+
+11001:{'requestUrl':'/getAllAnswer','requestType':'GET','onSuccess':'fillAnswerDetails(response)'},
 
 
+11050:{'requestUrl':'/setAnswer','requestType':'POST','onSuccess':'getAnswersByViewId(true)'},
+11051:{'requestUrl':'/getAnswersByViewId','requestType':'POST','onSuccess':'fillAnswerDetails(response)'},
+11052:{'requestUrl':'/deleteAnswer','requestType':'POST','onSuccess':'getAnswersByViewId(true)'},
 
 
 

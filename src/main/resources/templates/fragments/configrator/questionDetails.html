@@ -28,8 +28,9 @@
 
 													<div class="col-md-6">
 														<div class="form-group">
-															<label for="qTag">QTag<label>*</label></label><input
-																type=label name="qTag" id="qTag" class="form-control"readonly="readonly">
+															<label for="qTag">QTag</label><label>*</label><input
+																type=label name="qtag" id="qtag" class="form-control"
+																readonly="readonly">
 														</div>
 													</div>
 
@@ -41,54 +42,7 @@
 																onpaste="return false;" required="required">
 														</div>
 													</div>
-
 													<div class="col-md-6">
-														<div class="form-group">
-															<label for="elementType">ElementType<label>*</label></label>
-															<input type="text" name="elementType" id="elementType"
-																class="form-control" required="required">
-														</div>
-													</div>
-
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="dataType">DataType<label>*</label></label> <input
-																type="text" name="dataType" id="dataType"
-																class="form-control" required="required">
-														</div>
-													</div>
-
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="defaultValue">DefaultValue<label>*</label></label>
-															<input type="text" name="defaultValue" id="defaultValue"
-																class="form-control">
-														</div>
-													</div>
-
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="name">Name<label>*</label></label> <input
-																type="text" name="name" id="name" class="form-control"
-																required="required">
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="answerType">AnswerType<label>*</label></label>
-															<input type="text" name="answerType" id="answerType"
-																class="form-control" required="required">
-														</div>
-													</div>
-
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="trigerAction">TrigerAction<label>*</label></label>
-															<input type="text" name="trigerAction" id="trigerAction"
-																class="form-control">
-														</div>
-													</div>
-													<div class="col-md-12">
 														<div class="form-group">
 															<label for="inputStatus">Status <label>*</label></label>
 															<select required="required" name="status" id="status"
@@ -101,11 +55,101 @@
 															</select>
 														</div>
 													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="elementType">ElementType <label>*</label></label>
+															<select required="required" name="elementType"
+																id="elementType" class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+																<option class="option" value="input">Input</option>
+																<option class="option" value="label">Label</option>
+																<option class="option" value="button">Button</option>
+																<option class="option" value="select">DropDown</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="options">Options</label>
+															<textarea name="options" id="options"
+																class="form-control" rows="2" disabled="disabled"></textarea>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="dataType">DataType <label>*</label></label> <select
+																required="required" name="dataType" id="dataType"
+																class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+																<option class="option" value="text">Text</option>
+																<option class="option" value="number">Number</option>
+																<option class="option" value="email">Email</option>
+
+															</select>
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="defaultValue">DefaultValue<label>*</label></label>
+															<input type="text" name="defaultValue" id="defaultValue"
+																value='0' class="form-control">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="name">Name<label>*</label></label> <input
+																type="text" name="name" id="name" class="form-control"
+																required="required">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="answerType">AnswerType<label>*</label></label>
+															<select required="required" name="answerType"
+																id="answerType" class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+																<option class="option" value="native">Native</option>
+																<option class="option" value="linked">Linked</option>
+
+															</select>
+														</div>
+													</div>
+
+													<!-- 													<div class="col-md-6">
+														<div class="form-group">
+															<label for="trigerAction">TrigerAction<label>*</label></label>
+															<input type="text" name="trigerAction" id="trigerAction"
+																class="form-control">
+														</div>
+													</div> -->
+
 
 													<div class="col-md-12">
 														<div class="form-group">
-															<label for="style">Style<label>*</label></label> <input
-																type="text" name="style" id="style" class="form-control"
+															<label for="required">Required <label>*</label></label> <select
+																required="required" name="required" id="required"
+																class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+																<option class="option" value=1>Yes</option>
+																<option class="option" value=0>No</option>
+															</select>
+														</div>
+													</div>													
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="options">Style</label>
+															<textarea name="style" id="style"
+																class="form-control" rows="2" ></textarea>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="options">Css Class</label>
+															<textarea name="cssClass" id="cssClass"
+																class="form-control" rows="2" ></textarea>
 														</div>
 													</div>
 

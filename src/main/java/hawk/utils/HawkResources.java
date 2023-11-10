@@ -41,6 +41,11 @@ public class HawkResources {
 	public static final String PAYMENT_TRANSACTION_CREDIT="Credit";
 	public static final String PAYMENT_TRANSACTION_DEBIT ="Debit";
 	public static final String PAYMENT_ENTRY_TYPE_PENDINGDUE="PendingDue";
+	
+	
+	
+	public static final String HISTORY_COMPONENT_ANSWER="Answer";
+	
 	public static final int ENQUIRY_TO_ENROLLED =11;
 	public static final int GET_ALL_PACKAGES_STATUS =0;
 	public static final int GET_ACTIVE_PACKAGES_STATUS =1;

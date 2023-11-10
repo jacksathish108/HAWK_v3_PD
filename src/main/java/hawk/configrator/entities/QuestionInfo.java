@@ -3,6 +3,7 @@
  */
 package hawk.configrator.entities;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 // TODO: Auto_generated Javadoc
 /**
@@ -31,8 +33,13 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
-public class QuestionInfo {
+@ToString
+public class QuestionInfo implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6096637684458683590L;
 	/* COMMON FOR ALL START */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,11 +81,16 @@ public class QuestionInfo {
 	@Column(name = "Answer_Type")
 	@NotNull(message = "Answer_Type is required")
 	String answerType;
-	@Column(name = "Triger_Action")
-	String trigerAction;
+	@Column(name = "Required")
+	int required;
 	@Column(name = "Style")
 	String style;
+	@Column(name = "Css_Class")
+	String cssClass;
+	@Column(name = "Options")
+	String options;
 
+	
 	public List update(QuestionInfo questionInfo) {
 		List<Object> changeHistoryList = new ArrayList<>();
 
@@ -136,17 +148,29 @@ public class QuestionInfo {
 			this.answerType = questionInfo.getAnswerType();
 		}
 
-		if (!Objects.equals(this.trigerAction, questionInfo.getTrigerAction())) {
-			changeHistoryList.add(
-					HawkResources.buildUpdateHistory("trigerAction", trigerAction, questionInfo.getTrigerAction()));
-			this.trigerAction = questionInfo.getTrigerAction();
-		}
+//		if (!Objects.equals(this.trigerAction, questionInfo.getTrigerAction())) {
+//			changeHistoryList.add(
+//					HawkResources.buildUpdateHistory("trigerAction", trigerAction, questionInfo.getTrigerAction()));
+//			this.trigerAction = questionInfo.getTrigerAction();
+//		}
 
 		if (!Objects.equals(this.style, questionInfo.getStyle())) {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("style", style, questionInfo.getStyle()));
 			this.style = questionInfo.getStyle();
 		}
-
+		if (!Objects.equals(this.required, questionInfo.getRequired())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("required", required, questionInfo.getRequired()));
+			this.required = questionInfo.getRequired();
+		}
+		if (!Objects.equals(this.options, questionInfo.getOptions())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("options", options, questionInfo.getOptions()));
+			this.options = questionInfo.getOptions();
+		}
+		if (!Objects.equals(this.cssClass, questionInfo.getCssClass())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("cssClass", cssClass, questionInfo.getCssClass()));
+			this.cssClass = questionInfo.getCssClass();
+		}
+		
 		return changeHistoryList;
 	}
 

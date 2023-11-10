@@ -1,7 +1,7 @@
-<div class="row" th:fragment="header" id="webPageDetailsFragment">
+<div class="row" th:fragment="header" id="viewDetailsFragment">
 	<!-- Modal -->
-	<div id="webPageDetailsDiv">
-		<div class="modal fade" id="webPageDetailsModal" tabindex="-1"
+	<div id="viewDetailsDiv">
+		<div class="modal fade" id="viewDetailsModal" tabindex="-1"
 			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -17,20 +17,13 @@
 					</div>
 					<div class="modal-body overflow-auto">
 						<div class="box clearfix">
-							<form name="webPageDetailsForm" id="webPageDetailsForm">
+							<form name="viewDetailsForm" id="viewDetailsForm">
 								<input id="id" name="id" type="hidden">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="card card-primary">
 											<div class="card-body">
 												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group">
-															<label for="client_Name">Menu Group<label>*</label></label>
-															<input type="text" name="menuGroup" id="menuGroup"
-																class="form-control" required="required">
-														</div>
-													</div>
 													<div class="col-md-6">
 														<div class="form-group">
 															<label for="referral">Tab Order</label> <input
@@ -42,13 +35,6 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label for="client_Name">Page Code<label>*</label></label>
-															<input type="text" name="pageCode" id="pageCode"
-																class="form-control" required="required">
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
 															<label for="client_Name">Name<label>*</label></label> <input
 																type="text" name="name" id="name" class="form-control"
 																required="required">
@@ -56,8 +42,8 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label for="client_Name">Title<label>*</label></label> <input
-																type="text" name="title" id="title" class="form-control"
+															<label for="viewCode">ViewCode<label>*</label></label> <input
+																type="text" name="viewCode" id="viewCode" class="form-control"
 																required="required">
 														</div>
 													</div>
@@ -85,13 +71,14 @@
 													</div>
 													<div class="col-12">
 														<div class="form-group">
-															<label>Views</label> <select
+															<label>Questions</label> <select
 																class="duallistbox mdb-select colorful-select dropdown-primary"
-																multiple="multiple" name="applicableViewList" id="applicableViewList"
-																title="applicableViewList">
+																multiple="multiple" name="applicableQtagList" id="applicableQtagList"
+																title="applicableQtagList">
 															</select>
 														</div>
 													</div>
+
 												</div>
 
 											</div>
@@ -101,11 +88,13 @@
 									</div>
 								</div>
 							</form>
+
+
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-success"
-							onclick="if(formValidation('webPageDetailsForm')){setWebPageDetails();}">Submit</button>
+							onclick="if(formValidation('viewDetailsForm')){setViewDetails();}">Submit</button>
 					</div>
 				</div>
 			</div>
@@ -113,6 +102,3 @@
 	</div>
 	<!-- END MODAL -->
 </div>
-<script>
-	
-</script>

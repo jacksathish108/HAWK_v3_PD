@@ -70,4 +70,16 @@ public class CommonUtil {
 		}
 		return expiryDate;
 	}
+	public static boolean isStringNumeric(String number)
+	{
+		boolean isNumeric;
+		String regex = "-?\\d+(\\.\\d+)?";		
+		if(number == null)
+			isNumeric = false;
+		else if(number.matches(regex))
+			isNumeric = true;
+		else
+			isNumeric = false;		
+		return isNumeric;
+	}
 }

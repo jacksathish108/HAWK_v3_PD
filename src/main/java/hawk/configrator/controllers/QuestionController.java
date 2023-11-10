@@ -28,13 +28,19 @@ public class QuestionController {
  		logger.info("getQuestionInfo method called...");
  		return QuestionService.getQuestion();
  	} 
+ 	@GetMapping("/getAllQtag")
+ 	public ResultMapper getAllQtag() {
+ 		logger.info("getQuestionInfo method called...");
+ 		return QuestionService.getAllQtag();
+ 	} 
+ 	
 @PostMapping("/setQuestion")
 public ResultMapper  setQuestionInfo(QuestionDTO questionInfoDTO,Model model) {
 	logger.info("setQuestionInfo method called..."+questionInfoDTO);
 	return QuestionService.setQuestion(questionInfoDTO);
 }
 @PostMapping("/deleteQuestion")
-public ResultMapper  deleteQuestionInfo(Long id,Model model) {
+public ResultMapper deleteQuestionInfo(Long id, Model model) {
 	logger.info("setQuestionInfo method called..."+id);
 	return QuestionService.deleteQuestion(id);
 }

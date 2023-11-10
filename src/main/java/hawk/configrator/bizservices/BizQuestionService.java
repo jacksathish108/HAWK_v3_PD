@@ -2,7 +2,9 @@ package hawk.configrator.bizservices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +99,6 @@ public class BizQuestionService implements QuestionService {
 					questionInfoRepository.findAll().forEach(QuestionInfo -> {
 						QuestionInfoList.add(new QuestionDTO(QuestionInfo));
 					});
-
 					resultMapper.setResponceList(QuestionInfoList);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				} /*
@@ -143,13 +144,50 @@ public class BizQuestionService implements QuestionService {
 	}
 
 	@Override
-	public ResultMapper getQuestionByid(Long id) {
+	public QuestionInfo getQuestionByid(Long id) {
 		logger.info("getQuestionByid method called..." + id);
+		try {
+			if (resultMapper.isSessionStatus()) {
+
+				return questionInfoRepository.findById(id).get();
+
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return new QuestionInfo();
+	}
+
+	@Override
+	public QuestionInfo getQuestionByQtag(String Qtag) {
+		logger.info("getQuestionByQtag method called..." + Qtag);
+		try {
+			if (clientService.getuserSession().isSessionStatus()) {
+
+				return questionInfoRepository.findByQtag(Qtag);
+			}
+		} catch (Exception e) {
+			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return new QuestionInfo();
+	}
+
+	@Override
+	public ResultMapper getAllQtag() {
+		logger.info("getAllQtag method called...");
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
-
-				resultMapper.setResponceObject(new QuestionDTO(questionInfoRepository.findById(id).get()));
+				Map<String, String> qTagMap = new HashMap<String, String>();
+				questionInfoRepository.findAll().forEach(QuestionInfo -> {
+					qTagMap.put(QuestionInfo.getQTag(), QuestionInfo.getName());
+				});
+				resultMapper.setResponceObject(qTagMap);
 				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 			} else {
 				resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
@@ -157,27 +195,11 @@ public class BizQuestionService implements QuestionService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
 		return resultMapper;
-	}
-
-	@Override
-	public QuestionDTO getQuestionByQtag(String Qtag) {
-		logger.info("getQuestionByQtag method called..." + Qtag);
-		try {
-			if (clientService.getuserSession().isSessionStatus()) {
-
-				return new QuestionDTO(questionInfoRepository.findByQtag(Qtag));
-			}
-		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
-			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
-			resultMapper.setMessage(e.getMessage());
-		}
-		return null;
 	}
 
 }

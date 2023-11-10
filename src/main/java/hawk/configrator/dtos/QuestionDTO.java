@@ -10,6 +10,11 @@ import lombok.Setter;
 @Setter
 @Getter
 public class QuestionDTO {
+	protected QuestionDTO(String qTag) {
+		super();
+		this.qTag = qTag;
+	}
+
 	/* COMMON FOR ALL START */
 	private Long id;
 	Timestamp updateDate;
@@ -27,7 +32,10 @@ public class QuestionDTO {
 	int status;
 	String answerType;
 	String trigerAction;
+	int required;
+	String options;
 	String style;
+	String cssClass;
 
 	public QuestionDTO(QuestionInfo questionInfo) {
 		if (questionInfo != null) {
@@ -52,9 +60,16 @@ public class QuestionDTO {
 			this.description = questionInfo.getDescription();
 			this.status = questionInfo.getStatus();
 			this.answerType = questionInfo.getAnswerType();
-			this.trigerAction = questionInfo.getTrigerAction();
+			// this.trigerAction = questionInfo.getTrigerAction();
 			this.style = questionInfo.getStyle();
+			this.required = questionInfo.getRequired();
+			this.options = questionInfo.getOptions();
+			this.cssClass = questionInfo.getCssClass();
 		}
+	}
+
+	public QuestionDTO() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public QuestionInfo QuestionInfoDTO() {
@@ -87,10 +102,18 @@ public class QuestionDTO {
 			questionInfo.setStatus(status);
 		if (Objects.nonNull(answerType))
 			questionInfo.setAnswerType(answerType);
-		if (Objects.nonNull(trigerAction))
-			questionInfo.setTrigerAction(trigerAction);
+//		if (Objects.nonNull(trigerAction))
+//			questionInfo.setTrigerAction(trigerAction);
 		if (Objects.nonNull(style))
 			questionInfo.setStyle(style);
+		if (Objects.nonNull(required))
+			questionInfo.setRequired(required);
+		;
+
+		if (Objects.nonNull(options))
+			questionInfo.setOptions(options);
+		if (Objects.nonNull(cssClass))
+			questionInfo.setCssClass(cssClass);
 
 		return questionInfo;
 	}

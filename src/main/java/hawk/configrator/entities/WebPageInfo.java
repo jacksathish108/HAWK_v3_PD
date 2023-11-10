@@ -3,6 +3,7 @@
  */
 package hawk.configrator.entities;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,25 +15,35 @@ import hawk.utils.HawkResources;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 // TODO: Auto_generated Javadoc
 /**
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "WebPage_info")
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "WebPage_info")
 @Setter
 @Getter
-public class WebPageInfo {
+@ToString
+public class WebPageInfo implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8500393178695155459L;
 	/* COMMON FOR ALL START */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,20 +79,15 @@ public class WebPageInfo {
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
 	int status;
+	 //@OneToMany
+	// @JoinColumn(name="Id", unique = false,insertable = true,updatable = true )
+	//@ElementCollection
+	//	private List<ViewInfo> applicableViews;
+	@ManyToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "ViewId", referencedColumnName = "id")
+	@OrderBy(value = "Tab_Order asc ")
+	private List<ViewInfo> applicableViews;
 
-	public WebPageInfo() {
-	}
-
-//	public void update(WebPageInfo newWebPageInfo) {
-//
-//		this.updateBy = newWebPageInfo.getUpdateBy();
-//		this.menuGroup = newWebPageInfo.getMenuGroup();
-//		this.tabOrder = newWebPageInfo.getTabOrder();
-//		this.pageCode = newWebPageInfo.getPageCode();
-//		this.name = newWebPageInfo.getName();
-//		this.title = newWebPageInfo.getTitle();
-//		this.description = newWebPageInfo.getDescription();
-//	}
 	public List update(WebPageInfo newWebPageInfo) {
 		List<Object> changeHistoryList = new ArrayList<>();
 		if (!Objects.equals(this.menuGroup, newWebPageInfo.getMenuGroup())) {
@@ -108,10 +114,11 @@ public class WebPageInfo {
 			this.description = newWebPageInfo.getDescription();
 		}
 		if (!Objects.equals(this.status, newWebPageInfo.getStatus())) {
-			changeHistoryList
-					.add(HawkResources.buildUpdateHistory("status", status, newWebPageInfo.getStatus()));
+			changeHistoryList.add(HawkResources.buildUpdateHistory("status", status, newWebPageInfo.getStatus()));
 			this.status = newWebPageInfo.getStatus();
 		}
+		this.applicableViews = newWebPageInfo.getApplicableViews();
+
 		return changeHistoryList;
 	}
 }

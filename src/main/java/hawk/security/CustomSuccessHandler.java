@@ -87,12 +87,12 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 			} 
 				 }
 						}
-			clearAuthenticationAttributes(request);
+			//clearAuthenticationAttributes(request);
 			LOG.info("Redirecting customer to the following location {} ", targetUrl);
 			redirectStrategy.sendRedirect(request, response, targetUrl);
 
 			// You can let Spring security handle it for you.
-			// super.onAuthenticationSuccess(request, response, authentication);
+			 super.onAuthenticationSuccess(request, response, authentication);
 
 		} else {
 			// we invalidating the session for the admin user.
@@ -101,8 +101,10 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 			request.setAttribute("status", "1");
 			LOG.info("Redirecting customer to the following location {} ", "/");
 			redirectStrategy.sendRedirect(request, response, "/");
+			 super.onAuthenticationSuccess(request, response, authentication);
+
 		}
-		clearAuthenticationAttributes(request);
+	//	clearAuthenticationAttributes(request);
 	}
 
 	protected void invalidateSession(final HttpServletRequest request, final HttpServletResponse response)

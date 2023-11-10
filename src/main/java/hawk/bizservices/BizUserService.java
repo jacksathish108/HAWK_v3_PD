@@ -16,6 +16,7 @@ import hawk.security.Provider;
 import hawk.services.UsersService;
 import hawk.utils.EnMessages;
 import hawk.utils.HawkResources;
+
 @Service
 public class BizUserService implements UsersService {
 	/** The logger. */
@@ -23,10 +24,10 @@ public class BizUserService implements UsersService {
 
 	@Autowired
 	private UsersInfoRepository usersInfoRepository;
-	
+
 	/** The now. */
 	Timestamp now;
-	static ResultMapper userSession;
+	private ResultMapper userSession;
 
 	public ResultMapper userLogout() {
 		logger.info("userLogout method called....");
@@ -53,7 +54,7 @@ public class BizUserService implements UsersService {
 		logger.info("attendanceEntry method called....");
 		ResultMapper resultMapper = new ResultMapper();
 		try {
-			
+
 		} catch (Exception e) {
 			logger.error("while getting error  on  attendanceEntry>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
@@ -120,9 +121,9 @@ public class BizUserService implements UsersService {
 	public static UserDetails toUserDetails(UsersInfo usersInfo) {
 
 		if (usersInfo != null) {
-			UserDetails user_details = new UserDetails(usersInfo.getId(),usersInfo.getName(), usersInfo.getMobileNo(),
-					usersInfo.getEmail(), usersInfo.getProfilePicUrl(),
-					usersInfo.getUserGroup(), usersInfo.getStatus());
+			UserDetails user_details = new UserDetails(usersInfo.getId(), usersInfo.getName(), usersInfo.getMobileNo(),
+					usersInfo.getEmail(), usersInfo.getProfilePicUrl(), usersInfo.getUserGroup(),
+					usersInfo.getStatus());
 
 			return user_details;
 		}
@@ -134,7 +135,8 @@ public class BizUserService implements UsersService {
 		return usersInfoRepository.save(usersInfo);
 	}
 
-	public void sendEmail(String toAddress, String msg, String subject) {}
+	public void sendEmail(String toAddress, String msg, String subject) {
+	}
 
 	public ResultMapper setuserSession(String userName) {
 		logger.info("setuserSession method called....>>" + userName);
@@ -142,10 +144,10 @@ public class BizUserService implements UsersService {
 		try {
 			UsersInfo user_Info = usersInfoRepository.findByUser(userName, 0);
 			if (!Objects.isNull(user_Info)) {
-					userSession.setUserDetails(toUserDetails(user_Info));
+				userSession.setUserDetails(toUserDetails(user_Info));
 				userSession.setSessionStatus(true);
 				userSession.setUserRole(HawkResources.getUserRole(user_Info.getUserGroup()));
-				userSession.setBy(user_Info.getName()+"@"+user_Info.getMobileNo());
+				userSession.setBy(user_Info.getName() + "@" + user_Info.getMobileNo());
 				return userSession;
 			}
 
@@ -161,8 +163,14 @@ public class BizUserService implements UsersService {
 		return new ResultMapper();
 	}
 
-
 	public ResultMapper getuserSession() {
+		if (userSession.isSessionStatus()&&userSession.getResponceList()!=null) 
+			userSession.getResponceList().clear();
+		if (userSession.isSessionStatus()&&userSession.getResponseMap()!=null) 
+			userSession.getResponseMap().clear();
+		if (userSession.isSessionStatus()&&userSession.getResponceObject()!=null) 
+			userSession.setResponceObject(null);
+		
 		return userSession;
 	}
 
@@ -173,9 +181,9 @@ public class BizUserService implements UsersService {
 	}
 
 	@Override
-	public boolean isExist(String mobileNo,String email) {
-		return (usersInfoRepository.isExistIdorMobileorEmail((long) 0,
-				mobileNo, email)) == 0 ? false : true;}
+	public boolean isExist(String mobileNo, String email) {
+		return (usersInfoRepository.isExistIdorMobileorEmail((long) 0, mobileNo, email)) == 0 ? false : true;
+	}
 
 	@Override
 	public UsersInfo findByClientId(String clientId) {

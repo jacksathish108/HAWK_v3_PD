@@ -35,9 +35,6 @@
 		href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 	<link rel="stylesheet" href="/plugins/jsgrid/jsgrid.min.css">
 	<link rel="stylesheet" href="/plugins/jsgrid/jsgrid-theme.min.css">
-	<link rel="stylesheet"
-		href="/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-
 	<!-- Select2 -->
 	<link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
 	<link rel="stylesheet"
@@ -207,9 +204,9 @@
 					<ul class="nav nav-pills nav-sidebar flex-column"
 						data-widget="treeview" role="menu" data-accordion="false">
 						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/webPage')"
+						<li class="nav-item"><a onclick="redirectTo('/question')"
 							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>WebPages</p>
+								<p>Questions</p>
 						</a></li>
 					</ul>
 				</nav>
@@ -219,9 +216,21 @@
 					<ul class="nav nav-pills nav-sidebar flex-column"
 						data-widget="treeview" role="menu" data-accordion="false">
 						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/question')"
+						<li class="nav-item"><a onclick="redirectTo('/view')"
 							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>Questions</p>
+								<p>Views</p>
+						</a></li>
+					</ul>
+				</nav>
+			</div>
+			<div class="sidebar">
+				<nav class="mt-2">
+					<ul class="nav nav-pills nav-sidebar flex-column"
+						data-widget="treeview" role="menu" data-accordion="false">
+						<!-- webPagees -->
+						<li class="nav-item"><a onclick="redirectTo('/webPage')"
+							class="nav-link"> <i class="far fa-circle nav-icon"></i>
+								<p>WebPages</p>
 						</a></li>
 					</ul>
 				</nav>
@@ -349,11 +358,11 @@
 	<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 	<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 	<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+	<script src="/plugins/multiselect/jquery.multiselect.js"></script>
+
+
 
 	<script src="/plugins/select2/js/select2.full.min.js"></script>
-	<script
-		src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-
 	<script src="/dist/js/calendar_main.js"></script>
 	<script src="/dist/js/day_calendar_main.js"></script>
 	<script src="/hawkJs/tost.js"></script>
@@ -464,9 +473,6 @@
 
 		})
 
-		// Setup the buttons for all transfers
-		// The "add files" button doesn't need to be setup because the config
-		// `clickable` has already been specified.
 	</script>
 </body>
 </html>

@@ -6,9 +6,10 @@ import hawk.dtos.ResultMapper;
 public interface WebPageService {
 	ResultMapper setWebPage(WebPageInfoDTO webPageInfoDTO);
 	ResultMapper getWebPage();
+	ResultMapper getPageCode();
 	ResultMapper getWebPageByid(Long id);
 	WebPageInfo getWebPageInfoByid(Long id);
-	WebPageInfo getWebPageInfoByCode(String code);
+	ResultMapper getWebPageInfoByCode(String code);
 	ResultMapper deleteWebPage(Long id);
 	
 }

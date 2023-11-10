@@ -3,6 +3,8 @@ package hawk.configrator.bizservices;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import hawk.configrator.dtos.WebPageInfoDTO;
 import hawk.configrator.entities.WebPageInfo;
 import hawk.configrator.jparepositorys.WebPageInfoRepository;
+import hawk.configrator.mapper.WebpageQuestionMapper;
+import hawk.configrator.services.ViewService;
 import hawk.configrator.services.WebPageService;
 import hawk.dtos.ResultMapper;
 import hawk.entities.FieldUpdateHistoryInfo;
@@ -27,7 +31,8 @@ public class BizWebPageService implements WebPageService {
 
 	@Autowired
 	UsersService clientService;
-
+	@Autowired
+	ViewService viewService;
 	@Autowired
 	WebPageInfoRepository webPageInfoRepository;
 	@Autowired
@@ -40,14 +45,21 @@ public class BizWebPageService implements WebPageService {
 		try {
 			resultMapper = clientService.getuserSession();
 			if (webPageInfoDTO != null && resultMapper.isSessionStatus()) {
-				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
-						HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
+				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
+						|| HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
 					boolean isExistRecord = (webPageInfoRepository.isExist(webPageInfoDTO.getId(),
 							webPageInfoDTO.getPageCode())) == 0 ? false : true;
 					if (!isExistRecord) {
 						webPageInfoDTO.setCreateBy(resultMapper.getBy());
 						webPageInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
-						webPageInfoRepository.saveAndFlush(webPageInfoDTO.WebPageDetailsDTO());
+						WebPageInfo newWebPage = webPageInfoDTO.WebPageDetailsDTO();
+
+//						for (int i = 0; i < newWebPage.getApplicableViews().size(); i++) {
+//							newWebPage.getApplicableViews().set(i,
+//									viewService.getViewInfoByid(newWebPage.getApplicableViews().get(i).getId()));
+//						}
+
+						webPageInfoRepository.saveAndFlush(newWebPage);
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
 					} else if (isExistRecord) {
@@ -56,6 +68,11 @@ public class BizWebPageService implements WebPageService {
 						List changeHistoryList = exitWebPageInfo.update(webPageInfoDTO.WebPageDetailsDTO());
 						exitWebPageInfo.setUpdateBy(resultMapper.getBy());
 						exitWebPageInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+						
+//						for (int i = 0; i < exitWebPageInfo.getApplicableViews().size(); i++) {
+//							exitWebPageInfo.getApplicableViews().set(i,
+//									viewService.getViewInfoByid(exitWebPageInfo.getApplicableViews().get(i).getId()));
+//						}
 						webPageInfoRepository.saveAndFlush(exitWebPageInfo);
 						if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
 							fieldUpdateHistoryService
@@ -85,8 +102,10 @@ public class BizWebPageService implements WebPageService {
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
-			/*	if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
-						HawkResources.PDADMIN.equals(resultMapper.getUserRole())) */{
+				/*
+				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
+				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
+				 */ {
 					List<WebPageInfoDTO> WebPageInfoList = new ArrayList<>();
 					webPageInfoRepository.findAll().forEach(WebPageInfo -> {
 						WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo));
@@ -112,13 +131,64 @@ public class BizWebPageService implements WebPageService {
 		return resultMapper;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public ResultMapper getPageCode() {
+		logger.info("getWebPage method called...");
+		try {
+			resultMapper = clientService.getuserSession();
+			if (resultMapper.isSessionStatus()) {
+				/*
+				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
+				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
+				 */ {
+					List<WebPageInfoDTO> WebPageInfoList = new ArrayList<>();
+
+					 webPageInfoRepository.findPageOnly((long) 1).forEach(WebPageInfo -> {
+					WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo.get(0),WebPageInfo.get(1)));
+					});
+
+					resultMapper.setResponceList(WebPageInfoList);
+					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+				} /*
+					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+					 * resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG); }
+					 */
+			} else {
+				logger.info("attendanceEntry>>Invalid session ....>...." + resultMapper.toString());
+				resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
+				resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public ResultMapper deleteWebPage(Long id) {
 		logger.info("getWebPage method called..." + id);
 		try {
 			resultMapper = clientService.getuserSession();
-			if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
-					HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
+			if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
+					|| HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
 				webPageInfoRepository.deleteById(id);
 				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				resultMapper.setMessage(id + EnMessages.RECORD_DELETED_MSG);
@@ -177,21 +247,33 @@ public class BizWebPageService implements WebPageService {
 	}
 
 	@Override
-	public WebPageInfo getWebPageInfoByCode(String code) {
-		logger.info("getWebPageInfoByCode method called..." + code);
+	public ResultMapper getWebPageInfoByCode(String code) {
+		logger.info("getWebPageInfoByCode method called...");
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
-
-				return webPageInfoRepository.findByCode(code);
+				/*
+				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
+				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
+				 */ {
+					resultMapper.setResponceObject(webPageInfoRepository.findByCode(code));
+					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+				} /*
+					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+					 * resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG); }
+					 */
+			} else {
+				logger.info("attendanceEntry>>Invalid session ....>...." + resultMapper.toString());
+				resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
+				resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPageInfoByCode>>>> " + e.getMessage());
+			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
-		return null;
+		return resultMapper;
 	}
 
 }

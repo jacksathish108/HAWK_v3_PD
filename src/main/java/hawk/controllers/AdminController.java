@@ -107,12 +107,12 @@ public class AdminController {
 		}
 	}
 
-	@RequestMapping("/enquiry")
+	@RequestMapping("/view")
 	public ModelAndView enquiry() {
-		logger.info("enquiry method called....");
+		logger.info("view method called....");
 		ModelAndView modelAndView = userSessionCheck();
 		if (modelAndView.getViewName() == null) {
-			modelAndView.setViewName(base_path + "admin/enquiryDetails");
+			modelAndView.setViewName(base_path + "configrator/viewDetails");
 		}
 		return modelAndView;
 	}
@@ -126,6 +126,7 @@ public class AdminController {
 		}
 		return modelAndView;
 	}
+
 	@RequestMapping("/question")
 	public ModelAndView questionPage() {
 		logger.info("WebPage method called....");
@@ -135,6 +136,7 @@ public class AdminController {
 		}
 		return modelAndView;
 	}
+
 	@RequestMapping("/clientDetails")
 	public ModelAndView clientDetails() {
 		logger.info("clientDetails method called....");

@@ -5,15 +5,15 @@ package hawk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class HawkApplication.
  */
 @SpringBootApplication
-public class HCApplication extends SpringBootServletInitializer {
+public class HCApplication 
+//extends SpringBootServletInitializer
+{
 	
 	/**
 	 * Configure.
@@ -21,11 +21,11 @@ public class HCApplication extends SpringBootServletInitializer {
 	 * @param application the application
 	 * @return the spring application builder
 	 */
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-	      return application.sources(HCApplication.class);
-
-	   }
-	
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//	      return application.sources(HCApplication.class);
+//
+//	   }
+//	
 	/**
 	 * The main method.
 	 *

@@ -1,0 +1,104 @@
+/*
+ * 
+ */
+package hawk.product.entities;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import hawk.utils.HawkResources;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+// TODO: Auto_generated Javadoc
+/**
+ * The Class Hawk_Login.
+ */
+@Entity
+@Table(name = "Answer_info")
+@EntityListeners(AuditingEntityListener.class)
+@Setter
+@Getter
+public class AnswerInfo implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6096637684458683590L;
+	/* COMMON FOR ALL START */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Id")
+	private Long id;
+	@Column(name = "Update_Date")
+	Timestamp updateDate;
+	@Column(name = "Create_Date")
+	Timestamp createDate;
+	@Column(name = "Create_By")
+	String createBy;
+	@Column(name = "Update_By")
+	String updateBy;
+	/* COMMON FOR ALL END */
+	@Column(name = "View_Id")
+	@NotNull(message = "QTag is required")
+	Long viewId;
+	@Column(name = "Page_Id")
+	@NotNull(message = "Page_Id is required")
+	Long pageId;
+	@Column(name = "Status")
+	@NotNull(message = "Status is required")
+	int status;
+	@ElementCollection(targetClass=Answer.class)
+	 List<Answer> answers;
+
+	public List update(AnswerInfo answerInfo) {
+		List<Object> changeHistoryList = new ArrayList<>();
+
+		if (!Objects.equals(this.updateDate, answerInfo.getUpdateDate())) {
+			changeHistoryList
+					.add(HawkResources.buildUpdateHistory("updateDate", updateDate, answerInfo.getUpdateDate()));
+			this.updateDate = answerInfo.getUpdateDate();
+		}
+
+		if (!Objects.equals(this.updateBy, answerInfo.getUpdateBy())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("updateBy", updateBy, answerInfo.getUpdateBy()));
+			this.updateBy = answerInfo.getUpdateBy();
+		}
+
+		if (!Objects.equals(this.createDate, answerInfo.getCreateDate())) {
+			changeHistoryList
+					.add(HawkResources.buildUpdateHistory("createDate", createDate, answerInfo.getCreateDate()));
+			this.createDate = answerInfo.getCreateDate();
+		}
+
+		if (!Objects.equals(this.createBy, answerInfo.getCreateBy())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("createBy", createBy, answerInfo.getCreateBy()));
+			this.createBy = answerInfo.getCreateBy();
+		}
+
+		if (!Objects.equals(this.viewId, answerInfo.getViewId())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("viewId", viewId, answerInfo.getViewId()));
+			this.viewId = answerInfo.getViewId();
+		}
+		if (!Objects.equals(this.answers, answerInfo.getAnswers())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("answers", answers, answerInfo.getAnswers()));
+			this.answers = answerInfo.getAnswers();
+		}
+		return changeHistoryList;
+	}
+
+}
