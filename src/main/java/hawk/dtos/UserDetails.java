@@ -1,11 +1,20 @@
 package hawk.dtos;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import hawk.entities.UsersInfo;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 @Setter
 @Getter
-public class UserDetails {
+@ToString
+public class UserDetails implements  Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7414616982532781167L;
 	Long id;
 	String name;
 	String mobileNo;
@@ -37,5 +46,24 @@ public class UserDetails {
 		usersInfo.setStatus(this.status);
 		usersInfo.setUserGroup(this.userGroup);
 		return usersInfo;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, dob, email, id, mobileNo, name, profilePicUrl, role, status, userGroup);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDetails other = (UserDetails) obj;
+		return Objects.equals(address, other.address) && Objects.equals(dob, other.dob)
+				&& Objects.equals(email, other.email) && Objects.equals(id, other.id)
+				&& Objects.equals(mobileNo, other.mobileNo) && Objects.equals(name, other.name)
+				&& Objects.equals(profilePicUrl, other.profilePicUrl) && Objects.equals(role, other.role)
+				&& status == other.status && userGroup == other.userGroup;
 	}
 }

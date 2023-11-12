@@ -27,8 +27,9 @@ public class BizUserService implements UsersService {
 
 	/** The now. */
 	Timestamp now;
-	private ResultMapper userSession;
-
+	//private Map<String,ResultMapper> userSessionMap;
+	  @Autowired
+	   private SessionData sessionData;
 	public ResultMapper userLogout() {
 		logger.info("userLogout method called....");
 		ResultMapper resultMapper = new ResultMapper();
@@ -138,9 +139,19 @@ public class BizUserService implements UsersService {
 	public void sendEmail(String toAddress, String msg, String subject) {
 	}
 
+	
+	public ResultMapper getUserSession() {
+		return sessionData.getUserSession();
+	}
+	
+	public void setUserSession(ResultMapper userSession) {
+		sessionData.setUserSession(userSession);
+	}
+	
+	
 	public ResultMapper setuserSession(String userName) {
 		logger.info("setuserSession method called....>>" + userName);
-		userSession = new ResultMapper();
+		ResultMapper userSession = new ResultMapper();	
 		try {
 			UsersInfo user_Info = usersInfoRepository.findByUser(userName, 0);
 			if (!Objects.isNull(user_Info)) {
@@ -148,13 +159,16 @@ public class BizUserService implements UsersService {
 				userSession.setSessionStatus(true);
 				userSession.setUserRole(HawkResources.getUserRole(user_Info.getUserGroup()));
 				userSession.setBy(user_Info.getName() + "@" + user_Info.getMobileNo());
-				return userSession;
+				//userSessionMap.put(sessionId, userSession);
+				setUserSession(userSession);
+				//return userSessionMap.get(sessionId);
+				return getUserSession();
 			}
 
 		} catch (Exception e) {
 			logger.error("while getting error  on  userRegestration>>>> " + e.getMessage());
 		}
-		return userSession;
+		return null;
 
 	}
 
@@ -162,16 +176,9 @@ public class BizUserService implements UsersService {
 		// TODO Auto-generated method stub
 		return new ResultMapper();
 	}
-
+	@Override
 	public ResultMapper getuserSession() {
-		if (userSession.isSessionStatus()&&userSession.getResponceList()!=null) 
-			userSession.getResponceList().clear();
-		if (userSession.isSessionStatus()&&userSession.getResponseMap()!=null) 
-			userSession.getResponseMap().clear();
-		if (userSession.isSessionStatus()&&userSession.getResponceObject()!=null) 
-			userSession.setResponceObject(null);
-		
-		return userSession;
+		return getUserSession();
 	}
 
 	@Override
@@ -190,4 +197,6 @@ public class BizUserService implements UsersService {
 		logger.info("getuserInfo method called....>>" + clientId);
 		return usersInfoRepository.findByClientId(clientId);
 	}
+
+
 }
