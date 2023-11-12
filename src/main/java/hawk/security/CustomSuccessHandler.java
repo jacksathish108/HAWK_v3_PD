@@ -92,7 +92,7 @@ public class CustomSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 			redirectStrategy.sendRedirect(request, response, targetUrl);
 
 			// You can let Spring security handle it for you.
-			 super.onAuthenticationSuccess(request, response, authentication);
+			// super.onAuthenticationSuccess(request, response, authentication);
 
 		} else {
 			// we invalidating the session for the admin user.
