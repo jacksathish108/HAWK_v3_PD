@@ -34,7 +34,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class QuestionInfo implements Serializable{
+public class QuestionInfo implements Serializable {
 
 	/**
 	 * 
@@ -87,9 +87,16 @@ public class QuestionInfo implements Serializable{
 	String style;
 	@Column(name = "Css_Class")
 	String cssClass;
+	@Column(name = "On_Click")
+	String onClick;
+	@Column(name = "Attributes")
+	String attributes;
+	@Column(name = "On_Change")
+	String onChange;
 	@Column(name = "Options")
 	String options;
-
+	@Column(name = "Unique_Ans")
+	Integer unique;
 	
 	public List update(QuestionInfo questionInfo) {
 		List<Object> changeHistoryList = new ArrayList<>();
@@ -170,7 +177,24 @@ public class QuestionInfo implements Serializable{
 			changeHistoryList.add(HawkResources.buildUpdateHistory("cssClass", cssClass, questionInfo.getCssClass()));
 			this.cssClass = questionInfo.getCssClass();
 		}
-		
+
+		if (!Objects.equals(this.onClick, questionInfo.getOnClick())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("onClick", onClick, questionInfo.getOnClick()));
+			this.onClick = questionInfo.getOnClick();
+		}
+		if (!Objects.equals(this.onChange, questionInfo.getOnChange())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("onCHange", onChange, questionInfo.getOnChange()));
+			this.onChange = questionInfo.getOnChange();
+		}
+		if (!Objects.equals(this.attributes, questionInfo.getAttributes())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("attributes", attributes, questionInfo.getAttributes()));
+			this.attributes = questionInfo.getAttributes();
+		}
+		if (!Objects.equals(this.unique, questionInfo.getUnique())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("unique", unique, questionInfo.getUnique()));
+			this.unique = questionInfo.getUnique();
+		}
+
 		return changeHistoryList;
 	}
 

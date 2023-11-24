@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hawk.configrator.services.QtagGeneratorService;
+import hawk.configrator.services.QuestionService;
 import hawk.dtos.ResultMapper;
 import hawk.entities.FieldUpdateHistoryInfo;
 import hawk.product.dtos.AnswerDTO;
@@ -29,7 +30,8 @@ public class BizAnswerService implements AnswerService {
 
 	@Autowired
 	UsersService clientService;
-
+	@Autowired 
+	QuestionService  questionService;
 	@Autowired
 	AnswerInfoRepository answerInfoRepository;
 	@Autowired
@@ -44,8 +46,9 @@ public class BizAnswerService implements AnswerService {
 		logger.info("setAnswer method called..." + answers);
 		try {
 			AnswerDTO answerInfoDTO = new AnswerDTO(answers);
-
 			resultMapper = clientService.getuserSession();
+			
+			
 			if (answerInfoDTO != null && answerInfoDTO.getAnswers() != null && resultMapper.isSessionStatus()) {
 				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 						|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {

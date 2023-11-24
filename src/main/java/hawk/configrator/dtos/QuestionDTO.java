@@ -36,7 +36,10 @@ public class QuestionDTO {
 	String options;
 	String style;
 	String cssClass;
-
+	String onClick;
+	String onChange;
+	String attributes;
+	Integer unique;
 	public QuestionDTO(QuestionInfo questionInfo) {
 		if (questionInfo != null) {
 			this.id = questionInfo.getId();
@@ -65,6 +68,10 @@ public class QuestionDTO {
 			this.required = questionInfo.getRequired();
 			this.options = questionInfo.getOptions();
 			this.cssClass = questionInfo.getCssClass();
+			this.onClick = questionInfo.getOnClick();
+			this.onChange = questionInfo.getOnChange();
+			this.attributes= questionInfo.getAttributes();
+			this.unique=questionInfo.getUnique();
 		}
 	}
 
@@ -108,12 +115,20 @@ public class QuestionDTO {
 			questionInfo.setStyle(style);
 		if (Objects.nonNull(required))
 			questionInfo.setRequired(required);
-		;
-
 		if (Objects.nonNull(options))
 			questionInfo.setOptions(options);
 		if (Objects.nonNull(cssClass))
 			questionInfo.setCssClass(cssClass);
+		if (Objects.nonNull(onClick))
+			questionInfo.setOnClick(onClick);
+		if (Objects.nonNull(onChange))
+			questionInfo.setOnChange(onChange);
+		if (Objects.nonNull(attributes))
+			questionInfo.setAttributes(attributes);
+		if (Objects.nonNull(unique))
+			questionInfo.setUnique(unique);
+		
+		
 
 		return questionInfo;
 	}

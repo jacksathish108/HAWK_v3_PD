@@ -108,7 +108,7 @@ public class AdminController {
 	}
 
 	@RequestMapping("/view")
-	public ModelAndView enquiry() {
+	public ModelAndView view() {
 		logger.info("view method called....");
 		ModelAndView modelAndView = userSessionCheck();
 		if (modelAndView.getViewName() == null) {
@@ -116,7 +116,15 @@ public class AdminController {
 		}
 		return modelAndView;
 	}
-
+	@RequestMapping("/dataLink")
+	public ModelAndView dataLink() {
+		logger.info("dataLink method called....");
+		ModelAndView modelAndView = userSessionCheck();
+		if (modelAndView.getViewName() == null) {
+			modelAndView.setViewName(base_path + "configrator/dataLinkDetails");
+		}
+		return modelAndView;
+	}
 	@RequestMapping("/webPage")
 	public ModelAndView WebPage() {
 		logger.info("WebPage method called....");

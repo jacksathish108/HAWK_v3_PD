@@ -50,4 +50,11 @@ public ResultMapper  deleteWebPageInfo(Long id,Model model) {
 	return WebPageService.deleteWebPage(id);
 }
 
+@GetMapping("/getAllWebPageCode")
+	public ResultMapper getAllWebPageCode() {
+		logger.info("getAllWebPageCode method called...");
+		return WebPageService.getAllWebPageCode();
+	} 
+
+
 }

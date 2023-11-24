@@ -26,6 +26,7 @@ function fillQuestionDetails(response) {
 			columns.push("Q_Tag");
 			columns.push("Index");
 			columns.push("ElementType");
+			columns.push("Unique");
 			columns.push("DataType");
 			columns.push("DefaultValue");
 			columns.push("Name");
@@ -33,12 +34,14 @@ function fillQuestionDetails(response) {
 			columns.push("Status");
 			columns.push("Requied");
 			columns.push("Style");
+			columns.push("OnClick");
+			columns.push("OnChange");
+			columns.push("Attributes");
 
 
 			$("#" + questionReportDiv).empty();
 			$("#" + questionReportDiv).append(tableCreator(questionReportTable));
 			$("#" + questionReportDiv + " thead").append(tableHeaderMaker(columns));
-			var questionOptions;
 			$.each(questionResponseData, function(index, row) {
 
 
@@ -52,6 +55,7 @@ function fillQuestionDetails(response) {
 				fields.push(row.qtag);
 				fields.push(row.index);
 				fields.push(row.elementType);
+				fields.push(row.unique);
 				fields.push(row.dataType);
 				fields.push(row.defaultValue);
 				fields.push(row.name);
@@ -59,7 +63,9 @@ function fillQuestionDetails(response) {
 				fields.push(row.status);
 				fields.push(row.required);
 				fields.push("<p  style='max-width: 150px;'>" + row.style + "</p>");
-
+				fields.push(row.onClick);
+				fields.push(row.onChange);
+				fields.push(row.attributes);
 				$("#" + questionReportTable + " tbody").append(tableRowMaker(fields));
 
 			});

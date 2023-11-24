@@ -25,7 +25,6 @@ var actionUrl={
 
 2000:{'requestUrl':'/getAllQuestion','requestType':'GET','onSuccess':'fillQuestionDetails(response)'},
 2001:{'requestUrl':'/getAllQtag','requestType':'GET','onSuccess':'fillQtagDetails(response)'},
-
 2050:{'requestUrl':'/setQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 2051:{'requestUrl':'/deleteQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 
@@ -34,6 +33,12 @@ var actionUrl={
 3051:{'requestUrl':'/deleteView','requestType':'POST','onSuccess':'getAllViewDetails(true)'},
 
 
+4000:{'requestUrl':'/getAllDataLink','requestType':'GET','onSuccess':'fillDataLinkDetails(response)'},
+4001:{'requestUrl':'/getAllWebPageCode','requestType':'GET','onSuccess':'fillWebPageCode(response)'},
+4002:{'requestUrl':'/getAllViewCode','requestType':'GET','onSuccess':'fillViewCode(response)'},
+
+4050:{'requestUrl':'/setDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
+4051:{'requestUrl':'/deleteDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
 
 //////////////////////////
 10000:{'requestUrl':'/getAllMenuItems','requestType':'GET','onSuccess':'fillmenuItems(response)'},
@@ -43,6 +48,8 @@ var actionUrl={
 //11000:{'requestUrl':'/getAnswersByViewId','requestType':'GET','onSuccess':'fillAnswerDetails(response)'},
 
 11001:{'requestUrl':'/getAllAnswer','requestType':'GET','onSuccess':'fillAnswerDetails(response)'},
+11002:{'requestUrl':'/getDataLink','requestType':'GET','onSuccess':'fillDataLinkDetails(response)'},
+
 
 
 11050:{'requestUrl':'/setAnswer','requestType':'POST','onSuccess':'getAnswersByViewId(true)'},

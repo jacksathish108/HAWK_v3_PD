@@ -61,7 +61,7 @@ public class WebPageInfo implements Serializable {
 	@Column(name = "Menu_Group")
 	@NotNull(message = "Menu Code is required")
 	String menuGroup;
-	@Column(name = "Tab_Order", unique = true)
+	@Column(name = "Tab_Order")
 	@NotNull(message = "Tab Order is required")
 	Integer tabOrder;
 	@Column(name = "Page_Code", unique = true)
@@ -70,7 +70,7 @@ public class WebPageInfo implements Serializable {
 	@Column(name = "Name")
 	@NotNull(message = "Name is required")
 	String name;
-	@Column(name = "Title", unique = true)
+	@Column(name = "Title")
 	@NotNull(message = "Title is required")
 	String title;
 	@Column(name = "Description")

@@ -68,6 +68,19 @@
 															</select>
 														</div>
 													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="referral">Unique</label> <select
+																required="required" name="unique" id="unique"
+																class="form-control custom-select">
+																<option class="option" value="1">True</option>
+																<option class="option" value="2">False</option>
+
+															</select>
+														</div>
+													</div>
+
 													<div class="col-md-12">
 														<div class="form-group">
 															<label for="options">Options</label>
@@ -137,27 +150,48 @@
 																<option class="option" value=0>No</option>
 															</select>
 														</div>
-													</div>													
+													</div>
 													<div class="col-md-12">
 														<div class="form-group">
 															<label for="options">Style</label>
-															<textarea name="style" id="style"
-																class="form-control" rows="2" ></textarea>
+															<textarea name="style" id="style" class="form-control"
+																rows="2"></textarea>
 														</div>
 													</div>
 													<div class="col-md-12">
 														<div class="form-group">
 															<label for="options">Css Class</label>
 															<textarea name="cssClass" id="cssClass"
-																class="form-control" rows="2" ></textarea>
+																class="form-control" rows="2"></textarea>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="name">On-Click</label> <input type="text"
+																name="onClick" id="onClick" class="form-control">
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="name">On-Change</label> <input type="text"
+																name="onCHange" id="onChange" class="form-control">
 														</div>
 													</div>
 
 													<div class="col-md-12">
 														<div class="form-group">
+															<label for="description">Attributes</label>
+															<textarea name="attributes" id="attributes"
+																class="form-control" rows="2"></textarea>
+														</div>
+													</div>
+
+
+													<div class="col-md-12">
+														<div class="form-group">
 															<label for="description">Description</label>
 															<textarea name="description" id="description"
-																class="form-control" rows="2" required="required"></textarea>
+																class="form-control" rows="2"></textarea>
 														</div>
 													</div>
 												</div>

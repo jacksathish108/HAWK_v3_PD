@@ -7,11 +7,16 @@ var adminDashBoardViewerReportDiv = "adminDashBoardViewerReportDiv";
 var adminDashBoardViewerReportTable = "adminDashBoardViewerReportTable";
 var menuItemcontainer = "menuItemsDiv";
 var reportTableHeaders = {};
+var dataLinkResponseData;
+var linkBtn;
 var pageid, viewid;
 var answerResponseData;
 function getMenuItems() {
 	doApiAction(10000);
 }
+
+
+
 function getAdminDashBoardViewerDetails() {
 
 	doApiAction(1300);
@@ -67,7 +72,7 @@ function loadWebPage(pageCode) {
 }
 
 function fillWebPage(response) {
-	if (response && response.responceList) {
+	if (response && response.responceObject) {
 		progressBar(true);
 		webPageResponseData = response.responceObject;
 		try {
@@ -85,7 +90,7 @@ function fillWebPage(response) {
 					pageViewDiv = pageViewDiv + "<div class='card-header'>";
 					pageViewDiv = pageViewDiv + "<h3 class='card-title'>Report</h3>";
 					pageViewDiv = pageViewDiv + "<div class='card-tools'>";
-					pageViewDiv = pageViewDiv + "<button class='btn btn-success' onclick=loadViewEditModal('" + val.id + "DetailsModal','" + val.id + "DetailsForm')>New</button>";
+					pageViewDiv = pageViewDiv + "<button class='btn btn-success' id='loadModal_" + val.id + "' onclick=loadViewEditModal('" + val.id + "DetailsModal','" + val.id + "DetailsForm')>New</button>";
 					pageViewDiv = pageViewDiv + "<button type='button' class='btn btn-tool'";
 					pageViewDiv = pageViewDiv + "data-card-widget='collapse' title='Collapse'>";
 					pageViewDiv = pageViewDiv + "<i class='fas fa-minus'></i>";
@@ -122,14 +127,13 @@ function fillWebPage(response) {
 
 					var columsHeaderList = {};
 					$.each(val.applicableQtagMap, function(key, val) {
-						console.log("index " + val.qtag + "::" + val.index)
 						if (val.elementType != "button") {
 							modalDiv = modalDiv + "<div class='col-md-6'>";
 							modalDiv = modalDiv + "<div class='form-group'>";
 							modalDiv = modalDiv + "<label for='" + val.name + "'>" + val.name + "</label> ";
 							if (val.required == 1)
 								modalDiv = modalDiv + "<label>*</label>";
-							modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "' class='" + val.cssClass + "'";
+							modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "' class='" + val.cssClass + "'";
 							if (val.required == 1)
 								modalDiv = modalDiv + "' required='required' value='" + val.defaultValue + "'>";
 							else
@@ -144,9 +148,10 @@ function fillWebPage(response) {
 							modalDiv = modalDiv + "</div>";
 							modalDiv = modalDiv + "</div>";
 						}
-						if (val.elementType != "button") {
-							columsHeaderList[val.qtag] = (val.name);
-						}
+						//if (val.elementType != "button") {
+
+						columsHeaderList[val.qtag] = (val);
+						//}
 
 					});
 					reportTableHeaders[val.id] = columsHeaderList;
@@ -223,12 +228,21 @@ function fillAnswerDetails(response) {
 			answerResponseData = response.responceList;
 			var columns = [];
 			var viewQtagList = [];
+			var buttonQtagList = [];
 			columns.push("Actions");
 			$("#" + answerResponseData[0].viewId + "ReportDiv").empty();
 			$("#" + answerResponseData[0].viewId + "ReportDiv").append(tableCreator(answerResponseData[0].viewId + "ReportTable"));
-			$.each(reportTableHeaders[answerResponseData[0].viewId], function(qtag, name) {
-				columns.push(name);
-				viewQtagList.push(qtag);
+			$.each(reportTableHeaders[answerResponseData[0].viewId], function(qtag, val) {
+
+				if (val.elementType == 'button') {
+					//	console.log("val ::" + JSON.stringify(val))
+					buttonQtagList.push(val);
+				}
+				else {
+					viewQtagList.push(qtag);
+					columns.push(val.name);
+				}
+
 			});
 			$("#" + answerResponseData[0].viewId + "ReportDiv" + " thead").append(tableHeaderMaker(columns));
 
@@ -237,8 +251,17 @@ function fillAnswerDetails(response) {
 				var actions = "<div class='btn-group btn-group-sm'>";
 				actions = actions + "<a  id='" + row.id + "'  onClick=\"loadViewEditModal(\'" + row.viewId + "DetailsModal\',\'" + row.viewId + "DetailsForm\',this.id)\" class='btn btn-info'><i class='fas fa-eye'></i></a>";
 				actions = actions + "<a  rowId='" + row.id + "' pageId=" + row.pageId + "  viewId=" + row.viewId + "  rowName='" + row.viewId + "'    id='" + row.id + "' onConform='answerDelete'  onClick='deleteConformation(this)' class='btn btn-danger'><i class='fas fa-trash'></i></a>";
+
+
+				$.each(buttonQtagList, function(index, val) {
+					if (val) {
+						actions = actions + "<a  rowId='" + row.id + "'  pageId=" + row.pageId + " pageId=" + row.pageId + "  " + val.attributes + "   viewId=" + row.viewId + "  rowName='" + row.viewId + "'    id='" + row.id + "'  onClick=" + val.onClick + "(this); class='" + val.cssClass + "'><i class='fas fa-grin-alt'></i></a>";
+					}
+				});
 				actions = actions + " </div>";
+
 				fields.push(actions);
+
 				$.each(viewQtagList, function(index, val) {
 					var Object = getObjects(row.answers, "qtag", val);
 					if (Object && Object.ansValue) {
@@ -268,6 +291,7 @@ function fillAnswerDetails(response) {
 function loadViewEditModal(modalId, formId, id) {
 	try {
 		progressBar(true);
+		console.log("callling load modalId::" + modalId + " :formId: " + formId + "::id:" + id)
 		$("[name=" + formId + "]").trigger("reset");
 		//preFill();
 		$("input[name=id]").val("");
@@ -291,6 +315,7 @@ function loadViewEditModal(modalId, formId, id) {
 
 		}
 		$("#" + modalId).modal();
+		console.log(":modalId :" + $("#" + modalId))
 		setFocus('name');
 	}
 	catch (err) {
@@ -323,3 +348,53 @@ function formValidation(formId) {
 	console.log(formId)
 	return true;
 }
+
+function dataLink(btn) {
+	try {
+		progressBar(true);
+		linkBtn = btn;
+		doApiAction(11002, null, ("/" + btn.getAttribute("linkCode")));
+	}
+	catch (err) {
+		errorTost(err);
+		console.log("ERROR :  " + err);
+
+	}
+	finally {
+		progressBar(false);
+	}
+}
+function fillDataLinkDetails(response) {
+	try {
+		if (response && response.responceObject) {
+			//	formResetById(viewDetailsForm);
+			progressBar(true);
+			dataLinkResponseData = response.responceObject;
+			var rowObject = getObjects(answerResponseData, 'id', linkBtn.getAttribute("rowId"));
+			if (dataLinkResponseData) {
+				loadWebPage(dataLinkResponseData.targetWebPageCode);
+
+				$(document).ready(function() {
+					setTimeout(function() {
+						loadViewEditModal((dataLinkResponseData.targetViewId + 'DetailsModal'), (dataLinkResponseData.targetViewId + 'DetailsForm'));
+						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target,source) {
+							console.log(target + " ::" + source)
+							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue);
+						});
+
+
+						//	$("#Q_009").val(getObjects(rowObject.answers, 'qtag', 'Q_0017').ansValue);
+					}, 100); // for 0.1 second delay 
+				});
+			}
+		}
+	}
+	catch (err) {
+		errorTost(err);
+		console.log("ERROR :  " + err);
+	}
+	finally {
+		progressBar(false);
+	}
+}
+

@@ -2,9 +2,10 @@ package hawk.configrator.bizservices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import hawk.configrator.dtos.WebPageInfoDTO;
 import hawk.configrator.entities.WebPageInfo;
 import hawk.configrator.jparepositorys.WebPageInfoRepository;
-import hawk.configrator.mapper.WebpageQuestionMapper;
 import hawk.configrator.services.ViewService;
 import hawk.configrator.services.WebPageService;
 import hawk.dtos.ResultMapper;
@@ -68,7 +68,7 @@ public class BizWebPageService implements WebPageService {
 						List changeHistoryList = exitWebPageInfo.update(webPageInfoDTO.WebPageDetailsDTO());
 						exitWebPageInfo.setUpdateBy(resultMapper.getBy());
 						exitWebPageInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-						
+
 //						for (int i = 0; i < exitWebPageInfo.getApplicableViews().size(); i++) {
 //							exitWebPageInfo.getApplicableViews().set(i,
 //									viewService.getViewInfoByid(exitWebPageInfo.getApplicableViews().get(i).getId()));
@@ -107,7 +107,7 @@ public class BizWebPageService implements WebPageService {
 				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
 				 */ {
 					List<WebPageInfoDTO> WebPageInfoList = new ArrayList<>();
-					webPageInfoRepository.findAll().forEach(WebPageInfo -> {
+					webPageInfoRepository.findByStatus((long) 1).forEach(WebPageInfo -> {
 						WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo));
 					});
 
@@ -131,13 +131,6 @@ public class BizWebPageService implements WebPageService {
 		return resultMapper;
 	}
 
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public ResultMapper getPageCode() {
 		logger.info("getWebPage method called...");
@@ -150,8 +143,8 @@ public class BizWebPageService implements WebPageService {
 				 */ {
 					List<WebPageInfoDTO> WebPageInfoList = new ArrayList<>();
 
-					 webPageInfoRepository.findPageOnly((long) 1).forEach(WebPageInfo -> {
-					WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo.get(0),WebPageInfo.get(1)));
+					webPageInfoRepository.findPageOnly((long) 1).forEach(WebPageInfo -> {
+						WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo.get(0), WebPageInfo.get(1)));
 					});
 
 					resultMapper.setResponceList(WebPageInfoList);
@@ -173,15 +166,7 @@ public class BizWebPageService implements WebPageService {
 		}
 		return resultMapper;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public ResultMapper deleteWebPage(Long id) {
 		logger.info("getWebPage method called..." + id);
@@ -257,6 +242,55 @@ public class BizWebPageService implements WebPageService {
 				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
 				 */ {
 					resultMapper.setResponceObject(webPageInfoRepository.findByCode(code));
+					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+				} /*
+					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+					 * resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG); }
+					 */
+			} else {
+				logger.info("attendanceEntry>>Invalid session ....>...." + resultMapper.toString());
+				resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
+				resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
+
+	@Override
+	public ResultMapper getAllWebPageCode() {
+		logger.info("getAllWebPageCode method called...");
+		try {
+			resultMapper = clientService.getuserSession();
+			if (resultMapper.isSessionStatus()) {
+				/*
+				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
+				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
+				 */ {
+
+					List<List<String>> allWebPageCode = webPageInfoRepository.getAllWebPageCode();
+					Map<String, ArrayList> webpages = new HashMap<>();
+					{
+						allWebPageCode.forEach(object -> {
+							if (webpages.containsKey(object.get(0))) {
+								webpages.get(object.get(0)).add(object.get(1));
+							} else {
+								ArrayList views = new ArrayList<>();
+								views.add(object.get(1));
+								webpages.put(object.get(0), views);
+							}
+
+						}
+
+						);
+
+					}
+
+					resultMapper.setResponceObject(webpages);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				} /*
 					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
