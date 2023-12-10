@@ -202,4 +202,21 @@ public class BizQuestionService implements QuestionService {
 		return resultMapper;
 	}
 
+	@Override
+	public QuestionDTO getByQtag(String qTag) {
+		QuestionDTO questionDTO = null;
+		logger.info("getByQtag method called..." + qTag);
+		try {
+			if (clientService.getuserSession().isSessionStatus()) {
+
+				questionDTO = new QuestionDTO(questionInfoRepository.findByQtag(qTag));
+			}
+		} catch (Exception e) {
+			logger.error("while getting error  on  getByQtag>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return questionDTO;
+	}
+
 }

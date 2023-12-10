@@ -16,6 +16,8 @@ public interface ViewService {
 	ViewInfo getViewInfoByid(Long id);
 
 	ViewInfo getViewInfoByCode(String code);
+	
+	ViewDTO getAllQuestionsByViewid(Long id);
 
 	ResultMapper deleteView(Long id);
 

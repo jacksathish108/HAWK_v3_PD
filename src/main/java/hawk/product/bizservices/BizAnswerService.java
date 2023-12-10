@@ -4,17 +4,22 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hawk.configrator.dtos.QuestionDTO;
+import hawk.configrator.dtos.ViewDTO;
 import hawk.configrator.services.QtagGeneratorService;
 import hawk.configrator.services.QuestionService;
+import hawk.configrator.services.ViewService;
 import hawk.dtos.ResultMapper;
 import hawk.entities.FieldUpdateHistoryInfo;
 import hawk.product.dtos.AnswerDTO;
+import hawk.product.dtos.AnswersDTO;
 import hawk.product.entities.AnswerInfo;
 import hawk.product.jparepositorys.AnswerInfoRepository;
 import hawk.product.services.AnswerService;
@@ -30,10 +35,12 @@ public class BizAnswerService implements AnswerService {
 
 	@Autowired
 	UsersService clientService;
-	@Autowired 
-	QuestionService  questionService;
+	@Autowired
+	ViewService viewService;
 	@Autowired
 	AnswerInfoRepository answerInfoRepository;
+	@Autowired
+	QuestionService questionService;
 	@Autowired
 	FieldUpdateHistoryService fieldUpdateHistoryService;
 	@Autowired
@@ -47,13 +54,45 @@ public class BizAnswerService implements AnswerService {
 		try {
 			AnswerDTO answerInfoDTO = new AnswerDTO(answers);
 			resultMapper = clientService.getuserSession();
-			
-			
+
+			ViewDTO viewDTO = viewService.getAllQuestionsByViewid(answerInfoDTO.getViewId());
+			viewDTO.setApplicableQtagList(new ArrayList<>());
+			viewDTO.getApplicableQtagMap().values().forEach(question -> {
+				if (question != null && question.getUnique() != null && question.getUnique() == 1)
+					viewDTO.getApplicableQtagList().add(question.getQTag());
+			});
+
+			StringBuilder sbqTags = new StringBuilder();
+			StringBuilder sbvalues = new StringBuilder();
+
+			answerInfoDTO.getAnswers().forEach(answer -> {
+				if (answer != null && answer.getQTag() != null && viewDTO != null
+						&& viewDTO.getApplicableQtagList().contains(answer.getQTag())) {
+					sbqTags.append(answer.getQTag());
+					sbvalues.append(answer.getAnsValue());
+				}
+			});
+
+			List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(sbqTags.toString(),
+					sbvalues.toString());
+
+			// List<AnswersDTO> ansList = answersDTOList.stream().filter(ans ->
+			// ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())).collect(Collectors.toList());
+
 			if (answerInfoDTO != null && answerInfoDTO.getAnswers() != null && resultMapper.isSessionStatus()) {
 				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 						|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {
 					boolean isExistRecord = (answerInfoRepository.isExist(answerInfoDTO.getId())) == 0 ? false : true;
 					if (!isExistRecord) {
+
+						if (answersDTOList != null && !answersDTOList.isEmpty()) {
+							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
+							QuestionDTO questionDTO = questionService.getByQtag(answersDTOList.get(0).getQTag());
+							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
+									+ ((questionDTO != null) ? questionDTO.getName().toString() : "")+" : "+answersDTOList.get(0).getAnsValue());
+							return resultMapper;
+						}
+
 						answerInfoDTO.setCreateBy(resultMapper.getBy());
 						answerInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
 						answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
@@ -62,6 +101,18 @@ public class BizAnswerService implements AnswerService {
 
 					} else if (isExistRecord) {
 						AnswerInfo exitAnswerInfo = answerInfoRepository.findById(answerInfoDTO.getId()).get();
+
+						List<AnswersDTO> ansList = answersDTOList.stream()
+								.filter(ans -> (!ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())))
+								.collect(Collectors.toList());
+						if (ansList != null && !ansList.isEmpty()) {
+							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
+							QuestionDTO questionDTO = questionService.getByQtag(ansList.get(0).getQTag());
+							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
+									+ ((questionDTO != null) ? questionDTO.getName().toString() : "")+" : "+answersDTOList.get(0).getAnsValue());
+							return resultMapper;
+						}
+
 						List changeHistoryList = exitAnswerInfo.update(answerInfoDTO.AnswerInfoDTO());
 						exitAnswerInfo.setUpdateBy(resultMapper.getBy());
 						exitAnswerInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
@@ -100,13 +151,13 @@ public class BizAnswerService implements AnswerService {
 				 */ {
 					List<AnswerDTO> AnswerInfoList = new ArrayList<>();
 					answerInfoRepository.findAll().forEach(AnswerInfo -> {
-						System.out.println(" ANS 0 :"+AnswerInfo.getAnswers());
-						AnswerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo( o2.getQTag()));
-						System.out.println(" ANS 1 :"+AnswerInfo.getAnswers());
+						System.out.println(" ANS 0 :" + AnswerInfo.getAnswers());
+						AnswerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo(o2.getQTag()));
+						System.out.println(" ANS 1 :" + AnswerInfo.getAnswers());
 						AnswerInfoList.add(new AnswerDTO(AnswerInfo));
-						System.out.println(" ANS 1 :"+AnswerInfo.getAnswers());
+						System.out.println(" ANS 1 :" + AnswerInfo.getAnswers());
 					});
-					
+
 					resultMapper.setResponceList(AnswerInfoList);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				} /*
@@ -160,10 +211,10 @@ public class BizAnswerService implements AnswerService {
 			if (resultMapper.isSessionStatus()) {
 				List<AnswerDTO> AnswerInfoList = new ArrayList<>();
 				answerInfoRepository.findAnswersByViewId(pageId, viewId).forEach(answerInfo -> {
-					System.out.println(" ANS 0 :"+answerInfo.getAnswers());
-					answerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo( o2.getQTag()));
-					System.out.println(" ANS 1 :"+answerInfo.getAnswers());
-					
+					System.out.println(" ANS 0 :" + answerInfo.getAnswers());
+					answerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo(o2.getQTag()));
+					System.out.println(" ANS 1 :" + answerInfo.getAnswers());
+
 					AnswerInfoList.add(new AnswerDTO(answerInfo));
 				});
 				resultMapper.setResponceList(AnswerInfoList);

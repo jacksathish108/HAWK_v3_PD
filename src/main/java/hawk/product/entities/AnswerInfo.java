@@ -11,14 +11,19 @@ import java.util.Objects;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import hawk.product.dtos.AnswersDTO;
 import hawk.utils.HawkResources;
 import jakarta.persistence.Column;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -30,6 +35,23 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "Answer_info")
+@NamedNativeQuery(
+	    name = "getUniqueQuestionAnswers",
+	    query =
+	        "SELECT ans.answerInfo_Id,ans.qTag,ans.ansValue  FROM answerinfo_answers ans WHERE qTag IN(?) AND ansValue IN (?)",
+	    resultSetMapping = "AnswersDTO"
+	)
+	@SqlResultSetMapping(
+	    name = "AnswersDTO",
+	    classes = @ConstructorResult(
+	        targetClass = AnswersDTO.class,
+	        columns = {
+	            @ColumnResult(name = "answerInfo_Id", type = Long.class),
+	            @ColumnResult(name = "qTag", type = String.class),
+	            @ColumnResult(name = "ansValue", type = String.class)
+	        }
+	    )
+	)
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter

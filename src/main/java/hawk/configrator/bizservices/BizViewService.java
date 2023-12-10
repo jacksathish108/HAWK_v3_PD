@@ -153,9 +153,34 @@ public class BizViewService implements ViewService {
 	}
 
 	@Override
-	public ResultMapper getViewByid(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public ViewDTO getAllQuestionsByViewid(Long id) {
+		logger.info("getAllQuestionsByViewid method called...");
+		ViewDTO viewDTO =null;
+		try {
+			
+			resultMapper = clientService.getuserSession();
+			if (resultMapper.isSessionStatus()) {
+				/*
+				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
+				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
+				 */ {
+						viewDTO=new ViewDTO(viewInfoRepository.getById(id));
+				} /*
+					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+					 * resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG); }
+					 */
+			} else {
+				logger.info("qTagList>>Invalid session ....>...." + resultMapper.toString());
+				resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
+				resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return viewDTO;
 	}
 
 	@Override
@@ -225,6 +250,12 @@ public class BizViewService implements ViewService {
 			resultMapper.setMessage(e.getMessage());
 		}
 		return resultMapper;
+	}
+
+	@Override
+	public ResultMapper getViewByid(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
