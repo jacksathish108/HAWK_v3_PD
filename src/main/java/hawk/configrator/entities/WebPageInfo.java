@@ -84,7 +84,7 @@ public class WebPageInfo implements Serializable {
 	//@ElementCollection
 	//	private List<ViewInfo> applicableViews;
 	@ManyToMany (fetch = FetchType.LAZY)
-	@JoinColumn (name = "ViewId", referencedColumnName = "id")
+	@JoinColumn(name = "ViewId", referencedColumnName = "id")
 	@OrderBy(value = "Tab_Order asc ")
 	private List<ViewInfo> applicableViews;
 

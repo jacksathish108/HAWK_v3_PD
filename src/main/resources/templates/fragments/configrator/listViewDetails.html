@@ -1,0 +1,103 @@
+<div class="row" th:fragment="header" id="listViewDetailsFragment">
+	<!-- Modal -->
+	<div id="listViewDetailsDiv">
+		<div class="modal fade" id="listViewDetailsModal" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="row">
+							<h5 class="modal-title" id="exampleModalLabel">General
+								Information</h5>
+						</div>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body overflow-auto">
+						<div class="box clearfix">
+							<form name="listViewDetailsForm" id="listViewDetailsForm">
+								<input id="id" name="id" type="hidden">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="card card-primary">
+											<div class="card-body">
+												<div class="row">
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="referral">ListViewCode</label> <input
+																type="text" name="listViewCode" id="listViewCode"
+																class="form-control textfield" required="required">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="sourceQtag">SourceQtag <label>*</label></label>
+															<select required="required" name="sourceQtag"
+																id="sourceQtag" class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="targetQtag">TargetQtag <label>*</label></label>
+															<select required="required" name="targetQtag"
+																id="targetQtag" class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="inputStatus">Status <label>*</label></label>
+															<select required="required" name="status" id="status"
+																class="form-control custom-select">
+																<option value="" selected disabled>Select one</option>
+																<option class="option" value=1>Active</option>
+																<option class="option" value=2>Idle</option>
+																<option class="option" value=3>Closed</option>
+																<option class="option" value=4>Inprogress</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="description">DependencyCondition</label>
+															<textarea name="dependencyCondition"
+																id="dependencyCondition" class="form-control" rows="2"></textarea>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="description">Description</label>
+															<textarea name="description" id="description"
+																class="form-control" rows="2" required="required"></textarea>
+														</div>
+													</div>
+
+												</div>
+
+											</div>
+											<!-- /.card-body -->
+										</div>
+										<!-- /.card -->
+									</div>
+								</div>
+							</form>
+
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary btn-success"
+							onclick="if(formValidation('listViewDetailsForm')){setListViewDetails();}">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END MODAL -->
+</div>

@@ -2,6 +2,7 @@ package hawk.configrator.bizservices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +13,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import hawk.configrator.dtos.ListViewAnswerDTO;
+import hawk.configrator.dtos.ListViewDTO;
+import hawk.configrator.dtos.QuestionDTO;
 import hawk.configrator.dtos.WebPageInfoDTO;
 import hawk.configrator.entities.WebPageInfo;
 import hawk.configrator.jparepositorys.WebPageInfoRepository;
+import hawk.configrator.services.ListViewService;
 import hawk.configrator.services.ViewService;
 import hawk.configrator.services.WebPageService;
 import hawk.dtos.ResultMapper;
 import hawk.entities.FieldUpdateHistoryInfo;
+import hawk.product.services.AnswerService;
 import hawk.services.FieldUpdateHistoryService;
 import hawk.services.UsersService;
 import hawk.utils.EnMessages;
@@ -33,6 +42,10 @@ public class BizWebPageService implements WebPageService {
 	UsersService clientService;
 	@Autowired
 	ViewService viewService;
+	@Autowired
+	AnswerService answerService;
+	@Autowired
+	ListViewService listViewService;
 	@Autowired
 	WebPageInfoRepository webPageInfoRepository;
 	@Autowired
@@ -232,34 +245,98 @@ public class BizWebPageService implements WebPageService {
 	}
 
 	@Override
-	public ResultMapper getWebPageInfoByCode(String code) {
-		logger.info("getWebPageInfoByCode method called...");
-		try {
-			resultMapper = clientService.getuserSession();
-			if (resultMapper.isSessionStatus()) {
-				/*
-				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
-				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
-				 */ {
-					resultMapper.setResponceObject(webPageInfoRepository.findByCode(code));
-					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
-				} /*
-					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
-					 * resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG); }
-					 */
-			} else {
-				logger.info("attendanceEntry>>Invalid session ....>...." + resultMapper.toString());
-				resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
-				resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
-			}
+	public ResultMapper getWebPageInfoByCode(String code) {logger.info("getWebPageInfoByCode method called...");
+	try {
+	    resultMapper = clientService.getuserSession();
+	    if (resultMapper.isSessionStatus()) {
+	        logger.info("getWebPageInfoByCode method called...");
+	        WebPageInfoDTO webPageInfo = new WebPageInfoDTO(webPageInfoRepository.findByCode(code));
 
-		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
-			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
-			resultMapper.setMessage(e.getMessage());
-		}
-		return resultMapper;
+	        if (webPageInfo != null && !webPageInfo.getApplicableViews().isEmpty()) {
+	            webPageInfo.getApplicableViews().values().forEach(view -> {
+	                List<QuestionDTO> applicableQtagList = view.getApplicableQtagMap().values().stream()
+	                        .filter(question -> question.getElementType()
+	                                .equals(HawkResources.QUESTION_ELEMENTTYPE.select.name()))
+	                        .collect(Collectors.toList());
+
+	                List<ListViewDTO> listViewDTO = listViewService.getListViewBySelectedQtags(
+	                        applicableQtagList.stream().map(QuestionDTO::getQTag).collect(Collectors.toList()));
+
+	                List<String> targetQtagList = listViewDTO.stream().map(ListViewDTO::getTargetQtag)
+	                        .collect(Collectors.toList());
+
+	                List<ListViewAnswerDTO> viewAnswerDTOs = answerService.getAnswersByListViewTargetQtags(
+	                        applicableQtagList.stream().map(QuestionDTO::getQTag).collect(Collectors.toList()));
+
+	                Map<Long, List<ListViewAnswerDTO>> lsMap = viewAnswerDTOs.stream()
+	                        .collect(Collectors.groupingBy(ListViewAnswerDTO::getAnsId, HashMap::new,
+	                                Collectors.toList()));
+
+	                view.getApplicableQtagMap().values().stream()
+	                        .filter(question -> question.getElementType()
+	                                .equals(HawkResources.QUESTION_ELEMENTTYPE.select.name()))
+	                        .filter(question -> viewAnswerDTOs != null && lsMap.values() != null)
+	                        .forEach(question -> {
+	                            question.setOptions(question.getOptions()
+	                                    + "<option value='' selected disabled>Select one</option>");
+
+	                            ListViewDTO lsvDTO = listViewDTO.stream()
+	                                    .filter(listViewAns -> targetQtagList.contains(listViewAns.getTargetQtag()))
+	                                    .findFirst().orElse(null);
+
+	                            if (lsvDTO != null && lsvDTO.getDependencyCondition() != null) {
+	                                Map<String, String> dependencyConditionMap = Arrays.stream(
+	                                        lsvDTO.getDependencyCondition().split(","))
+	                                        .map(String::trim)
+	                                        .map(entry -> entry.split("="))
+	                                        .collect(Collectors.toMap(
+	                                                entry -> entry[1],
+	                                                entry -> entry[0]
+	                                        ));
+
+	                                lsMap.values().forEach(listViewAns -> {
+	                                    Map<String, String> attributes = new HashMap<>();
+	                                    String options = "";
+
+	                                    for (ListViewAnswerDTO s1 : listViewAns) {
+	                                        if (s1.getSourceqTag().equals(lsvDTO.getTargetQtag())
+	                                                && lsvDTO.getSourceQtag().equals(question.getQTag())) {
+	                                            options = s1.getAnsValue();
+	                                        } else if (dependencyConditionMap.containsKey(s1.getSourceqTag())) {
+	                                            attributes.put(dependencyConditionMap.get(s1.getSourceqTag()),
+	                                                    s1.getAnsValue());
+	                                        }
+	                                    }
+
+	                                    try {
+	                                        question.setOptions(question.getOptions() + "<option class='option' listView="
+	                                                + new ObjectMapper().writeValueAsString(attributes)
+	                                                + " value='" + options + "'>" + options + "</option>");
+	                                    } catch (JsonProcessingException e) {
+	                                        e.printStackTrace();
+	                                    }
+	                                });
+	                            }
+	                        });
+	            });
+	        }
+
+	        resultMapper.setResponceObject(webPageInfo);
+	        resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+
+	    } else {
+	        logger.info("attendanceEntry>>Invalid session ....>...." + resultMapper.toString());
+	        resultMapper.setStatusCode(EnMessages.INVALID_SESSION_STATUS);
+	        resultMapper.setMessage(EnMessages.INVALID_SESSION_MSG);
+	    }
+
+	} catch (Exception e) {
+	    logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+	    resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+	    resultMapper.setMessage(e.getMessage());
 	}
+	return resultMapper;
+}
 
 	@Override
 	public ResultMapper getAllWebPageCode() {

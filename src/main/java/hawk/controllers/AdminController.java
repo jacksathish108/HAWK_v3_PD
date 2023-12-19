@@ -125,6 +125,19 @@ public class AdminController {
 		}
 		return modelAndView;
 	}
+	@RequestMapping("/listView")
+	public ModelAndView listView() {
+		logger.info("listView method called....");
+		ModelAndView modelAndView = userSessionCheck();
+		if (modelAndView.getViewName() == null) {
+			modelAndView.setViewName(base_path + "configrator/listViewDetails");
+		}
+		return modelAndView;
+	}	
+	
+	
+	
+	
 	@RequestMapping("/webPage")
 	public ModelAndView WebPage() {
 		logger.info("WebPage method called....");

@@ -69,8 +69,27 @@ function fillmenuItems(response) {
 function loadWebPage(pageCode) {
 
 	doApiAction(10001, null, '/' + pageCode);
+	doApiAction(10002);
 }
 
+function fillListView(response) {
+	if (response && response.responceObject) {
+		progressBar(true);
+		webPageResponseData = response.responceObject;
+		try {
+
+
+
+		}
+		catch (err) {
+			errorTost(err);
+			console.log("ERROR :  " + err);
+		}
+		finally {
+			progressBar(false);
+		}
+	}
+}
 function fillWebPage(response) {
 	if (response && response.responceObject) {
 		progressBar(true);
@@ -133,7 +152,17 @@ function fillWebPage(response) {
 							modalDiv = modalDiv + "<label for='" + val.name + "'>" + val.name + "</label> ";
 							if (val.required == 1)
 								modalDiv = modalDiv + "<label>*</label>";
-							modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "' class='" + val.cssClass + "'";
+							modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
+
+							if (val.onChange)
+								modalDiv = modalDiv + " onchange='" + val.onChange + "(this)'"
+
+							if (val.cssClass) {
+								modalDiv = modalDiv + " class='" + val.cssClass + "(this)'"
+								if (val.cssClass.includes("disabled"))
+									modalDiv = modalDiv + " disabled ";
+							}
+
 							if (val.required == 1)
 								modalDiv = modalDiv + "' required='required' value='" + val.defaultValue + "'>";
 							else
@@ -377,13 +406,10 @@ function fillDataLinkDetails(response) {
 				$(document).ready(function() {
 					setTimeout(function() {
 						loadViewEditModal((dataLinkResponseData.targetViewId + 'DetailsModal'), (dataLinkResponseData.targetViewId + 'DetailsForm'));
-						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target,source) {
+						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target, source) {
 							console.log(target + " ::" + source)
 							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue);
 						});
-
-
-						//	$("#Q_009").val(getObjects(rowObject.answers, 'qtag', 'Q_0017').ansValue);
 					}, 100); // for 0.1 second delay 
 				});
 			}
@@ -398,3 +424,27 @@ function fillDataLinkDetails(response) {
 	}
 }
 
+
+function listViewUpdate(listViewselect) {
+	try {
+		progressBar(true);
+		if (listViewselect) {
+			var gs = $(listViewselect).find('option:selected').attr('listview');
+			$.each(JSON.parse(gs), function(key, ansVal) {
+
+				console.log(key + ":::" + ansVal)
+				$("#" + key).val(ansVal);
+
+			});
+		}
+
+	}
+	catch (err) {
+		errorTost(err);
+		console.log("ERROR :  " + err);
+
+	}
+	finally {
+		progressBar(false);
+	}
+}

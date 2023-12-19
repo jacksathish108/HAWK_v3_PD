@@ -40,9 +40,22 @@ var actionUrl={
 4050:{'requestUrl':'/setDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
 4051:{'requestUrl':'/deleteDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
 
+
+5000:{'requestUrl':'/getAllListView','requestType':'GET','onSuccess':'fillListViewDetails(response)'},
+5001:{'requestUrl':'/getAllSelectQtags','requestType':'GET','onSuccess':'fillQtags(response)'},
+
+
+
+5050:{'requestUrl':'/setListView','requestType':'POST','onSuccess':'getAllListViewDetails(true)'},
+5051:{'requestUrl':'/deleteListView','requestType':'POST','onSuccess':'getAllListViewDetails(true)'},
+
+
+
+
 //////////////////////////
 10000:{'requestUrl':'/getAllMenuItems','requestType':'GET','onSuccess':'fillmenuItems(response)'},
 10001:{'requestUrl':'/getAllWebPage','requestType':'GET','onSuccess':'fillWebPage(response)'},
+10002:{'requestUrl':'/getAllListView','requestType':'GET','onSuccess':'fillListView(response)'},
 
 ////////////////PRODUCT API
 //11000:{'requestUrl':'/getAnswersByViewId','requestType':'GET','onSuccess':'fillAnswerDetails(response)'},

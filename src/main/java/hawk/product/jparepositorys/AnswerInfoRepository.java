@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import hawk.configrator.dtos.ListViewAnswerDTO;
 import hawk.product.dtos.AnswersDTO;
 import hawk.product.entities.AnswerInfo;
 
@@ -41,6 +41,12 @@ public interface AnswerInfoRepository extends JpaRepository<AnswerInfo, Long> {
 //	public List<AnswersDTO> getUniqueQuestionsValues(String qTags, String values);
 
 	@Query(name = "getUniqueQuestionAnswers", nativeQuery = true)
-	List<AnswersDTO> getUniqueQuestionsValues( String qTags, String values);
+	List<AnswersDTO> getUniqueQuestionsValues( List qTags, List ansValues);
 
+	@Query(name = "getAnswersByQtag", nativeQuery = true)
+	List<AnswersDTO> getAnswersByQtag( String qTags);
+	
+	
+	@Query(name = "getAnswersByListViewTargetQtags", nativeQuery = true)
+	List<ListViewAnswerDTO> getAnswersByListViewTargetQtags( List targetQtags);
 }

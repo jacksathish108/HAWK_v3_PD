@@ -2,6 +2,7 @@ package hawk.product.bizservices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import hawk.configrator.dtos.ListViewAnswerDTO;
 import hawk.configrator.dtos.QuestionDTO;
 import hawk.configrator.dtos.ViewDTO;
 import hawk.configrator.services.QtagGeneratorService;
@@ -62,19 +64,18 @@ public class BizAnswerService implements AnswerService {
 					viewDTO.getApplicableQtagList().add(question.getQTag());
 			});
 
-			StringBuilder sbqTags = new StringBuilder();
-			StringBuilder sbvalues = new StringBuilder();
+			List qTags = new ArrayList<>();
+			List ansValues = new ArrayList<>();
 
 			answerInfoDTO.getAnswers().forEach(answer -> {
 				if (answer != null && answer.getQTag() != null && viewDTO != null
 						&& viewDTO.getApplicableQtagList().contains(answer.getQTag())) {
-					sbqTags.append(answer.getQTag());
-					sbvalues.append(answer.getAnsValue());
+					qTags.add(answer.getQTag());
+					ansValues.add(answer.getAnsValue());
 				}
 			});
 
-			List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(sbqTags.toString(),
-					sbvalues.toString());
+			List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(qTags, ansValues);
 
 			// List<AnswersDTO> ansList = answersDTOList.stream().filter(ans ->
 			// ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())).collect(Collectors.toList());
@@ -89,7 +90,8 @@ public class BizAnswerService implements AnswerService {
 							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
 							QuestionDTO questionDTO = questionService.getByQtag(answersDTOList.get(0).getQTag());
 							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
-									+ ((questionDTO != null) ? questionDTO.getName().toString() : "")+" : "+answersDTOList.get(0).getAnsValue());
+									+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
+									+ answersDTOList.get(0).getAnsValue());
 							return resultMapper;
 						}
 
@@ -109,7 +111,8 @@ public class BizAnswerService implements AnswerService {
 							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
 							QuestionDTO questionDTO = questionService.getByQtag(ansList.get(0).getQTag());
 							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
-									+ ((questionDTO != null) ? questionDTO.getName().toString() : "")+" : "+answersDTOList.get(0).getAnsValue());
+									+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
+									+ answersDTOList.get(0).getAnsValue());
 							return resultMapper;
 						}
 
@@ -151,11 +154,8 @@ public class BizAnswerService implements AnswerService {
 				 */ {
 					List<AnswerDTO> AnswerInfoList = new ArrayList<>();
 					answerInfoRepository.findAll().forEach(AnswerInfo -> {
-						System.out.println(" ANS 0 :" + AnswerInfo.getAnswers());
 						AnswerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo(o2.getQTag()));
-						System.out.println(" ANS 1 :" + AnswerInfo.getAnswers());
 						AnswerInfoList.add(new AnswerDTO(AnswerInfo));
-						System.out.println(" ANS 1 :" + AnswerInfo.getAnswers());
 					});
 
 					resultMapper.setResponceList(AnswerInfoList);
@@ -230,6 +230,45 @@ public class BizAnswerService implements AnswerService {
 			resultMapper.setMessage(e.getMessage());
 		}
 		return resultMapper;
+	}
+
+	@Override
+	public ResultMapper getAnswersByQtag(String Qtag) {
+		logger.info("getAnswersByQtag method called...");
+		try {
+			resultMapper = clientService.getuserSession();
+
+			if (resultMapper.isSessionStatus()) {
+				Map<String, String> qTagMap = new HashMap<String, String>();
+				answerInfoRepository.getAnswersByQtag(Qtag).forEach(QuestionInfo -> {
+					qTagMap.put(QuestionInfo.getQTag(), QuestionInfo.getAnsValue());
+				});
+				resultMapper.setResponceObject(qTagMap);
+				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+			} else {
+				resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+				resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
+
+	@Override
+	public List<ListViewAnswerDTO> getAnswersByListViewTargetQtags(List targetQtags) {
+		logger.info("getAnswersByListView method called...");
+		try {
+			return answerInfoRepository.getAnswersByListViewTargetQtags(targetQtags);
+		} catch (Exception e) {
+			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return null;
 	}
 
 }

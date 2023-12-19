@@ -219,4 +219,30 @@ public class BizQuestionService implements QuestionService {
 		return questionDTO;
 	}
 
+	@Override
+	public ResultMapper getQtagsByElementType(String elementType) {
+		logger.info("getAllOptionQtags method called...");
+		try {
+			resultMapper = clientService.getuserSession();
+			
+			if (resultMapper.isSessionStatus()) {
+				Map<String, String> qTagMap = new HashMap<String, String>();
+				questionInfoRepository.findByElementType(elementType).forEach(QuestionInfo -> {
+					qTagMap.put(QuestionInfo.getQTag(), QuestionInfo.getName());
+				});
+				resultMapper.setResponceObject(qTagMap);
+				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+			} else {
+				resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+				resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
+
 }
