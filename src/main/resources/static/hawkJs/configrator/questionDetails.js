@@ -34,9 +34,13 @@ function fillQuestionDetails(response) {
 			columns.push("Status");
 			columns.push("Requied");
 			columns.push("Style");
+			columns.push("CssClass");
+			columns.push("Options");
 			columns.push("OnClick");
 			columns.push("OnChange");
 			columns.push("Attributes");
+			columns.push("JScript");
+			
 
 
 			$("#" + questionReportDiv).empty();
@@ -63,9 +67,12 @@ function fillQuestionDetails(response) {
 				fields.push(row.status);
 				fields.push(row.required);
 				fields.push("<p  style='max-width: 150px;'>" + row.style + "</p>");
+				fields.push("<p  style='max-width: 150px;'>" + row.cssClass + "</p>");
+				fields.push("<p  style='max-width: 150px;'>" + row.options + "</p>");
 				fields.push(row.onClick);
 				fields.push(row.onChange);
 				fields.push(row.attributes);
+				fields.push(row.jscript);
 				$("#" + questionReportTable + " tbody").append(tableRowMaker(fields));
 
 			});
@@ -124,11 +131,12 @@ function loadQuestionEditModal(qtag) {
 		progressBar(false);
 	}
 }
+
 $('#elementType').on('change', function() {
 	if (this.value == "select") {
 		$("#options").prop('disabled', false);
 	} else {
-		$("#options").val("");
+		//$("#options").val("");
 		$("#options").prop('disabled', true);
 	}
 

@@ -12,6 +12,7 @@ import java.util.Objects;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import hawk.utils.HawkResources;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -33,7 +34,7 @@ import lombok.ToString;
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "View_info")
+@Table(name = "view_info")
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
@@ -73,6 +74,7 @@ public class ViewInfo implements Serializable {
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
 	int status;
+	 @CollectionTable(name = "applicableqtagmap")
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "QtagTagId", referencedColumnName = "id")
 	@OrderBy(value = "index asc ")

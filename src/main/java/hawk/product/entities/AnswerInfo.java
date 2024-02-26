@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import hawk.configrator.dtos.ListViewAnswerDTO;
 import hawk.product.dtos.AnswersDTO;
 import hawk.utils.HawkResources;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
@@ -35,24 +36,24 @@ import lombok.Setter;
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "Answer_info")
+@Table(name = "answer_info")
 @NamedNativeQuery(name = "getUniqueQuestionAnswers", query = "SELECT answerInfo_Id, qTag, ansValue\r\n"
-		+ "FROM answerinfo_answers\r\n"
+		+ "FROM answers\r\n"
 		+ "WHERE qTag IN (:qTags) AND ansValue IN (:ansValues)", resultSetMapping = "AnswersDTO")
 @SqlResultSetMapping(name = "AnswersDTO", classes = @ConstructorResult(targetClass = AnswersDTO.class, columns = {
 		@ColumnResult(name = "answerInfo_Id", type = Long.class), @ColumnResult(name = "qTag", type = String.class),
 		@ColumnResult(name = "ansValue", type = String.class) }))
 
 @NamedNativeQuery(name = "getAnswersByQtag", query = "SELECT ans.answerInfo_Id, ans.qTag, ans.ansValue\r\n"
-		+ "FROM answerinfo_answers ans\r\n" + "INNER JOIN answer_info ansinf ON ansinf.id = ans.AnswerInfo_Id\r\n"
+		+ "FROM answers ans\r\n" + "INNER JOIN answer_info ansinf ON ansinf.id = ans.AnswerInfo_Id\r\n"
 		+ "WHERE ansinf.status = 0 AND ans.qTag IN (:qTags);", resultSetMapping = "AnswersDTO")
 @SqlResultSetMapping(name = "AnswersDTO1", classes = @ConstructorResult(targetClass = AnswersDTO.class, columns = {
 		@ColumnResult(name = "answerInfo_Id", type = Long.class), @ColumnResult(name = "qTag", type = String.class),
 		@ColumnResult(name = "ansValue", type = String.class) }))
 
-@NamedNativeQuery(name = "getAnswersByListViewTargetQtags", query = "SELECT ans.answerInfo_Id,ans.qTag,ans.ansValue  FROM answerinfo_answers ans \r\n"
+@NamedNativeQuery(name = "getAnswersByListViewTargetQtags", query = "SELECT ans.answerInfo_Id,ans.qTag,ans.ansValue  FROM answers ans \r\n"
 		+ "INNER JOIN answer_info ansinf ON ansinf.id=ans.AnswerInfo_Id WHERE ansinf.status=0 \r\n"
-		+ "AND answerInfo_Id IN\r\n" + "(\r\n" + "SELECT answerInfo_Id FROM answerinfo_answers WHERE \r\n"
+		+ "AND answerInfo_Id IN\r\n" + "(\r\n" + "SELECT answerInfo_Id FROM answers WHERE \r\n"
 		+ "qTag IN(SELECT Target_Qtag  FROM listview_info  WHERE   Source_Qtag IN(:targetQtags) AND STATUS=1)\r\n"
 		+ ")", resultSetMapping = "ListViewAnswerDTO")
 @SqlResultSetMapping(name = "ListViewAnswerDTO", classes = @ConstructorResult(targetClass = ListViewAnswerDTO.class, columns = {
@@ -92,6 +93,7 @@ public class AnswerInfo implements Serializable {
 	@NotNull(message = "Status is required")
 	int status;
 	@ElementCollection(targetClass = Answer.class)
+	 @CollectionTable(name = "answers")
 	List<Answer> answers;
 
 	public List update(AnswerInfo answerInfo) {

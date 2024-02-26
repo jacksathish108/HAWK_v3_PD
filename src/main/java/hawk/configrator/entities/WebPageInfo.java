@@ -12,6 +12,7 @@ import java.util.Objects;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import hawk.utils.HawkResources;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -34,7 +35,7 @@ import lombok.ToString;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "WebPage_info")
+@Table(name = "webpage_info")
 @Setter
 @Getter
 @ToString
@@ -83,6 +84,7 @@ public class WebPageInfo implements Serializable {
 	// @JoinColumn(name="Id", unique = false,insertable = true,updatable = true )
 	//@ElementCollection
 	//	private List<ViewInfo> applicableViews;
+	 @CollectionTable(name = "applicableviews")
 	@ManyToMany (fetch = FetchType.LAZY)
 	@JoinColumn(name = "ViewId", referencedColumnName = "id")
 	@OrderBy(value = "Tab_Order asc ")

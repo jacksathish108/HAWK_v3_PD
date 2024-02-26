@@ -40,6 +40,7 @@ public class QuestionDTO {
 	String onChange;
 	String attributes;
 	Integer unique;
+	String jscript;
 	public QuestionDTO(QuestionInfo questionInfo) {
 		if (questionInfo != null) {
 			this.id = questionInfo.getId();
@@ -72,6 +73,8 @@ public class QuestionDTO {
 			this.onChange = questionInfo.getOnChange();
 			this.attributes= questionInfo.getAttributes();
 			this.unique=questionInfo.getUnique();
+			this.jscript=questionInfo.getJscript();
+			
 		}
 	}
 
@@ -127,7 +130,8 @@ public class QuestionDTO {
 			questionInfo.setAttributes(attributes);
 		if (Objects.nonNull(unique))
 			questionInfo.setUnique(unique);
-		
+		if (Objects.nonNull(jscript))
+			questionInfo.setJscript(jscript);		
 		
 
 		return questionInfo;

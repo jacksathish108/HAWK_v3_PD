@@ -15,22 +15,22 @@ import hawk.configrator.entities.WebPageInfo;
 @Repository
 public interface ViewInfoRepository extends JpaRepository<ViewInfo, Long> {
 
-	@Query(value = "(SELECT views.* FROM View_info views WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
+	@Query(value = "(SELECT views.* FROM view_info views WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
 	// and
 	public WebPageInfo findByCode(String code);
 
-	@Query(value = "SELECT EXISTS(SELECT views.* FROM View_info views WHERE Id=:id)", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT EXISTS(SELECT views.* FROM view_info views WHERE Id=:id)", nativeQuery = true) // Status=:status
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT views.* FROM View_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+	@Query(value = "SELECT views.* FROM view_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
 	public List<ViewInfo> findAllViews();
 
-	@Query(value = "SELECT views.* FROM View_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT views.* FROM view_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and
 	public List<WebPageInfo> findByStatus(Long status);
 
-	@Query(value = "SELECT views.* FROM View_info views WHERE Id=:id or Page_Code=:code", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT views.* FROM view_info views WHERE Id=:id or Page_Code=:code", nativeQuery = true) // Status=:status
 	// and
 	public WebPageInfo findByIdorPageCode(Long id, String code);
 

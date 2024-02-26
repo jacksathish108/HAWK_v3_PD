@@ -47,11 +47,11 @@ public class UserController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/register")
+	@RequestMapping("register")
 	public ModelAndView register() {
 		logger.info("register method called....");
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("/register");
+		modelAndView.setViewName("register");
 		return modelAndView;
 
 	}

@@ -16,7 +16,6 @@ function getMenuItems() {
 }
 
 
-
 function getAdminDashBoardViewerDetails() {
 
 	doApiAction(1300);
@@ -109,7 +108,7 @@ function fillWebPage(response) {
 					pageViewDiv = pageViewDiv + "<div class='card-header'>";
 					pageViewDiv = pageViewDiv + "<h3 class='card-title'>Report</h3>";
 					pageViewDiv = pageViewDiv + "<div class='card-tools'>";
-					pageViewDiv = pageViewDiv + "<button class='btn btn-success' id='loadModal_" + val.id + "' onclick=loadViewEditModal('" + val.id + "DetailsModal','" + val.id + "DetailsForm')>New</button>";
+					pageViewDiv = pageViewDiv + "<button class='btn btn-success' id='loadModal_" + val.id + "' onclick=calendarRendaring();loadViewEditModal('" + val.id + "DetailsModal','" + val.id + "DetailsForm')>New</button>";
 					pageViewDiv = pageViewDiv + "<button type='button' class='btn btn-tool'";
 					pageViewDiv = pageViewDiv + "data-card-widget='collapse' title='Collapse'>";
 					pageViewDiv = pageViewDiv + "<i class='fas fa-minus'></i>";
@@ -152,13 +151,34 @@ function fillWebPage(response) {
 							modalDiv = modalDiv + "<label for='" + val.name + "'>" + val.name + "</label> ";
 							if (val.required == 1)
 								modalDiv = modalDiv + "<label>*</label>";
-							modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
+
+							if (val.elementType == "calendar") {
+
+								modalDiv = modalDiv + "<div class='input-group date ' id='c_" + val.qtag + "' data-target-input='nearest'>";
+								modalDiv = modalDiv + "<input  type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
+
+							}
+							else {
+								modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
+
+							}
+
+
+
+							if (val.elementType == "calendar") {
+
+								modalDiv = modalDiv + " data-target='#c_" + val.qtag + "'";
+							}
+
+
+
+
 
 							if (val.onChange)
 								modalDiv = modalDiv + " onchange='" + val.onChange + "(this)'"
 
 							if (val.cssClass) {
-								modalDiv = modalDiv + " class='" + val.cssClass + "(this)'"
+								modalDiv = modalDiv + " class='" + val.cssClass
 								if (val.cssClass.includes("disabled"))
 									modalDiv = modalDiv + " disabled ";
 							}
@@ -169,13 +189,41 @@ function fillWebPage(response) {
 								modalDiv = modalDiv + "value='" + val.defaultValue + "'>";
 
 							if (val.elementType == "select") {
-								modalDiv = modalDiv + val.options;
+								$.each(val.options.split(","), function(index, val) {
+										modalDiv = modalDiv + "<option value ='" + val + "'>" + val + "</option> ";
+								});
+
 							}
-							modalDiv = modalDiv + "</" + val.elementType + ">";
+							if (val.elementType == "calendar") {
+								modalDiv = modalDiv + "</input>";
 
+
+								//	modalDiv = modalDiv + "<script>$(document).ready(function() {calendarRendaring(); $('#"+ val.qtag+"').datetimepicker({format : 'YYYY-MM-DD'});});</script>";
+
+
+
+							} else {
+								modalDiv = modalDiv + "</" + val.elementType + ">";
+							}
+
+
+							if (val.elementType == "calendar") {
+
+								modalDiv = modalDiv + "<div class='input-group-append' data-target='#c_" + val.qtag + "' data-toggle='datetimepicker'>";
+								modalDiv = modalDiv + "<div class='input-group-text'>";
+								modalDiv = modalDiv + "<i class='fa fa-calendar'></i>";
+								modalDiv = modalDiv + "</div>";
+								modalDiv = modalDiv + "</div>";
+								modalDiv = modalDiv + "</div>";
+
+								//	modalDiv = modalDiv + "<script>$('#' + val.qtag).datetimepicker({format: 'YYYY-MM-DD'});</script>";
+
+							}
 
 							modalDiv = modalDiv + "</div>";
 							modalDiv = modalDiv + "</div>";
+							modalDiv = modalDiv + "<script> " + val.jscript + " </script>";
+
 						}
 						//if (val.elementType != "button") {
 
@@ -209,7 +257,6 @@ function fillWebPage(response) {
 				});
 			}
 			UserDashboardRendar(singleObject.pageCode, pageViewDiv)
-
 			setFocus('name');
 		}
 		catch (err) {
@@ -218,6 +265,7 @@ function fillWebPage(response) {
 		}
 		finally {
 			progressBar(false);
+
 
 		}
 		progressBar(false);

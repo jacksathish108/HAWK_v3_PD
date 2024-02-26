@@ -3,7 +3,7 @@
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
-<title id="title">Hawk | Dashboard123</title>
+<title id="title">Hawk-Admin | Dashboard</title>
 </head>
 <style type="text/css">
 .center {
@@ -35,9 +35,6 @@
 		href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 	<link rel="stylesheet" href="/plugins/jsgrid/jsgrid.min.css">
 	<link rel="stylesheet" href="/plugins/jsgrid/jsgrid-theme.min.css">
-	<link rel="stylesheet"
-		href="/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-
 	<!-- Select2 -->
 	<link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
 	<link rel="stylesheet"
@@ -202,9 +199,7 @@
 			</a>
 
 			<!-- Sidebar -->
-			<div id="menuItemsDiv">
-			</div>
-
+			<div id="menuItemsDiv"></div>
 			<!-- /.sidebar -->
 		</aside>
 
@@ -328,9 +323,8 @@
 	<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 	<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 	<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+	<script src="/plugins/multiselect/jquery.multiselect.js"></script>
 	<script src="/plugins/select2/js/select2.full.min.js"></script>
-	<script
-		src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 	<script src="/dist/js/calendar_main.js"></script>
 	<script src="/dist/js/day_calendar_main.js"></script>
 	<script src="/hawkJs/tost.js"></script>
@@ -340,6 +334,7 @@
 
 
 	<script>
+	function calendarRendaring() {
 		$(function() {
 			//Initialize Select2 Elements
 			$('.select2').select2()
@@ -365,7 +360,7 @@
 			 format: 'L'
 			 }); */
 
-			$('#reservationdate').datetimepicker({
+			$('.date').datetimepicker({
 				// dateFormat: 'dd-mm-yy',
 				format : 'YYYY-MM-DD'
 			});
@@ -440,10 +435,7 @@
 			})
 
 		})
-
-		// Setup the buttons for all transfers
-		// The "add files" button doesn't need to be setup because the config
-		// `clickable` has already been specified.
+	}
 	</script>
 </body>
 </html>

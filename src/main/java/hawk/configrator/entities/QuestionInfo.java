@@ -20,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,7 +30,7 @@ import lombok.ToString;
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "Question_info")
+@Table(name = "question_info")
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
@@ -97,6 +98,10 @@ public class QuestionInfo implements Serializable {
 	String options;
 	@Column(name = "Unique_Ans")
 	Integer unique;
+	@Size(min = 0, max = 65555)
+	@Column(name = "Jscript",columnDefinition="LONGTEXT")
+	String jscript;
+	
 	
 	public List update(QuestionInfo questionInfo) {
 		List<Object> changeHistoryList = new ArrayList<>();
@@ -193,6 +198,10 @@ public class QuestionInfo implements Serializable {
 		if (!Objects.equals(this.unique, questionInfo.getUnique())) {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("unique", unique, questionInfo.getUnique()));
 			this.unique = questionInfo.getUnique();
+		}
+		if (!Objects.equals(this.jscript, questionInfo.getJscript())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("jscript", jscript, questionInfo.getJscript()));
+			this.jscript = questionInfo.getJscript();
 		}
 
 		return changeHistoryList;

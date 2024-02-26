@@ -29,7 +29,7 @@ import lombok.ToString;
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "DataLink_info")
+@Table(name = "datalink_info")
 @EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter

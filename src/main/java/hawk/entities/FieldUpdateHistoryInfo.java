@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -54,6 +55,7 @@ public class FieldUpdateHistoryInfo {
 	Long recordId;
 
 	@ElementCollection
+	 @CollectionTable(name = "modifiedvalues")
 	List<String> modifiedValues;
 	public FieldUpdateHistoryInfo(long recordId,Timestamp createDate, String createBy,
 			@NotNull(message = "Module Name is required") String moduleName,

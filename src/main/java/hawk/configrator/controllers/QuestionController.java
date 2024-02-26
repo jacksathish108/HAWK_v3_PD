@@ -44,5 +44,22 @@ public ResultMapper deleteQuestionInfo(Long id, Model model) {
 	logger.info("setQuestionInfo method called..."+id);
 	return QuestionService.deleteQuestion(id);
 }
-
+//@PostMapping("/excel/upload")
+//public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file)
+//{
+//  String message = "";
+//  //if (ExcelUtility.hasExcelFormat(file)) 
+//  {
+//    try {
+//       // stuService.save(file);
+//      message = "The Excel file is uploaded: " + file.getOriginalFilename();
+//      return ResponseEntity.status(HttpStatus.OK).body(message);
+//    } catch (Exception exp) {
+//      message = "The Excel file is not upload: " + file.getOriginalFilename() + "!";
+//      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+//    }
+//  }
+// // message = "Please upload an excel file!";
+//  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+//}
 }

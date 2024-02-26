@@ -34,7 +34,7 @@ import lombok.ToString;
  * The Class Hawk_Login.
  */
 @Entity
-@Table(name = "ListView_info")
+@Table(name = "listview_info")
 @NamedNativeQuery(
     name = "findBySelectedQtags",
     query = "SELECT ListView_Code,Source_Qtag,Target_Qtag,Dependency_Condition FROM listview_info WHERE Source_Qtag IN (:targetQtags) AND STATUS = 1",
