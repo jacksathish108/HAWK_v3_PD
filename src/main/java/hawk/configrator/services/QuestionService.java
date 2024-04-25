@@ -1,11 +1,14 @@
 package hawk.configrator.services;
 
+import java.util.List;
+
 import hawk.configrator.dtos.QuestionDTO;
 import hawk.configrator.entities.QuestionInfo;
 import hawk.dtos.ResultMapper;
 
 public interface QuestionService {
 	ResultMapper setQuestion(QuestionDTO questionDTO);
+	ResultMapper setQuestion(List<QuestionDTO> questionDTO);
 	ResultMapper getQuestion();
 	//ResultMapper getQuestionByid(Long id);
 	QuestionInfo getQuestionByid(Long id);

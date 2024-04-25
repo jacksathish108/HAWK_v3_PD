@@ -42,7 +42,7 @@ public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> 
 	public WebPageInfo findByIdorPageCode(Long id, String code);
 
 	@Query(value = "SELECT WebPages.Page_Code,vinfo.Id FROM webpage_info WebPages "
-			+ "INNER JOIN webpage_info_applicableviews apView " + " ON apView.WebPageInfo_Id=WebPages.id "
+			+ "INNER JOIN applicableviews apView " + " ON apView.WebPageInfo_Id=WebPages.id "
 			+ "  INNER JOIN view_info  vinfo " + " ON vinfo.id=apView.applicableViews_Id "
 			+ " WHERE WebPages.STATUS=1", nativeQuery = true) // Status=:status
 	// and

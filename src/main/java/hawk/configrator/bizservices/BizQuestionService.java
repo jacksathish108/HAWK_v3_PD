@@ -84,7 +84,41 @@ public class BizQuestionService implements QuestionService {
 		}
 		return resultMapper;
 	}
+	@Override
+	public ResultMapper setQuestion(List<QuestionDTO> questionInfoDTOList) {
+		logger.info("setQuestion method called..." + questionInfoDTOList);
+		try {
+			resultMapper = clientService.getuserSession();
+			if (questionInfoDTOList != null && resultMapper.isSessionStatus()) {
+				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
+						|| HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
+					
+					{
+						questionInfoDTOList.forEach(questionInfoDTO->
+						{
+							questionInfoDTO.setCreateBy(resultMapper.getBy());
+							questionInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
+							questionInfoDTO.setQTag(qtagGeneratorService.genarateQtag("Q_"));
+							questionInfoRepository.saveAndFlush(questionInfoDTO.QuestionInfoDTO());
+							resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+							resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
+							
+						});
+					}
 
+				} else {
+					resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+					resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+				}
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  setQuestion>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
 	@Override
 	public ResultMapper getQuestion() {
 		logger.info("getQuestion method called...");

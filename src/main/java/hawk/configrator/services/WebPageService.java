@@ -14,5 +14,6 @@ public interface WebPageService {
 	ResultMapper getWebPageInfoByCode(String code);
 	ResultMapper deleteWebPage(Long id);
 	ResultMapper getAllWebPageCode();
+	WebPageInfoDTO getWebPageInfoByCode_1(String code);
 	
 }

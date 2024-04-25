@@ -5,6 +5,7 @@ import java.util.Map;
 
 import hawk.configrator.dtos.ListViewAnswerDTO;
 import hawk.dtos.ResultMapper;
+import hawk.product.dtos.AnswerDTO;
 
 public interface AnswerService {
 	ResultMapper setAnswer(Map answerMap);
@@ -14,5 +15,6 @@ public interface AnswerService {
 	ResultMapper deleteAnswer(Long id);
 	ResultMapper getAnswersByQtag(String Qtag);
 	List<ListViewAnswerDTO> getAnswersByListViewTargetQtags(List targetQtags);
+	List<AnswerDTO> getAnswerListsByViewId(Long pageId,Long viewId);
 	
 }

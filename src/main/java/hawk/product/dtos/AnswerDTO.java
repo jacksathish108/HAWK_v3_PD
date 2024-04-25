@@ -32,6 +32,7 @@ public class AnswerDTO {
 	Long pageId;;
 	List<Answer> answers;
 	int status;
+	String discription;
 
 	public AnswerDTO(AnswerInfo answerInfo) {
 		if (answerInfo != null) {
@@ -47,6 +48,8 @@ public class AnswerDTO {
 			else
 				this.updateBy = answerInfo.getUpdateBy();
 
+			
+			this.discription = answerInfo.getDiscription();
 			this.status = answerInfo.getStatus();
 			this.pageId = answerInfo.getPageId();
 			this.viewId = answerInfo.getViewId();
@@ -66,6 +69,7 @@ public class AnswerDTO {
 				Long viewId = null;
 				Long ansId = null;
 				Long pageId = null;
+				String discription="";
 				if (CommonUtil.isStringNumeric((String) answers.get("viewId")))
 					viewId = Long.valueOf((String) answers.get("viewId"));
 
@@ -80,6 +84,7 @@ public class AnswerDTO {
 				this.pageId = pageId;
 				this.viewId = viewId;
 				this.id = ansId;
+				this.discription=discription;
 				map.forEach((key, value) -> {
 					{
 						if(key.contains("Q"))
@@ -112,6 +117,8 @@ public class AnswerDTO {
 			answerInfo.setUpdateBy(updateBy);
 		if (Objects.nonNull(status))
 			answerInfo.setStatus(status);
+		if (Objects.nonNull(discription))
+			answerInfo.setDiscription(discription);
 		if (Objects.nonNull(pageId))
 			answerInfo.setPageId(pageId);
 		if (Objects.nonNull(viewId))

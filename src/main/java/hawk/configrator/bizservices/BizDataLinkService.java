@@ -248,5 +248,21 @@ public class BizDataLinkService implements DataLinkService {
 		}
 		return resultMapper;
 	}
+	@Override
+	public List<DataLinkDTO> getDataLinkByTargetViewId(Long targetViewId) {
+		logger.info("getDataLinkByTargetViewId method called..." + targetViewId);
+		try {
+						List<DataLinkDTO> dataLinkInfoList = new ArrayList<>();
+						dataLinkInfoRepository.findByTargetViewId(targetViewId).forEach(dataLinkInfo -> {
+							dataLinkInfoList.add(new DataLinkDTO(dataLinkInfo));
+						});
+						return dataLinkInfoList;
 
+		} catch (Exception e) {
+			logger.error("while getting error  on  getDataLinkByLinkCode>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return null;
+	}
 }

@@ -25,4 +25,6 @@ public interface DataLinkService {
 
 	ResultMapper getDataLinkByLinkCode(String linkCode);
 
+	List<DataLinkDTO> getDataLinkByTargetViewId(Long targetViewId);
+
 }

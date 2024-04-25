@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 import hawk.configrator.dtos.ListViewAnswerDTO;
 import hawk.configrator.dtos.QuestionDTO;
 import hawk.configrator.dtos.ViewDTO;
+import hawk.configrator.services.DataLinkService;
 import hawk.configrator.services.QtagGeneratorService;
 import hawk.configrator.services.QuestionService;
 import hawk.configrator.services.ViewService;
+import hawk.configrator.services.WebPageService;
 import hawk.dtos.ResultMapper;
 import hawk.entities.FieldUpdateHistoryInfo;
 import hawk.product.dtos.AnswerDTO;
@@ -43,6 +46,10 @@ public class BizAnswerService implements AnswerService {
 	AnswerInfoRepository answerInfoRepository;
 	@Autowired
 	QuestionService questionService;
+	@Autowired
+	DataLinkService dataLinkService;
+	@Autowired
+	WebPageService webPageService;
 	@Autowired
 	FieldUpdateHistoryService fieldUpdateHistoryService;
 	@Autowired
@@ -76,10 +83,6 @@ public class BizAnswerService implements AnswerService {
 			});
 
 			List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(qTags, ansValues);
-
-			// List<AnswersDTO> ansList = answersDTOList.stream().filter(ans ->
-			// ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())).collect(Collectors.toList());
-
 			if (answerInfoDTO != null && answerInfoDTO.getAnswers() != null && resultMapper.isSessionStatus()) {
 				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 						|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {
@@ -97,7 +100,7 @@ public class BizAnswerService implements AnswerService {
 
 						answerInfoDTO.setCreateBy(resultMapper.getBy());
 						answerInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
-						answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
+						//answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
 
@@ -119,7 +122,7 @@ public class BizAnswerService implements AnswerService {
 						List changeHistoryList = exitAnswerInfo.update(answerInfoDTO.AnswerInfoDTO());
 						exitAnswerInfo.setUpdateBy(resultMapper.getBy());
 						exitAnswerInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-						answerInfoRepository.saveAndFlush(exitAnswerInfo);
+					//	answerInfoRepository.saveAndFlush(exitAnswerInfo);
 						if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
 							fieldUpdateHistoryService
 									.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitAnswerInfo.getId(),
@@ -133,6 +136,7 @@ public class BizAnswerService implements AnswerService {
 					resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
 				}
 			}
+			updateDataLinkAnswers(viewDTO.getId());
 
 		} catch (Exception e) {
 			logger.error("while getting error  on  setAnswer>>>> " + e.getMessage());
@@ -211,10 +215,7 @@ public class BizAnswerService implements AnswerService {
 			if (resultMapper.isSessionStatus()) {
 				List<AnswerDTO> AnswerInfoList = new ArrayList<>();
 				answerInfoRepository.findAnswersByViewId(pageId, viewId).forEach(answerInfo -> {
-					System.out.println(" ANS 0 :" + answerInfo.getAnswers());
 					answerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo(o2.getQTag()));
-					System.out.println(" ANS 1 :" + answerInfo.getAnswers());
-
 					AnswerInfoList.add(new AnswerDTO(answerInfo));
 				});
 				resultMapper.setResponceList(AnswerInfoList);
@@ -230,6 +231,28 @@ public class BizAnswerService implements AnswerService {
 			resultMapper.setMessage(e.getMessage());
 		}
 		return resultMapper;
+	}
+
+	@Override
+	public List<AnswerDTO> getAnswerListsByViewId(Long pageId, Long viewId) {
+		logger.info("getAnswersByViewId method called...pageId: " + pageId + " :viewId: " + viewId);
+		try {
+			resultMapper = clientService.getuserSession();
+			if (resultMapper.isSessionStatus()) {
+				List<AnswerDTO> AnswerInfoList = new ArrayList<>();
+				answerInfoRepository.findAnswersByViewId(pageId, viewId).forEach(answerInfo -> {
+					answerInfo.getAnswers().sort((o1, o2) -> o1.getQTag().compareTo(o2.getQTag()));
+					AnswerInfoList.add(new AnswerDTO(answerInfo));
+				});
+				return AnswerInfoList;
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getAnswersByViewId>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return null;
 	}
 
 	@Override
@@ -271,4 +294,28 @@ public class BizAnswerService implements AnswerService {
 		return null;
 	}
 
+	public void updateDataLinkAnswers(Long viewId) {
+		try {
+			resultMapper = clientService.getuserSession();
+			dataLinkService.getDataLinkByTargetViewId(viewId).forEach(dataLinkDTO -> {
+
+				List<AnswerDTO> answerDTOList = getAnswerListsByViewId(
+						webPageService.getWebPageInfoByCode_1(dataLinkDTO.getSourceWebPageCode()).getId(),
+						Long.valueOf(dataLinkDTO.getSourceViewId()));
+				
+				answerDTOList.forEach(answerDTO -> {
+					JSONObject jsonObj = new JSONObject(dataLinkDTO.getQtagMap());
+					answerDTO.setStatus(jsonObj.getInt("statusCode"));
+					answerDTO.setUpdateBy(resultMapper.getBy());
+					answerDTO.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+					answerDTO.setDiscription(jsonObj.getString("description"));
+					answerInfoRepository.saveAndFlush(answerDTO.AnswerInfoDTO());
+				});
+			});
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  processDataLinkAnswers>>>> " + e.getMessage());
+		}
+
+	}
 }

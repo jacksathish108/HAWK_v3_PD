@@ -68,7 +68,6 @@ public class QuestionInfo implements Serializable {
 	@NotNull(message = "Data_Type is required")
 	String dataType;
 	@Column(name = "Default_Value")
-	@NotNull(message = "Default is required")
 	String defaultValue;
 	@Column(name = "Name")
 	@NotNull(message = "Name is required")
@@ -80,7 +79,6 @@ public class QuestionInfo implements Serializable {
 	@NotNull(message = "Status is required")
 	int status;
 	@Column(name = "Answer_Type")
-	@NotNull(message = "Answer_Type is required")
 	String answerType;
 	@Column(name = "Required")
 	int required;

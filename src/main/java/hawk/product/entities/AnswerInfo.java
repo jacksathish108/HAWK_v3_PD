@@ -89,6 +89,10 @@ public class AnswerInfo implements Serializable {
 	@Column(name = "Page_Id")
 	@NotNull(message = "Page_Id is required")
 	Long pageId;
+	@Column(name = "Discription")
+	String discription;
+	
+	
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
 	int status;
@@ -119,6 +123,18 @@ public class AnswerInfo implements Serializable {
 		if (!Objects.equals(this.createBy, answerInfo.getCreateBy())) {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("createBy", createBy, answerInfo.getCreateBy()));
 			this.createBy = answerInfo.getCreateBy();
+		}
+		
+		
+		if (!Objects.equals(this.status, answerInfo.getStatus())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("Status", status, answerInfo.getStatus()));
+			this.status = answerInfo.getStatus();
+		}
+		
+		
+		if (!Objects.equals(this.discription, answerInfo.getDiscription())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("discription", discription, answerInfo.getDiscription()));
+			this.discription = answerInfo.getDiscription();
 		}
 
 		if (!Objects.equals(this.viewId, answerInfo.getViewId())) {

@@ -38,5 +38,8 @@ public interface DataLinkInfoRepository extends JpaRepository<DataLinkInfo, Long
 	// and
 	public DataLinkInfo findByDataLinkCode( String code);
 
+	@Query(value = "SELECT datalinks.* FROM datalink_info datalinks WHERE TargetViewId=:targetViewId and  Status=1", nativeQuery = true) // Status=:status
+	// and
+	public List<DataLinkInfo> findByTargetViewId( Long targetViewId);
 
 }

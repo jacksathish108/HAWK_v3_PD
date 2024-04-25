@@ -49,4 +49,8 @@ public interface AnswerInfoRepository extends JpaRepository<AnswerInfo, Long> {
 	
 	@Query(name = "getAnswersByListViewTargetQtags", nativeQuery = true)
 	List<ListViewAnswerDTO> getAnswersByListViewTargetQtags( List targetQtags);
+	
+	
+	
+	
 }

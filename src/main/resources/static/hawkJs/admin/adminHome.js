@@ -144,7 +144,15 @@ function fillWebPage(response) {
 					modalDiv = modalDiv + "<div class='row'>";
 
 					var columsHeaderList = {};
-					$.each(val.applicableQtagMap, function(key, val) {
+					
+					
+const applicableQ=(val.applicableQtagMap)
+let sortedArray = Object.entries(applicableQ).sort(([,a], [,b]) => a.index - b.index);
+let sortedObject = {};
+for (let [key, value] of sortedArray) {
+  sortedObject[key] = value;
+}
+					$.each(sortedObject, function(key, val) {
 						if (val.elementType != "button") {
 							modalDiv = modalDiv + "<div class='col-md-6'>";
 							modalDiv = modalDiv + "<div class='form-group'>";
@@ -189,6 +197,7 @@ function fillWebPage(response) {
 								modalDiv = modalDiv + "value='" + val.defaultValue + "'>";
 
 							if (val.elementType == "select") {
+							modalDiv = modalDiv + "<option disabled selected value> -- select an option -- </option>";
 								$.each(val.options.split(","), function(index, val) {
 										modalDiv = modalDiv + "<option value ='" + val + "'>" + val + "</option> ";
 								});
@@ -198,7 +207,7 @@ function fillWebPage(response) {
 								modalDiv = modalDiv + "</input>";
 
 
-								//	modalDiv = modalDiv + "<script>$(document).ready(function() {calendarRendaring(); $('#"+ val.qtag+"').datetimepicker({format : 'YYYY-MM-DD'});});</script>";
+									modalDiv = modalDiv + "<script>$(document).ready(function() {calendarRendaring(); $('#"+ val.qtag+"').datetimepicker({format : 'YYYY-MM-DD'});});</script>";
 
 
 
@@ -231,6 +240,7 @@ function fillWebPage(response) {
 						//}
 
 					});
+					//console.log(modalDiv);
 					reportTableHeaders[val.id] = columsHeaderList;
 					modalDiv = modalDiv + "</div>";
 					modalDiv = modalDiv + "</div>";
@@ -307,6 +317,9 @@ function fillAnswerDetails(response) {
 			var viewQtagList = [];
 			var buttonQtagList = [];
 			columns.push("Actions");
+			columns.push("Last Change");
+			columns.push("ChangeBy");
+			columns.push("Status");
 			$("#" + answerResponseData[0].viewId + "ReportDiv").empty();
 			$("#" + answerResponseData[0].viewId + "ReportDiv").append(tableCreator(answerResponseData[0].viewId + "ReportTable"));
 			$.each(reportTableHeaders[answerResponseData[0].viewId], function(qtag, val) {
@@ -337,7 +350,22 @@ function fillAnswerDetails(response) {
 				});
 				actions = actions + " </div>";
 
-				fields.push(actions);
+if(row.status==3)
+{
+fields.push(row.discription);
+}
+else
+{
+fields.push(actions);
+}
+				
+				fields.push(sqlTDateToDateDDMMYYHHMMSS(row.updateDate));
+				fields.push(row.updateBy);
+				fields.push(row.status);
+				
+				
+				
+				
 
 				$.each(viewQtagList, function(index, val) {
 					var Object = getObjects(row.answers, "qtag", val);
@@ -454,11 +482,11 @@ function fillDataLinkDetails(response) {
 				$(document).ready(function() {
 					setTimeout(function() {
 						loadViewEditModal((dataLinkResponseData.targetViewId + 'DetailsModal'), (dataLinkResponseData.targetViewId + 'DetailsForm'));
-						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target, source) {
+						$.each(JSON.parse(dataLinkResponseData.qtagMap).qtag, function(target, source) {
 							console.log(target + " ::" + source)
 							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue);
 						});
-					}, 100); // for 0.1 second delay 
+					}, 500); // for 0.5 second delay 
 				});
 			}
 		}

@@ -243,7 +243,24 @@ public class BizWebPageService implements WebPageService {
 		}
 		return null;
 	}
-
+	@Override
+	public WebPageInfoDTO getWebPageInfoByCode_1(String code) {
+		logger.info("getWebPageInfoByCode method called...");
+	try {
+	    resultMapper = clientService.getuserSession();
+	    if (resultMapper.isSessionStatus()) {
+	        logger.info("getWebPageInfoByCode method called...");
+	        return new WebPageInfoDTO(webPageInfoRepository.findByCode(code));
+	    }
+	}catch (Exception e) {
+		e.printStackTrace();
+	}
+	return null;
+	}
+	    
+	    
+	    
+	    
 	@Override
 	public ResultMapper getWebPageInfoByCode(String code) {logger.info("getWebPageInfoByCode method called...");
 	try {
@@ -277,8 +294,7 @@ public class BizWebPageService implements WebPageService {
 	                                .equals(HawkResources.QUESTION_ELEMENTTYPE.select.name()))
 	                        .filter(question -> viewAnswerDTOs != null && lsMap.values() != null)
 	                        .forEach(question -> {
-	                            question.setOptions(question.getOptions()
-	                                    + "<option value='' selected disabled>Select one</option>");
+	                            question.setOptions(question.getOptions());
 
 	                            ListViewDTO lsvDTO = listViewDTO.stream()
 	                                    .filter(listViewAns -> targetQtagList.contains(listViewAns.getTargetQtag()))

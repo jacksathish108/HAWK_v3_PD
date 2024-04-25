@@ -27,6 +27,7 @@ var actionUrl={
 2001:{'requestUrl':'/getAllQtag','requestType':'GET','onSuccess':'fillQtagDetails(response)'},
 2050:{'requestUrl':'/setQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 2051:{'requestUrl':'/deleteQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
+2052:{'requestUrl':'/uploadQuestion','requestType':'POST','onSuccess':'getAllQuestionDetails(true)'},
 
 3000:{'requestUrl':'/getAllView','requestType':'GET','onSuccess':'fillViewDetails(response)'},
 3050:{'requestUrl':'/setView','requestType':'POST','onSuccess':'getAllViewDetails(true)'},

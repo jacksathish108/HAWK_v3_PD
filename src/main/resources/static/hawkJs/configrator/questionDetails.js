@@ -141,4 +141,10 @@ $('#elementType').on('change', function() {
 	}
 
 });
-
+ 
+ function upd()
+ {
+	var formElement = document.forms.namedItem('upd1');
+	var oData = new FormData(formElement);
+	doApiAction(2052, oData);
+ }
