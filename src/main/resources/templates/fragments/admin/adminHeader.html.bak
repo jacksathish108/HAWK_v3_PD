@@ -3,7 +3,7 @@
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
-<title id="title">Hawk PD| Dashboard</title>
+<title id="title">Hawk-Admin | Dashboard</title>
 </head>
 <style type="text/css">
 .center {
@@ -199,78 +199,7 @@
 			</a>
 
 			<!-- Sidebar -->
-			<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/question')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>Questions</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
-			<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/view')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>Views</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
-			<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/dataLink')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>DataLink</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
-						<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/dataMaping')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>DataMaping</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
-			<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/listView')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>ListView</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
-			<div class="sidebar">
-				<nav class="mt-2">
-					<ul class="nav nav-pills nav-sidebar flex-column"
-						data-widget="treeview" role="menu" data-accordion="false">
-						<!-- webPagees -->
-						<li class="nav-item"><a onclick="redirectTo('/webPage')"
-							class="nav-link"> <i class="far fa-circle nav-icon"></i>
-								<p>WebPages</p>
-						</a></li>
-					</ul>
-				</nav>
-			</div>
+			<div id="menuItemsDiv"></div>
 			<!-- /.sidebar -->
 		</aside>
 
@@ -431,7 +360,7 @@
 			 format: 'L'
 			 }); */
 
-			$('.date').datetimepicker({
+			$('#reservationdate').datetimepicker({
 				// dateFormat: 'dd-mm-yy',
 				format : 'YYYY-MM-DD'
 			});
@@ -507,7 +436,6 @@
 
 		})
 	}
-	calendarRendaring();
 	</script>
 </body>
 </html>

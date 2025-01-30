@@ -125,6 +125,18 @@ public class AdminController {
 		}
 		return modelAndView;
 	}
+	
+	@RequestMapping("/dataMaping")
+	public ModelAndView DataMaping() {
+		logger.info("dataMaping method called....");
+		ModelAndView modelAndView = userSessionCheck();
+		if (modelAndView.getViewName() == null) {
+			modelAndView.setViewName(base_path + "configrator/dataMapingDetails");
+		}
+		return modelAndView;
+	}
+	
+	
 	@RequestMapping("/listView")
 	public ModelAndView listView() {
 		logger.info("listView method called....");
