@@ -650,7 +650,7 @@ dataSet.push(columns);
 		  function get_client_details()
 		  {
 		  var request = new XMLHttpRequest();
-		  	request.open("get", "/Hawk/Hawk_api_01/get_client_details/",true);
+		  	request.open("get", "/sudo/Hawk_api_01/get_client_details/",true);
 		 	  request.onload = function () {
 		 	  sessionCheck(this.response);
 		 // alert(" data   :: "+this.response);

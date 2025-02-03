@@ -482,7 +482,7 @@ function fillDataLinkDetails(response) {
 				$(document).ready(function() {
 					setTimeout(function() {
 						loadViewEditModal((dataLinkResponseData.targetViewId + 'DetailsModal'), (dataLinkResponseData.targetViewId + 'DetailsForm'));
-						$.each(JSON.parse(dataLinkResponseData.qtagMap).qtag, function(target, source) {
+						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target, source) {
 							console.log(target + " ::" + source)
 							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue);
 						});

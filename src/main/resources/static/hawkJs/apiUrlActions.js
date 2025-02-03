@@ -35,6 +35,10 @@ var actionUrl={
 
 
 4000:{'requestUrl':'/getAllDataLink','requestType':'GET','onSuccess':'fillDataLinkDetails(response)'},
+
+6000:{'requestUrl':'/getAllDataMaping','requestType':'GET','onSuccess':'fillDataMapingDetails(response)'},
+
+
 4001:{'requestUrl':'/getAllWebPageCode','requestType':'GET','onSuccess':'fillWebPageCode(response)'},
 4002:{'requestUrl':'/getAllViewCode','requestType':'GET','onSuccess':'fillViewCode(response)'},
 
