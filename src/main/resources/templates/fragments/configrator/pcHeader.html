@@ -3,7 +3,7 @@
 	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
-<title id="title">Hawk PD| Dashboard</title>
+<title id="title">sudo PD| Dashboard</title>
 </head>
 <style type="text/css">
 .center {
@@ -49,7 +49,7 @@
 		<!-- Preloader -->
 		<div
 			class="preloader flex-column justify-content-center align-items-center">
-			<img class="animation__wobble" src="/dist/img/hawk.png"
+			<img class="animation__wobble" src="/dist/img/sudo.png"
 				alt="AdminLTELogo" height="60" width="60">
 		</div>
 
@@ -98,7 +98,7 @@
 					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 						<a href="#" class="dropdown-item"> <!-- Message Start -->
 							<div class="media">
-								<img src="/dist/img/hawk.png" alt="User Avatar"
+								<img src="/dist/img/sudo.png" alt="User Avatar"
 									class="img-size-50 mr-3 img-circle">
 								<div class="media-body">
 									<h3 class="dropdown-item-title">
@@ -115,7 +115,7 @@
 						<div class="dropdown-divider"></div>
 						<a href="#" class="dropdown-item"> <!-- Message Start -->
 							<div class="media">
-								<img src="/dist/img/hawk.png" alt="User Avatar"
+								<img src="/dist/img/sudo.png" alt="User Avatar"
 									class="img-size-50 img-circle mr-3">
 								<div class="media-body">
 									<h3 class="dropdown-item-title">
@@ -132,7 +132,7 @@
 						<div class="dropdown-divider"></div>
 						<a href="#" class="dropdown-item"> <!-- Message Start -->
 							<div class="media">
-								<img src="/dist/img/hawk.png" alt="User Avatar"
+								<img src="/dist/img/sudo.png" alt="User Avatar"
 									class="img-size-50 img-circle mr-3">
 								<div class="media-body">
 									<h3 class="dropdown-item-title">
@@ -193,9 +193,9 @@
 		<aside class="main-sidebar sidebar-dark-primary elevation-4">
 			<!-- Brand Logo -->
 			<a onclick="redirectTo('/home')" class="brand-link"> <img
-				src="/dist/img/hawk.png" alt="AdminLTE Logo"
+				src="/dist/img/sudo.png" alt="AdminLTE Logo"
 				class="brand-image img-circle elevation-3" style="opacity: .8">
-				<span class="brand-text font-weight-light">Hawk</span>
+				<span class="brand-text font-weight-light">sudo</span>
 			</a>
 
 			<!-- Sidebar -->
@@ -231,6 +231,18 @@
 						<li class="nav-item"><a onclick="redirectTo('/dataLink')"
 							class="nav-link"> <i class="far fa-circle nav-icon"></i>
 								<p>DataLink</p>
+						</a></li>
+					</ul>
+				</nav>
+			</div>
+						<div class="sidebar">
+				<nav class="mt-2">
+					<ul class="nav nav-pills nav-sidebar flex-column"
+						data-widget="treeview" role="menu" data-accordion="false">
+						<!-- webPagees -->
+						<li class="nav-item"><a onclick="redirectTo('/dataMaping')"
+							class="nav-link"> <i class="far fa-circle nav-icon"></i>
+								<p>DataMaping</p>
 						</a></li>
 					</ul>
 				</nav>
@@ -309,7 +321,7 @@
 
 		<!-- Main Footer -->
 		<footer class="main-footer">
-			<strong>Copyright &copy; 2018-2022 <a href="#">Hawksoft</a>.
+			<strong>Copyright &copy; 2018-2022 <a href="#">sudoCorporation</a>.
 			</strong> All rights reserved.
 			<div class="float-right d-none d-sm-inline-block">
 				<b>Version</b> 3.2.0-rc
