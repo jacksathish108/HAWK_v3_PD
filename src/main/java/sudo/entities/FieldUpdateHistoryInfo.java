@@ -56,6 +56,7 @@ public class FieldUpdateHistoryInfo {
 
 	@ElementCollection
 	 @CollectionTable(name = "modifiedvalues")
+	@Column(name="modifiedvalues",columnDefinition="LONGTEXT")
 	List<String> modifiedValues;
 	public FieldUpdateHistoryInfo(long recordId,Timestamp createDate, String createBy,
 			@NotNull(message = "Module Name is required") String moduleName,
