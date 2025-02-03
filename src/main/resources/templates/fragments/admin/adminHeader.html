@@ -12,6 +12,7 @@
 }
 </style>
 <body th:fragment="header" class="">
+
 	<link rel="stylesheet"
 		href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
@@ -46,6 +47,7 @@
 	<link rel="stylesheet" href="/dist/css/adminlte.min.css">
 
 	<div class="wrapper">
+<div th:insert="fragments/admin/contactUs :: header"></div>
 		<!-- Preloader -->
 		<div
 			class="preloader flex-column justify-content-center align-items-center">
@@ -61,7 +63,8 @@
 					href="#" role="button"><i class="fas fa-bars"></i></a></li>
 				<li class="nav-item d-none d-sm-inline-block"><a
 					onclick="redirectTo('/home')" class="nav-link">Home</a></li>
-				<li class="nav-item d-none d-sm-inline-block"><a href="#"
+					
+				<li class="nav-item d-none d-sm-inline-block"><a onclick="$('#contactUsDetailsModal').modal();" 
 					class="nav-link">Contact</a></li>
 			</ul>
 
