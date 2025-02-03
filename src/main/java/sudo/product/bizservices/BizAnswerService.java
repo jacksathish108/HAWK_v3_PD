@@ -98,7 +98,7 @@ public class BizAnswerService implements AnswerService {
 
 						answerInfoDTO.setCreateBy(resultMapper.getBy());
 						answerInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
-						//answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
+						answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
 
@@ -120,7 +120,7 @@ public class BizAnswerService implements AnswerService {
 						List changeHistoryList = exitAnswerInfo.update(answerInfoDTO.AnswerInfoDTO());
 						exitAnswerInfo.setUpdateBy(resultMapper.getBy());
 						exitAnswerInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-					//	answerInfoRepository.saveAndFlush(exitAnswerInfo);
+						answerInfoRepository.saveAndFlush(exitAnswerInfo);
 						if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
 							fieldUpdateHistoryService
 									.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitAnswerInfo.getId(),
