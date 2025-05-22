@@ -325,17 +325,33 @@ function setFocus(id) {
 	$("#" + id).focus();
 }
 
-function setValueByName(formName, key, val) {
-	try {
-		//obj=document.getElementsByName(key)[0];
-		obj = document.forms[formName][key]
-		if (obj && val) {
-			obj.value = val;
-		}
-	}
-	catch (err) {
-	}
+function setValueByName(formName, fieldName, value) {
+ try {
+    var $form = $('form[name="' + formName + '"]');
+    var $field = $form.find('[name="' + fieldName + '"]');
+
+    if (!$field.length) return;
+
+    var type = $field.attr('type');
+    var tag = $field.prop('tagName').toLowerCase();
+
+    if (tag === 'select') {
+      $field.val(value).trigger('change');
+    } else if (type === 'checkbox') {
+      $field.prop('checked', !!value).trigger('change');
+    } else if (type === 'radio') {
+      $form.find('input[name="' + fieldName + '"][value="' + value + '"]').prop('checked', true).trigger('change');
+    } else {
+      $field.val(value).trigger('input');
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+
+
+
 function setValueById(key, val) {
 	//$("#" + key).val(val);
 	obj = document.getElementById(key);

@@ -16,7 +16,7 @@ import jakarta.persistence.OrderBy;
 @Repository
 public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> {
 
-	@Query(value = "(SELECT WebPages.* FROM webpage_info WebPages WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
+	@Query(value = "(SELECT webpage.* FROM webpage_info webpage WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
 																												// and
 	public WebPageInfo findByCode(String code);
 

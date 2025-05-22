@@ -197,10 +197,18 @@ for (let [key, value] of sortedArray) {
 								modalDiv = modalDiv + "value='" + val.defaultValue + "'>";
 
 							if (val.elementType == "select") {
-							modalDiv = modalDiv + "<option disabled selected value> -- select an option -- </option>";
-								$.each(val.options.split(","), function(index, val) {
-										modalDiv = modalDiv + "<option value ='" + val + "'>" + val + "</option> ";
-								});
+							modalDiv += "<option disabled selected value> -- select an option -- </option>";
+
+							$.each(val.options.split(","), function(index, optionValue) {
+    console.log(index + " :: " + optionValue);
+
+    		optionValue = optionValue.trim(); 
+    				if (optionValue.includes("<option")) {
+        modalDiv += optionValue;
+   				 } else {
+        modalDiv += "<option value='" + optionValue + "'>" + optionValue + "</option>";
+  			  }
+			});
 
 							}
 							if (val.elementType == "calendar") {
@@ -410,7 +418,7 @@ function loadViewEditModal(modalId, formId, id) {
 				console.log(":::" + val)
 				//if (key.includes("Date")/*||key.includes("date")*/) {
 				//console.log(key + ":::" + val)
-				//	setValueByName(formId, val.qtag, sqlTDateToDateYYMMDD(val.ansValue));
+					//setValueByName(formId, val.qtag, sqlTDateToDateYYMMDD(val.ansValue));
 				//}
 				//else {
 				setValueByName(formId, val.qtag, val.ansValue);
@@ -484,7 +492,7 @@ function fillDataLinkDetails(response) {
 						loadViewEditModal((dataLinkResponseData.targetViewId + 'DetailsModal'), (dataLinkResponseData.targetViewId + 'DetailsForm'));
 						$.each(JSON.parse(dataLinkResponseData.qtagMap), function(target, source) {
 							console.log(target + " ::" + source)
-							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue);
+							$("#" + target).val(getObjects(rowObject.answers, 'qtag', source).ansValue).trigger('change');;
 						});
 					}, 500); // for 0.5 second delay 
 				});
@@ -524,3 +532,9 @@ function listViewUpdate(listViewselect) {
 		progressBar(false);
 	}
 }
+
+
+
+
+
+ 

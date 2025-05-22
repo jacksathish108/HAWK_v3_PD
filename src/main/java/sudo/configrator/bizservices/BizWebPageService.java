@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,7 +174,7 @@ public class BizWebPageService implements WebPageService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			logger.error("while getting error  on  getPageCode>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -197,7 +198,7 @@ public class BizWebPageService implements WebPageService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			logger.error("while getting error  on  deleteWebPage>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -219,7 +220,7 @@ public class BizWebPageService implements WebPageService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			logger.error("while getting error  on  getWebPageByid>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -237,30 +238,28 @@ public class BizWebPageService implements WebPageService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			logger.error("while getting error  on  getWebPageInfoByid>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
 		return null;
 	}
+
 	@Override
 	public WebPageInfoDTO getWebPageInfoByCode_1(String code) {
 		logger.info("getWebPageInfoByCode method called...");
-	try {
-	    resultMapper = clientService.getuserSession();
-	    if (resultMapper.isSessionStatus()) {
-	        logger.info("getWebPageInfoByCode method called...");
-	        return new WebPageInfoDTO(webPageInfoRepository.findByCode(code));
-	    }
-	}catch (Exception e) {
-		e.printStackTrace();
+		try {
+			resultMapper = clientService.getuserSession();
+			if (resultMapper.isSessionStatus()) {
+				logger.info("getWebPageInfoByCode method called...");
+				return new WebPageInfoDTO(webPageInfoRepository.findByCode(code));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-	return null;
-	}
-	    
-	    
-	    
-	    
+
 	@Override
 	public ResultMapper getWebPageInfoByCode(String code) {logger.info("getWebPageInfoByCode method called...");
 	try {
@@ -300,7 +299,7 @@ public class BizWebPageService implements WebPageService {
 	                                    .filter(listViewAns -> targetQtagList.contains(listViewAns.getTargetQtag()))
 	                                    .findFirst().orElse(null);
 
-	                            if (lsvDTO != null && lsvDTO.getDependencyCondition() != null) {
+	                            if (lsvDTO != null && lsvDTO.getDependencyCondition() != null&&lsvDTO.getSourceQtag().equals(question.getQTag())) {
 	                                Map<String, String> dependencyConditionMap = Arrays.stream(
 	                                        lsvDTO.getDependencyCondition().split(","))
 	                                        .map(String::trim)
@@ -313,7 +312,7 @@ public class BizWebPageService implements WebPageService {
 	                                lsMap.values().forEach(listViewAns -> {
 	                                    Map<String, String> attributes = new HashMap<>();
 	                                    String options = "";
-
+	                                    
 	                                    for (ListViewAnswerDTO s1 : listViewAns) {
 	                                        if (s1.getSourceqTag().equals(lsvDTO.getTargetQtag())
 	                                                && lsvDTO.getSourceQtag().equals(question.getQTag())) {
@@ -325,9 +324,16 @@ public class BizWebPageService implements WebPageService {
 	                                    }
 
 	                                    try {
-	                                        question.setOptions(question.getOptions() + "<option class='option' listView="
-	                                                + new ObjectMapper().writeValueAsString(attributes)
-	                                                + " value='" + options + "'>" + options + "</option>");
+	                                    	StringBuilder htmlSelectlist = new StringBuilder();
+	                                    			htmlSelectlist.append( "<option class='option' listView=" );
+	                                    	 	htmlSelectlist.append( new ObjectMapper().writeValueAsString(attributes));
+	                                    	 	htmlSelectlist.append( " value='" );
+	                                    	 	htmlSelectlist.append(options );
+	                                    	 	htmlSelectlist.append( "'>"); 
+	                                    	 	htmlSelectlist.append(options);
+	                                    	 	htmlSelectlist.append("</option>");
+	                                    	 	question.setOptions(question.getOptions()+htmlSelectlist.toString());
+	                                    	 	System.out.println(htmlSelectlist);
 	                                    } catch (JsonProcessingException e) {
 	                                        e.printStackTrace();
 	                                    }
@@ -347,7 +353,7 @@ public class BizWebPageService implements WebPageService {
 	    }
 
 	} catch (Exception e) {
-	    logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+	    logger.error("while getting error  on  getWebPageInfoByCode>>>> " + e.getMessage());
 	    resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 	    resultMapper.setMessage(e.getMessage());
 	}
@@ -396,7 +402,7 @@ public class BizWebPageService implements WebPageService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getWebPage>>>> " + e.getMessage());
+			logger.error("while getting error  on  getAllWebPageCode>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
