@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.poi.util.SystemOutLogger;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -325,16 +325,17 @@ public class BizWebPageService implements WebPageService {
 
 	                                    try {
 	                                    	StringBuilder htmlSelectlist = new StringBuilder();
-	                                    			htmlSelectlist.append( "<option class='option' listView=" );
-	                                    	 	htmlSelectlist.append( new ObjectMapper().writeValueAsString(attributes));
-	                                    	 	htmlSelectlist.append( " value='" );
-	                                    	 	htmlSelectlist.append(options );
-	                                    	 	htmlSelectlist.append( "'>"); 
-	                                    	 	htmlSelectlist.append(options);
-	                                    	 	htmlSelectlist.append("</option>");
-	                                    	 	question.setOptions(question.getOptions()+htmlSelectlist.toString());
+	                                    	htmlSelectlist.append("<option class='option' listView='")
+	                                    	              .append(new JSONObject(attributes))
+	                                    	              .append("' value='")
+	                                    	              .append(options)
+	                                    	              .append("'>")
+	                                    	              .append(options)
+	                                    	              .append("</option>");
+
+	                                    	question.setOptions(question.getOptions() + htmlSelectlist.toString());
 	                                    	 	System.out.println(htmlSelectlist);
-	                                    } catch (JsonProcessingException e) {
+	                                    } catch (Exception e) {
 	                                        e.printStackTrace();
 	                                    }
 	                                });

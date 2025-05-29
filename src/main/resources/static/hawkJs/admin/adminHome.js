@@ -199,16 +199,20 @@ for (let [key, value] of sortedArray) {
 							if (val.elementType == "select") {
 							modalDiv += "<option disabled selected value> -- select an option -- </option>";
 
-							$.each(val.options.split(","), function(index, optionValue) {
-    console.log(index + " :: " + optionValue);
+		if(val.options.includes("<option"))
+		{
+        modalDiv += val.options;
+		}
+		else
+		{
+	$.each(val.options.split(","), function(index, optionValue) {
+		console.log(index + " :: " + optionValue);
 
-    		optionValue = optionValue.trim(); 
-    				if (optionValue.includes("<option")) {
-        modalDiv += optionValue;
-   				 } else {
         modalDiv += "<option value='" + optionValue + "'>" + optionValue + "</option>";
-  			  }
+  			  
 			});
+}
+
 
 							}
 							if (val.elementType == "calendar") {
