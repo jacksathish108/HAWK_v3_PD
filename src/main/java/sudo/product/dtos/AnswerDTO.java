@@ -8,11 +8,11 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.Getter;
+import lombok.Setter;
 import sudo.product.entities.Answer;
 import sudo.product.entities.AnswerInfo;
 import sudo.utils.CommonUtil;
-import lombok.Getter;
-import lombok.Setter;
 
 @Setter
 @Getter
@@ -32,6 +32,7 @@ public class AnswerDTO {
 	Long pageId;;
 	List<Answer> answers;
 	int status;
+	int deleteStatus;
 	String discription;
 
 	public AnswerDTO(AnswerInfo answerInfo) {
@@ -51,6 +52,7 @@ public class AnswerDTO {
 			
 			this.discription = answerInfo.getDiscription();
 			this.status = answerInfo.getStatus();
+			this.deleteStatus=answerInfo.getDeleteStatus();
 			this.pageId = answerInfo.getPageId();
 			this.viewId = answerInfo.getViewId();
 			this.answers = answerInfo.getAnswers();
@@ -72,8 +74,6 @@ public class AnswerDTO {
 				String discription="";
 				if (CommonUtil.isStringNumeric((String) answers.get("viewId")))
 					viewId = Long.valueOf((String) answers.get("viewId"));
-
-
 				if (CommonUtil.isStringNumeric((String) answers.get("pageId")))
 					pageId = Long.valueOf((String) answers.get("pageId"));
 				ObjectMapper mapper = new ObjectMapper();
@@ -127,6 +127,14 @@ public class AnswerDTO {
 			answerInfo.setAnswers(answers);
 
 		return answerInfo;
+	}
+
+	public AnswerDTO(Long pageId,Long viewId, List<Answer> answers, int status) {
+		super();
+		this.viewId = viewId;
+		this.pageId = pageId;
+		this.answers = answers;
+		this.status = status;
 	}
 
 	/**

@@ -300,14 +300,17 @@ public class BizWebPageService implements WebPageService {
 	                                    .findFirst().orElse(null);
 
 	                            if (lsvDTO != null && lsvDTO.getDependencyCondition() != null&&lsvDTO.getSourceQtag().equals(question.getQTag())) {
-	                                Map<String, String> dependencyConditionMap = Arrays.stream(
-	                                        lsvDTO.getDependencyCondition().split(","))
-	                                        .map(String::trim)
-	                                        .map(entry -> entry.split("="))
-	                                        .collect(Collectors.toMap(
-	                                                entry -> entry[1],
-	                                                entry -> entry[0]
-	                                        ));
+	                            	Map<String, String> dependencyConditionMap = Arrays.stream(
+	                            	        lsvDTO.getDependencyCondition().split(","))
+	                            	    .map(String::trim)
+	                            	    .filter(str -> str.contains("=")) // only include strings with '='
+	                            	    .map(entry -> entry.split("=", 2)) // split into key/value pair
+	                            	    .filter(parts -> parts.length == 2 && !parts[0].isEmpty() && !parts[1].isEmpty()) // ensure both key and value exist
+	                            	    .collect(Collectors.toMap(
+	                            	        parts -> parts[1], // value as key
+	                            	        parts -> parts[0]  // key as value
+	                            	    ));
+
 
 	                                lsMap.values().forEach(listViewAns -> {
 	                                    Map<String, String> attributes = new HashMap<>();
@@ -362,7 +365,7 @@ public class BizWebPageService implements WebPageService {
 }
 
 	@Override
-	public ResultMapper getAllWebPageCode() {
+	public ResultMapper getAllWebPageCodeAndId() {
 		logger.info("getAllWebPageCode method called...");
 		try {
 			resultMapper = clientService.getuserSession();
@@ -372,25 +375,8 @@ public class BizWebPageService implements WebPageService {
 				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
 				 */ {
 
-					List<List<String>> allWebPageCode = webPageInfoRepository.getAllWebPageCode();
-					Map<String, ArrayList> webpages = new HashMap<>();
-					{
-						allWebPageCode.forEach(object -> {
-							if (webpages.containsKey(object.get(0))) {
-								webpages.get(object.get(0)).add(object.get(1));
-							} else {
-								ArrayList views = new ArrayList<>();
-								views.add(object.get(1));
-								webpages.put(object.get(0), views);
-							}
-
-						}
-
-						);
-
-					}
-
-					resultMapper.setResponceObject(webpages);
+					 List<Map<String, Object>> allWebPageCode = webPageInfoRepository.getAllWebPageCodeAndId();
+					resultMapper.setResponceObject(allWebPageCode);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				} /*
 					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);

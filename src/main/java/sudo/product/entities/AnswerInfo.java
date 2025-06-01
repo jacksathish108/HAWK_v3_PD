@@ -37,24 +37,24 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "answer_info")
-@NamedNativeQuery(name = "getUniqueQuestionAnswers", query = "SELECT answerInfo_Id, qTag, ansValue\r\n"
-		+ "FROM answers\r\n"
-		+ "WHERE qTag IN (:qTags) AND ansValue IN (:ansValues)", resultSetMapping = "AnswersDTO")
+@NamedNativeQuery(name = "getUniqueQuestionAnswers", query = "SELECT a.answerInfo_Id, a.qTag, a.ansValue\r\n"
+		+ " FROM answers a INNER JOIN answer_info ans ON ans.id = a.answerInfo_Id\r\n"
+		+ "WHERE  a.qTag IN (:qTags) AND  a.ansValue IN (:ansValues) AND ans.status=0 AND ans.delete_Status !=1", resultSetMapping = "AnswersDTO")
 @SqlResultSetMapping(name = "AnswersDTO", classes = @ConstructorResult(targetClass = AnswersDTO.class, columns = {
 		@ColumnResult(name = "answerInfo_Id", type = Long.class), @ColumnResult(name = "qTag", type = String.class),
 		@ColumnResult(name = "ansValue", type = String.class) }))
 
 @NamedNativeQuery(name = "getAnswersByQtag", query = "SELECT ans.answerInfo_Id, ans.qTag, ans.ansValue\r\n"
 		+ "FROM answers ans\r\n" + "INNER JOIN answer_info ansinf ON ansinf.id = ans.AnswerInfo_Id\r\n"
-		+ "WHERE ansinf.status = 0 AND ans.qTag IN (:qTags);", resultSetMapping = "AnswersDTO")
+		+ "WHERE ansinf.status = 0 AND ansinf.delete_Status !=1 AND ans.qTag IN (:qTags);", resultSetMapping = "AnswersDTO")
 @SqlResultSetMapping(name = "AnswersDTO1", classes = @ConstructorResult(targetClass = AnswersDTO.class, columns = {
 		@ColumnResult(name = "answerInfo_Id", type = Long.class), @ColumnResult(name = "qTag", type = String.class),
 		@ColumnResult(name = "ansValue", type = String.class) }))
 
 @NamedNativeQuery(name = "getAnswersByListViewTargetQtags", query = "SELECT ans.answerInfo_Id,ans.qTag,ans.ansValue  FROM answers ans \r\n"
-		+ "INNER JOIN answer_info ansinf ON ansinf.id=ans.AnswerInfo_Id WHERE ansinf.status=0 \r\n"
+		+ "INNER JOIN answer_info ansinf ON ansinf.id=ans.AnswerInfo_Id WHERE ansinf.status=0 AND ansinf.delete_Status !=1 \r\n"
 		+ "AND answerInfo_Id IN\r\n" + "(\r\n" + "SELECT answerInfo_Id FROM answers WHERE \r\n"
-		+ "qTag IN(SELECT Target_Qtag  FROM listview_info  WHERE   Source_Qtag IN(:targetQtags) AND STATUS=1)\r\n"
+		+ "qTag IN(SELECT Target_Qtag  FROM listview_info  WHERE   Source_Qtag IN(:targetQtags) AND STATUS=1 AND ansinf.delete_Status !=1)\r\n"
 		+ ")", resultSetMapping = "ListViewAnswerDTO")
 @SqlResultSetMapping(name = "ListViewAnswerDTO", classes = @ConstructorResult(targetClass = ListViewAnswerDTO.class, columns = {
 		@ColumnResult(name = "answerInfo_Id", type = Long.class), @ColumnResult(name = "qTag", type = String.class),
@@ -96,6 +96,12 @@ public class AnswerInfo implements Serializable {
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
 	int status;
+	@Column(name = "Delete_Status")
+	@NotNull(message = "Delete Status is required")
+	int deleteStatus;
+	
+	
+	
 	@ElementCollection(targetClass = Answer.class)
 	 @CollectionTable(name = "answers")
 	List<Answer> answers;
@@ -130,6 +136,11 @@ public class AnswerInfo implements Serializable {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("Status", status, answerInfo.getStatus()));
 			this.status = answerInfo.getStatus();
 		}
+		if (!Objects.equals(this.deleteStatus, answerInfo.getDeleteStatus())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("deleteStatus", deleteStatus, answerInfo.getDeleteStatus()));
+			this.deleteStatus = answerInfo.getDeleteStatus();
+		}
+		
 		
 		
 		if (!Objects.equals(this.discription, answerInfo.getDiscription())) {

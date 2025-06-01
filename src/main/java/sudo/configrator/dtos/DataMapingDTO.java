@@ -21,21 +21,21 @@ public class DataMapingDTO {
 	private String createBy;
 	private String updateBy;
 	/* COMMON FOR ALL END */
-	private String linkCode;
+	private String dataMapCode;
 	private String name;
 	private String description;
 	private int status;
-	private String sourceWebPageCode;
-	private String targetWebPageCode;
-	private Integer sourceViewId;
-	private Integer targetViewId;
+	private Long sourceWebPageId;
+	private Long targetWebPageId;
+	private Long sourceViewId;
+	private Long targetViewId;
 
 	//private Map<String, String>  qtagMap;
 	private String qtagMap;
 
 	public DataMapingDTO(DataMapingInfo DataMapingInfo) {
 		if (Objects.nonNull(DataMapingInfo)) {
-			this.linkCode = DataMapingInfo.getLinkCode();
+			this.dataMapCode = DataMapingInfo.getDataMapCode();
 			this.id = DataMapingInfo.getId();
 			this.createDate = DataMapingInfo.getCreateDate();
 			this.createBy = DataMapingInfo.getCreateBy();
@@ -52,8 +52,8 @@ public class DataMapingDTO {
 			this.description = DataMapingInfo.getDescription();
 			this.status = DataMapingInfo.getStatus();
 
-			this.sourceWebPageCode = DataMapingInfo.getSourceWebPageCode();
-			this.targetWebPageCode = DataMapingInfo.getTargetWebPageCode();
+			this.sourceWebPageId = DataMapingInfo.getSourceWebPageId();
+			this.targetWebPageId = DataMapingInfo.getTargetWebPageId();
 			this.sourceViewId = DataMapingInfo.getSourceViewId();
 			this.targetViewId = DataMapingInfo.getTargetViewId();
 			this.qtagMap = DataMapingInfo.getQtagMap();
@@ -64,8 +64,8 @@ public class DataMapingDTO {
 		DataMapingInfo DataMapingInfo = new DataMapingInfo();
 		if (Objects.nonNull(id))
 			DataMapingInfo.setId(id);
-		if (Objects.nonNull(linkCode))
-			DataMapingInfo.setLinkCode(linkCode);
+		if (Objects.nonNull(dataMapCode))
+			DataMapingInfo.setDataMapCode(dataMapCode);
 		if (Objects.nonNull(createBy))
 			DataMapingInfo.setCreateBy(createBy);
 		if (Objects.nonNull(createDate))
@@ -84,10 +84,10 @@ public class DataMapingDTO {
 			DataMapingInfo.setStatus(status);
 
 		
-		if (Objects.nonNull(sourceWebPageCode))
-			DataMapingInfo.setSourceWebPageCode(sourceWebPageCode);
-		if (Objects.nonNull(targetWebPageCode))
-			DataMapingInfo.setTargetWebPageCode(targetWebPageCode);
+		if (Objects.nonNull(sourceWebPageId))
+			DataMapingInfo.setSourceWebPageId(sourceWebPageId);
+		if (Objects.nonNull(targetWebPageId))
+			DataMapingInfo.setTargetWebPageId(targetWebPageId);
 		if (Objects.nonNull(sourceViewId))
 			DataMapingInfo.setSourceViewId(sourceViewId);
 		if (Objects.nonNull(targetViewId))

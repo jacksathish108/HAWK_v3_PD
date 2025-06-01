@@ -77,11 +77,15 @@ public class QuestionInfo implements Serializable {
 	String description;
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
-	int status;
+	Integer status;
 	@Column(name = "Answer_Type")
 	String answerType;
 	@Column(name = "Required")
-	int required;
+	Integer required;
+	@Column(name = "Read_Only")
+	Integer readOnly;
+	@Column(name = "Auto_Generate")
+	String autoGenerate;
 	@Column(name = "Style")
 	String style;
 	@Column(name = "Css_Class")
@@ -172,6 +176,19 @@ public class QuestionInfo implements Serializable {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("required", required, questionInfo.getRequired()));
 			this.required = questionInfo.getRequired();
 		}
+		
+		if (!Objects.equals(this.readOnly, questionInfo.getReadOnly())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("readOnly", readOnly, questionInfo.getReadOnly()));
+			this.readOnly = questionInfo.getReadOnly();
+		}
+		
+		if (!Objects.equals(this.autoGenerate, questionInfo.getAutoGenerate())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("autoGenerate", autoGenerate, questionInfo.getAutoGenerate()));
+			this.autoGenerate = questionInfo.getAutoGenerate();
+		}
+		
+		
+		
 		if (!Objects.equals(this.options, questionInfo.getOptions())) {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("options", options, questionInfo.getOptions()));
 			this.options = questionInfo.getOptions();

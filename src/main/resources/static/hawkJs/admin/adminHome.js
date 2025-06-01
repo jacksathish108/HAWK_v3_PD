@@ -164,11 +164,19 @@ for (let [key, value] of sortedArray) {
 
 								modalDiv = modalDiv + "<div class='input-group date ' id='c_" + val.qtag + "' data-target-input='nearest'>";
 								modalDiv = modalDiv + "<input  type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
+								if( val.readOnly==1)
+								{
+									modalDiv = modalDiv +" readonly='readonly' ";
+								}
+								
 
 							}
 							else {
 								modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
-
+								if( val.readOnly==1)
+								{
+									modalDiv = modalDiv +" readonly='readonly'  ";
+								}
 							}
 
 
@@ -195,7 +203,10 @@ for (let [key, value] of sortedArray) {
 								modalDiv = modalDiv + "' required='required' value='" + val.defaultValue + "'>";
 							else
 								modalDiv = modalDiv + "value='" + val.defaultValue + "'>";
-
+							if( val.readOnly==1)
+								{
+									modalDiv = modalDiv +" readonly='readonly'  ";
+								}
 							if (val.elementType == "select") {
 							modalDiv += "<option disabled selected value> -- select an option -- </option>";
 
@@ -232,7 +243,11 @@ for (let [key, value] of sortedArray) {
 
 								modalDiv = modalDiv + "<div class='input-group-append' data-target='#c_" + val.qtag + "' data-toggle='datetimepicker'>";
 								modalDiv = modalDiv + "<div class='input-group-text'>";
-								modalDiv = modalDiv + "<i class='fa fa-calendar'></i>";
+								if( val.readOnly==1)
+								{
+									modalDiv = modalDiv +" readonly='readonly'  ";
+								}
+								modalDiv = modalDiv + "<i class='fa fa-calendar' ></i>";
 								modalDiv = modalDiv + "</div>";
 								modalDiv = modalDiv + "</div>";
 								modalDiv = modalDiv + "</div>";

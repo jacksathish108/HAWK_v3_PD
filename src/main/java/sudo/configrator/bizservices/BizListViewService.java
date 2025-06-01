@@ -65,7 +65,7 @@ public class BizListViewService implements ListViewService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getListView>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}

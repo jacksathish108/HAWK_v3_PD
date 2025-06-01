@@ -40,12 +40,19 @@ public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> 
 	@Query(value = "SELECT webpage.* FROM webpage_info webpage WHERE Id=:id or Page_Code=:code", nativeQuery = true) // Status=:status
 																														// and
 	public WebPageInfo findByIdorPageCode(Long id, String code);
-
-	@Query(value = "SELECT WebPages.Page_Code,vinfo.Id FROM webpage_info WebPages "
-			+ "INNER JOIN applicableviews apView " + " ON apView.WebPageInfo_Id=WebPages.id "
-			+ "  INNER JOIN view_info  vinfo " + " ON vinfo.id=apView.applicableViews_Id "
-			+ " WHERE WebPages.STATUS=1", nativeQuery = true) // Status=:status
-	// and
-	public List<List<String>> getAllWebPageCode();
-
-}
+	    @Query(value = "SELECT " +
+	            "    WebPages.Id AS pid, " +
+	            "    WebPages.Page_Code AS pageCode, " +
+	            "    GROUP_CONCAT(vinfo.id ORDER BY vinfo.id) AS vid_list " +
+	            "FROM " +
+	            "    webpage_info WebPages " +
+	            "INNER JOIN " +
+	            "    applicableviews apView ON apView.WebPageInfo_Id = WebPages.id " +
+	            "INNER JOIN " +
+	            "    view_info vinfo ON vinfo.id = apView.applicableViews_Id " +
+	            "WHERE " +
+	            "    WebPages.STATUS = 1 " +
+	            "GROUP BY " +
+	            "    WebPages.Id, WebPages.Page_Code", nativeQuery = true)
+	    List<Map<String, Object>> getAllWebPageCodeAndId();
+	}

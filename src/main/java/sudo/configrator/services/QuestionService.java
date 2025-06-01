@@ -15,6 +15,7 @@ public interface QuestionService {
 	QuestionInfo getQuestionByQtag(String code);
 	ResultMapper getAllQtag();
 	ResultMapper getQtagsByElementType(String elementType);
+	ResultMapper getQtagsByAutoGenerate();
 	QuestionDTO getByQtag(String qTag);
 	ResultMapper deleteQuestion(Long id);
 	

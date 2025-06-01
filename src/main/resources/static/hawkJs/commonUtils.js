@@ -274,20 +274,20 @@ function sqlTDateToDateDDMMYY(sqldate) {
 
 function sqlTDateToDateDDMMYYHHMMSS(sqldate) {
 	var today = new Date(sqldate);
-	
-	
-	 let hours = today.getHours();
-    const minutes = String(today.getMinutes()).padStart(2, '0');
-    const seconds = String(today.getSeconds()).padStart(2, '0');
-    const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    hours = String(hours).padStart(2, '0');
-	
-	
-	var formattedtoday = today.getFullYear()+'-'+(today.getMonth() + 1) + '-' + today.getDate() + ' ' + (hours) + ':' + (minutes) + ':' + (seconds)+" "+meridiem ;
-	
-	
-	
+
+
+	let hours = today.getHours();
+	const minutes = String(today.getMinutes()).padStart(2, '0');
+	const seconds = String(today.getSeconds()).padStart(2, '0');
+	const meridiem = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12 || 12;
+	hours = String(hours).padStart(2, '0');
+
+
+	var formattedtoday = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + (hours) + ':' + (minutes) + ':' + (seconds) + " " + meridiem;
+
+
+
 	return (formattedtoday);
 }
 
@@ -326,27 +326,27 @@ function setFocus(id) {
 }
 
 function setValueByName(formName, fieldName, value) {
- try {
-    var $form = $('form[name="' + formName + '"]');
-    var $field = $form.find('[name="' + fieldName + '"]');
+	try {
+		var $form = $('form[name="' + formName + '"]');
+		var $field = $form.find('[name="' + fieldName + '"]');
 
-    if (!$field.length) return;
+		if (!$field.length) return;
 
-    var type = $field.attr('type');
-    var tag = $field.prop('tagName').toLowerCase();
+		var type = $field.attr('type');
+		var tag = $field.prop('tagName').toLowerCase();
 
-    if (tag === 'select') {
-      $field.val(value).trigger('change');
-    } else if (type === 'checkbox') {
-      $field.prop('checked', !!value).trigger('change');
-    } else if (type === 'radio') {
-      $form.find('input[name="' + fieldName + '"][value="' + value + '"]').prop('checked', true).trigger('change');
-    } else {
-      $field.val(value).trigger('input');
-    }
-  } catch (err) {
-    console.log(err);
-  }
+		if (tag === 'select') {
+			$field.val(value).trigger('change');
+		} else if (type === 'checkbox') {
+			$field.prop('checked', !!value).trigger('change');
+		} else if (type === 'radio') {
+			$form.find('input[name="' + fieldName + '"][value="' + value + '"]').prop('checked', true).trigger('change');
+		} else {
+			$field.val(value).trigger('input');
+		}
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 
@@ -501,6 +501,16 @@ function fillReport(response) {
 function locationReplace(target) {
 	window.location.replace(target);
 }
+
+//find object by object Key
+function findObjectBykey(objectlist, key, val) {
+	return objectlist.find(function(object) {
+		return object[key] == val;
+	});
+	;
+}
+
+
 /////only for test
 function preFill() {
 	var number = 1 + Math.floor(Math.random() * 6);

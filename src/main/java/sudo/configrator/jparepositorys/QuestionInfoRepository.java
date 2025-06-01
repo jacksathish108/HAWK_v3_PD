@@ -30,8 +30,15 @@ public interface QuestionInfoRepository extends JpaRepository<QuestionInfo, Long
 	// and
 	public List<QuestionInfo> findByElementType(String elementType);
 
+	
+	@Query(value = "SELECT question.* FROM question_info question WHERE Auto_Generate IS NOT NULL AND TRIM(Auto_Generate) != ''", nativeQuery = true) // Status=:status
+	// and
+	public List<QuestionInfo> findByAutoGenerate();
+	
+	
 	@Query(value = "SELECT question.* FROM question_info question WHERE Id=:id or QTag=:qTag", nativeQuery = true) // Status=:status
 																													// and
 	public QuestionInfo findByIdorQTag(Long id, String qTag);
-
+	
+	
 }

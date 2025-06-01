@@ -23,8 +23,8 @@ public interface DataMapingService {
 
 	ResultMapper getAllDataMapingName();
 
-	ResultMapper getDataMapingByLinkCode(String linkCode);
+	ResultMapper getDataMapingBydataMapCode(String dataMapCode);
 
-	List<DataMapingDTO> getDataMapingByTargetViewId(Long targetViewId);
+	ResultMapper getDataMapingBySourcePageIdandViewId(Long sourcePageId,Long sourceViewId);
 
 }

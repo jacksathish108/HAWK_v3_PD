@@ -42,7 +42,7 @@ public class BizDataLinkService implements DataLinkService {
 
 	@Override
 	public ResultMapper getDataLink() {
-		logger.info("getQuestion method called...");
+		logger.info("getDataLink method called...");
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
@@ -67,7 +67,7 @@ public class BizDataLinkService implements DataLinkService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getDataLink>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -185,7 +185,7 @@ public class BizDataLinkService implements DataLinkService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  Data Link qTagList>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}

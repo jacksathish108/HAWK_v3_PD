@@ -35,6 +35,7 @@ function fillWebPageDetails(response) {
 			columns.push("LastChange");
 			/*		columns.push("Create_By");*/
 			columns.push("Status");
+			columns.push("ApplicableFor");
 			columns.push("MenuGroup");
 			columns.push("TabOrder");
 			columns.push("PageCode");
@@ -57,6 +58,7 @@ function fillWebPageDetails(response) {
 				fields.push(actions);
 				fields.push(sqlTDateToDateDDMMYY(row.updateDate));
 				fields.push(row.status);
+				fields.push(row.applicableFor);
 				fields.push(row.menuGroup);
 				fields.push(row.tabOrder);
 				fields.push(row.pageCode);

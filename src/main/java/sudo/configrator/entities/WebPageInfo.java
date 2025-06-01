@@ -62,6 +62,10 @@ public class WebPageInfo implements Serializable {
 	@Column(name = "Menu_Group")
 	@NotNull(message = "Menu Code is required")
 	String menuGroup;
+	@Column(name = "Applicable_For")
+	@NotNull(message = "ApplicableFor is required")
+	Integer applicableFor;
+
 	@Column(name = "Tab_Order")
 	@NotNull(message = "Tab Order is required")
 	Integer tabOrder;
@@ -80,12 +84,12 @@ public class WebPageInfo implements Serializable {
 	@Column(name = "Status")
 	@NotNull(message = "Status is required")
 	int status;
-	 //@OneToMany
+	// @OneToMany
 	// @JoinColumn(name="Id", unique = false,insertable = true,updatable = true )
-	//@ElementCollection
-	//	private List<ViewInfo> applicableViews;
-	 @CollectionTable(name = "applicableviews")
-	@ManyToMany (fetch = FetchType.LAZY)
+	// @ElementCollection
+	// private List<ViewInfo> applicableViews;
+	@CollectionTable(name = "applicableviews")
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ViewId", referencedColumnName = "id")
 	@OrderBy(value = "Tab_Order asc ")
 	private List<ViewInfo> applicableViews;
@@ -97,6 +101,13 @@ public class WebPageInfo implements Serializable {
 					.add(HawkResources.buildUpdateHistory("menuGroup", menuGroup, newWebPageInfo.getMenuGroup()));
 			this.menuGroup = newWebPageInfo.getMenuGroup();
 		}
+		if (!Objects.equals(this.applicableFor, newWebPageInfo.getApplicableFor())) {
+			changeHistoryList
+					.add(HawkResources.buildUpdateHistory("applicableFor", applicableFor, newWebPageInfo.getApplicableFor()));
+			this.applicableFor = newWebPageInfo.getApplicableFor();
+		}
+		
+		
 		if (!Objects.equals(this.tabOrder, newWebPageInfo.getTabOrder())) {
 			changeHistoryList.add(HawkResources.buildUpdateHistory("tabOrder", tabOrder, newWebPageInfo.getTabOrder()));
 			this.tabOrder = newWebPageInfo.getTabOrder();

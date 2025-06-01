@@ -10,36 +10,36 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sudo.configrator.entities.DataMapingInfo;
-import sudo.configrator.entities.WebPageInfo;
+import sudo.configrator.entities.DataMapingInfo;
 
 @Repository
 public interface DataMapingInfoRepository extends JpaRepository<DataMapingInfo, Long> {
 
-	@Query(value = "(SELECT views.* FROM datalink_info views WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
+	@Query(value = "(SELECT datamaping.* FROM datamaping_info datamaping WHERE DataMap_Code=:code)", nativeQuery = true) // Status=:status
 	// and
-	public WebPageInfo findByCode(String code);
+	public DataMapingInfo findByCode(String code);
 
-	@Query(value = "SELECT EXISTS(SELECT views.* FROM datalink_info views WHERE Id=:id)", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT EXISTS(SELECT datamaping.* FROM datamaping_info datamaping WHERE Id=:id)", nativeQuery = true) // Status=:status
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT views.* FROM datalink_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<DataMapingInfo> findAllViews();
+	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+	public List<DataMapingInfo> findAlldatamaping();
 
-	@Query(value = "SELECT views.* FROM datalink_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and
-	public List<WebPageInfo> findByStatus(Long status);
+	public List<DataMapingInfo> findByStatus(Long status);
 
-	@Query(value = "SELECT views.* FROM datalink_info views WHERE Id=:id or Page_Code=:code", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE Id=:id or DataMap_Code=:code", nativeQuery = true) // Status=:status
 	// and
-	public WebPageInfo findByIdorPageCode(Long id, String code);
+	public DataMapingInfo findByIdorPageCode(Long id, String code);
 	
-	@Query(value = "SELECT datalinks.* FROM datalink_info datalinks WHERE Link_Code=:code and  Status=1", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE DataMap_Codea=:code and  Status=1", nativeQuery = true) // Status=:status
 	// and
 	public DataMapingInfo findByDataMapingCode( String code);
 
-	@Query(value = "SELECT datalinks.* FROM datalink_info datalinks WHERE TargetViewId=:targetViewId and  Status=1", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE Source_WebPageId =:sourcePageId AND Source_ViewId=:sourceViewId and  Status=:status", nativeQuery = true) // Status=:status
 	// and
-	public List<DataMapingInfo> findByTargetViewId( Long targetViewId);
+	public List<DataMapingInfo> findBySourceData(int status,Long sourcePageId, Long sourceViewId);
 
 }

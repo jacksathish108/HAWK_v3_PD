@@ -24,6 +24,7 @@ function fillQuestionDetails(response) {
 			columns.push("Actions");
 			columns.push("Last Change");
 			columns.push("Q_Tag");
+			columns.push("Auto_Generate");
 			columns.push("Index");
 			columns.push("ElementType");
 			columns.push("Unique");
@@ -33,6 +34,7 @@ function fillQuestionDetails(response) {
 			columns.push("Description");
 			columns.push("Status");
 			columns.push("Requied");
+			columns.push("Read_Only");
 			columns.push("Style");
 			columns.push("CssClass");
 			columns.push("Options");
@@ -57,6 +59,7 @@ function fillQuestionDetails(response) {
 				fields.push(actions);
 				fields.push(sqlTDateToDateDDMMYY(row.updateDate));
 				fields.push(row.qtag);
+				fields.push(row.autoGenerate);
 				fields.push(row.index);
 				fields.push(row.elementType);
 				fields.push(row.unique);
@@ -66,6 +69,7 @@ function fillQuestionDetails(response) {
 				fields.push("<p  style='max-width: 150px;'>" + row.description + "</p>");
 				fields.push(row.status);
 				fields.push(row.required);
+				fields.push(row.ReadOnly);
 				fields.push("<p  style='max-width: 150px;'>" + row.style + "</p>");
 				fields.push("<p  style='max-width: 150px;'>" + row.cssClass + "</p>");
 				fields.push("<p  style='max-width: 150px;'>" + row.options + "</p>");

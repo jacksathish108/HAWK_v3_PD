@@ -66,7 +66,7 @@ public class BizViewService implements ViewService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getView>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -176,7 +176,7 @@ public class BizViewService implements ViewService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getAllQuestionsByViewid>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -220,7 +220,7 @@ public class BizViewService implements ViewService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  Biz view service  qTagList>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}

@@ -13,7 +13,7 @@ public interface WebPageService {
 	WebPageInfo getWebPageInfoByid(Long id);
 	ResultMapper getWebPageInfoByCode(String code);
 	ResultMapper deleteWebPage(Long id);
-	ResultMapper getAllWebPageCode();
+	ResultMapper getAllWebPageCodeAndId();
 	WebPageInfoDTO getWebPageInfoByCode_1(String code);
 	
 }

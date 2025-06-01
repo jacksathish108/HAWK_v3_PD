@@ -28,13 +28,14 @@ public class WebPageInfoDTO {
 	/* COMMON FOR ALL END */
 	String name;
 	String menuGroup;
+	Integer applicableFor;
 	Integer tabOrder;
 	String pageCode;
 	String title;
 	String description;
 	int status;
 	private Map<String, ViewDTO> applicableViews = new HashMap<>();
-	
+
 	List<Long> applicableViewList;
 	// List clientInfo;
 
@@ -53,6 +54,7 @@ public class WebPageInfoDTO {
 				this.updateBy = newWebPageInfo.getUpdateBy();
 
 			this.menuGroup = newWebPageInfo.getMenuGroup();
+			this.applicableFor = Objects.requireNonNullElse(newWebPageInfo.getApplicableFor(), this.applicableFor);
 			this.tabOrder = newWebPageInfo.getTabOrder();
 			this.pageCode = newWebPageInfo.getPageCode();
 			this.name = newWebPageInfo.getName();
@@ -79,6 +81,8 @@ public class WebPageInfoDTO {
 			webPageInfo.setDescription(description);
 		if (Objects.nonNull(menuGroup))
 			webPageInfo.setMenuGroup(menuGroup);
+		if (Objects.nonNull(applicableFor))
+			webPageInfo.setApplicableFor(applicableFor);
 		if (Objects.nonNull(tabOrder))
 			webPageInfo.setTabOrder(tabOrder);
 		if (Objects.nonNull(pageCode))

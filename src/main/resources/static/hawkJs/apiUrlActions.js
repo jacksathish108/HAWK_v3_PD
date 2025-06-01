@@ -35,25 +35,20 @@ var actionUrl={
 
 
 4000:{'requestUrl':'/getAllDataLink','requestType':'GET','onSuccess':'fillDataLinkDetails(response)'},
-
-6000:{'requestUrl':'/getAllDataMaping','requestType':'GET','onSuccess':'fillDataMapingDetails(response)'},
-
-
 4001:{'requestUrl':'/getAllWebPageCode','requestType':'GET','onSuccess':'fillWebPageCode(response)'},
 4002:{'requestUrl':'/getAllViewCode','requestType':'GET','onSuccess':'fillViewCode(response)'},
-
 4050:{'requestUrl':'/setDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
 4051:{'requestUrl':'/deleteDataLink','requestType':'POST','onSuccess':'getAllDataLinkDetails(true)'},
 
 
 5000:{'requestUrl':'/getAllListView','requestType':'GET','onSuccess':'fillListViewDetails(response)'},
 5001:{'requestUrl':'/getAllSelectQtags','requestType':'GET','onSuccess':'fillQtags(response)'},
-
-
-
 5050:{'requestUrl':'/setListView','requestType':'POST','onSuccess':'getAllListViewDetails(true)'},
 5051:{'requestUrl':'/deleteListView','requestType':'POST','onSuccess':'getAllListViewDetails(true)'},
 
+6000:{'requestUrl':'/getAllDataMaping','requestType':'GET','onSuccess':'fillDataMapingDetails(response)'},
+6050:{'requestUrl':'/setDataMaping','requestType':'POST','onSuccess':'getAllDataMapingDetails(true)'},
+6051:{'requestUrl':'/deleteDataMaping','requestType':'POST','onSuccess':'getAllDataMapingDetails(true)'},
 
 
 

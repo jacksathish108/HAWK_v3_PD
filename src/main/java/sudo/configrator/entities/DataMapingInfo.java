@@ -54,21 +54,21 @@ public class DataMapingInfo implements Serializable {
 	@Column(name = "Update_By")
 	String updateBy;
 	/* COMMON FOR ALL END */
-	@Column(name = "Link_Code", unique = true)
-	@NotNull(message = "Link_Code is required")
-	String linkCode;
-	@Column(name = "Source_WebPageCode")
+	@Column(name = "DataMap_Code", unique = true)
+	@NotNull(message = "dataMap_Code is required")
+	String dataMapCode;
+	@Column(name = "Source_WebPageId")
 	@NotNull(message = "SourceWebPage_Id is required")
-	String sourceWebPageCode;
-	@Column(name = "Target_WebPageCode")
+	Long sourceWebPageId;
+	@Column(name = "Target_WebPageId")
 	@NotNull(message = "Target_WebPageCode is required")
-	String targetWebPageCode;
-	@Column(name = "SourceViewId")
+	Long targetWebPageId;
+	@Column(name = "Source_ViewId")
 	@NotNull(message = "SourceViewId is required")
-	Integer sourceViewId;
-	@Column(name = "TargetViewId")
+	Long sourceViewId;
+	@Column(name = "Target_ViewId")
 	@NotNull(message = "TargetViewId is required")
-	Integer targetViewId;
+	Long targetViewId;
 
 	@Column(name = "Name")
 	@NotNull(message = "Name is required")
@@ -110,16 +110,16 @@ public class DataMapingInfo implements Serializable {
 			this.status = viewInfo.getStatus();
 		}
 
-		if (!Objects.equals(this.sourceWebPageCode, viewInfo.getSourceWebPageCode())) {
-			changeHistoryList.add(HawkResources.buildUpdateHistory("sourceWebPageCode", sourceWebPageCode,
-					viewInfo.getSourceWebPageCode()));
-			this.sourceWebPageCode = viewInfo.getSourceWebPageCode();
+		if (!Objects.equals(this.sourceWebPageId, viewInfo.getSourceWebPageId())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("sourceWebPageId", sourceWebPageId,
+					viewInfo.getSourceWebPageId()));
+			this.sourceWebPageId = viewInfo.getSourceWebPageId();
 		}
 
-		if (!Objects.equals(this.targetWebPageCode, viewInfo.getTargetWebPageCode())) {
-			changeHistoryList.add(HawkResources.buildUpdateHistory("targetWebPageCode", targetWebPageCode,
-					viewInfo.getTargetWebPageCode()));
-			this.targetWebPageCode = viewInfo.getTargetWebPageCode();
+		if (!Objects.equals(this.targetWebPageId, viewInfo.getTargetWebPageId())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("targetWebPageId", targetWebPageId,
+					viewInfo.getTargetWebPageId()));
+			this.targetWebPageId = viewInfo.getTargetWebPageId();
 		}
 
 		if (!Objects.equals(this.sourceViewId, viewInfo.getSourceViewId())) {
@@ -134,9 +134,9 @@ public class DataMapingInfo implements Serializable {
 			this.targetViewId = viewInfo.getTargetViewId();
 		}
 
-		if (!Objects.equals(this.linkCode, viewInfo.getLinkCode())) {
-			changeHistoryList.add(HawkResources.buildUpdateHistory("viewCode", linkCode, viewInfo.getLinkCode()));
-			this.linkCode = viewInfo.getLinkCode();
+		if (!Objects.equals(this.dataMapCode, viewInfo.getDataMapCode())) {
+			changeHistoryList.add(HawkResources.buildUpdateHistory("viewCode", dataMapCode, viewInfo.getDataMapCode()));
+			this.dataMapCode = viewInfo.getDataMapCode();
 		}
 
 		if (!Objects.equals(this.qtagMap, viewInfo.getQtagMap())) {

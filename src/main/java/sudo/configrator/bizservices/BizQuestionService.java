@@ -170,7 +170,7 @@ public class BizQuestionService implements QuestionService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  deleteQuestion>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -188,7 +188,7 @@ public class BizQuestionService implements QuestionService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getQuestionByid>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -204,7 +204,7 @@ public class BizQuestionService implements QuestionService {
 				return questionInfoRepository.findByQtag(Qtag);
 			}
 		} catch (Exception e) {
-			logger.error("while getting error  on  getQuestion>>>> " + e.getMessage());
+			logger.error("while getting error  on  getQuestionByQtag>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -273,6 +273,31 @@ public class BizQuestionService implements QuestionService {
 
 		} catch (Exception e) {
 			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
+			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+			resultMapper.setMessage(e.getMessage());
+		}
+		return resultMapper;
+	}
+	@Override
+	public ResultMapper getQtagsByAutoGenerate() {
+		logger.info("getAllOptionQtags method called...");
+		try {
+			resultMapper = clientService.getuserSession();
+			
+			if (resultMapper.isSessionStatus()) {
+				Map<String, String> qTagMap = new HashMap<String, String>();
+				questionInfoRepository.findByAutoGenerate().forEach(QuestionInfo -> {
+					qTagMap.put(QuestionInfo.getQTag(), QuestionInfo.getAutoGenerate());
+				});
+				resultMapper.setResponceObject(qTagMap);
+				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+			} else {
+				resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+				resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+			}
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getQtagsByAutoGenerate>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}

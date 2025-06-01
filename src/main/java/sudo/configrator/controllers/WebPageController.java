@@ -53,7 +53,7 @@ public ResultMapper  deleteWebPageInfo(Long id,Model model) {
 @GetMapping("/getAllWebPageCode")
 	public ResultMapper getAllWebPageCode() {
 		logger.info("getAllWebPageCode method called...");
-		return WebPageService.getAllWebPageCode();
+		return WebPageService.getAllWebPageCodeAndId();
 	} 
 
 

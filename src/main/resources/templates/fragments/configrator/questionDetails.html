@@ -33,6 +33,13 @@
 																readonly="readonly">
 														</div>
 													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="qTag">AutoGenerate</label><label>*</label><input
+																type=label name="autoGenerate" id="autoGenerate"
+																class="form-control" >
+														</div>
+													</div>
 
 													<div class="col-md-6">
 														<div class="form-group">
@@ -78,6 +85,17 @@
 																class="form-control custom-select">
 																<option class="option" value="1">True</option>
 																<option class="option" value="2">False</option>
+
+															</select>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label for="referral">Read Only</label> <select
+																required="required" name="readOnly" id="readOnly"
+																class="form-control custom-select">
+																<option class="option" value="1">True</option>
+																<option class="option" value="0">False</option>
 
 															</select>
 														</div>
@@ -162,13 +180,13 @@
 													</div>
 													<div class="col-md-12">
 														<div class="form-group">
-															<label for="options">Css Class</label>
-
-															<input type="text" rows="2" class="form-control" name="cssClass" list="items">
+															<label for="options">Css Class</label> <input type="text"
+																rows="2" class="form-control" name="cssClass"
+																list="items">
 															<datalist id="items">
 																<option value="control-form custom-select textfield">
-																	<option value="control-form custom-select textfield">
-																		<option value="control-form textfield">
+																<option value="control-form custom-select textfield">
+																<option value="control-form textfield">
 															</datalist>
 
 

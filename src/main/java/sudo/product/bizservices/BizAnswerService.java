@@ -1,7 +1,9 @@
 package sudo.product.bizservices;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +14,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import sudo.configrator.dtos.DataMapingDTO;
 import sudo.configrator.dtos.ListViewAnswerDTO;
 import sudo.configrator.dtos.QuestionDTO;
 import sudo.configrator.dtos.ViewDTO;
 import sudo.configrator.services.DataLinkService;
+import sudo.configrator.services.DataMapingService;
 import sudo.configrator.services.QtagGeneratorService;
 import sudo.configrator.services.QuestionService;
 import sudo.configrator.services.ViewService;
@@ -25,6 +34,7 @@ import sudo.dtos.ResultMapper;
 import sudo.entities.FieldUpdateHistoryInfo;
 import sudo.product.dtos.AnswerDTO;
 import sudo.product.dtos.AnswersDTO;
+import sudo.product.entities.Answer;
 import sudo.product.entities.AnswerInfo;
 import sudo.product.jparepositorys.AnswerInfoRepository;
 import sudo.product.services.AnswerService;
@@ -54,90 +64,150 @@ public class BizAnswerService implements AnswerService {
 	FieldUpdateHistoryService fieldUpdateHistoryService;
 	@Autowired
 	QtagGeneratorService qtagGeneratorService;
+	@Autowired
+	DataMapingService dataMapingService;
 	ResultMapper resultMapper;
+	int AnswerStatus = 0;
 
 	@Override
-
+	@Transactional(rollbackFor = { SQLException.class })
 	public ResultMapper setAnswer(Map answers) {
 		logger.info("setAnswer method called..." + answers);
 		try {
-			AnswerDTO answerInfoDTO = new AnswerDTO(answers);
 			resultMapper = clientService.getuserSession();
+			List<AnswerDTO> answerList = new ArrayList<>();
 
-			ViewDTO viewDTO = viewService.getAllQuestionsByViewid(answerInfoDTO.getViewId());
-			viewDTO.setApplicableQtagList(new ArrayList<>());
-			viewDTO.getApplicableQtagMap().values().forEach(question -> {
-				if (question != null && question.getUnique() != null && question.getUnique() == 1)
-					viewDTO.getApplicableQtagList().add(question.getQTag());
-			});
+			{
+				AnswerDTO sourceAnswer = new AnswerDTO(answers);
+				answerList.add(sourceAnswer);
+				ResultMapper dataMapingResponce = dataMapingService
+						.getDataMapingBySourcePageIdandViewId(sourceAnswer.getPageId(), sourceAnswer.getViewId());
+				if (dataMapingResponce.getStatusCode() == EnMessages.SUCCESS_STATUS) {
 
-			List qTags = new ArrayList<>();
-			List ansValues = new ArrayList<>();
+					List<DataMapingDTO> responseList = dataMapingResponce.getResponceList();
+					responseList.forEach(dataMaping -> {
+						// Long pageId,Long viewId, List<Answer> answers, int status
 
-			answerInfoDTO.getAnswers().forEach(answer -> {
-				if (answer != null && answer.getQTag() != null && viewDTO != null
-						&& viewDTO.getApplicableQtagList().contains(answer.getQTag())) {
-					qTags.add(answer.getQTag());
-					ansValues.add(answer.getAnsValue());
-				}
-			});
+						Map<String, String> qtagMapMap = Arrays.stream(dataMaping.getQtagMap().split(","))
+								.map(String::trim).map(entry -> entry.split("="))
+								.collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
 
-			List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(qTags, ansValues);
-			if (answerInfoDTO != null && answerInfoDTO.getAnswers() != null && resultMapper.isSessionStatus()) {
-				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
-						|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {
-					boolean isExistRecord = (answerInfoRepository.isExist(answerInfoDTO.getId())) == 0 ? false : true;
-					if (!isExistRecord) {
+						List<Answer> answersList = new ArrayList<>();
+						qtagMapMap.forEach((k, v) -> {
 
-						if (answersDTOList != null && !answersDTOList.isEmpty()) {
-							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
-							QuestionDTO questionDTO = questionService.getByQtag(answersDTOList.get(0).getQTag());
-							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
-									+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
-									+ answersDTOList.get(0).getAnsValue());
-							return resultMapper;
-						}
-
-						answerInfoDTO.setCreateBy(resultMapper.getBy());
-						answerInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
-						answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
-						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
-						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
-
-					} else if (isExistRecord) {
-						AnswerInfo exitAnswerInfo = answerInfoRepository.findById(answerInfoDTO.getId()).get();
-
-						List<AnswersDTO> ansList = answersDTOList.stream()
-								.filter(ans -> (!ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())))
-								.collect(Collectors.toList());
-						if (ansList != null && !ansList.isEmpty()) {
-							resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
-							QuestionDTO questionDTO = questionService.getByQtag(ansList.get(0).getQTag());
-							resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
-									+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
-									+ answersDTOList.get(0).getAnsValue());
-							return resultMapper;
-						}
-
-						List changeHistoryList = exitAnswerInfo.update(answerInfoDTO.AnswerInfoDTO());
-						exitAnswerInfo.setUpdateBy(resultMapper.getBy());
-						exitAnswerInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-						answerInfoRepository.saveAndFlush(exitAnswerInfo);
-						if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
-							fieldUpdateHistoryService
-									.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitAnswerInfo.getId(),
-											exitAnswerInfo.getUpdateDate(), exitAnswerInfo.getUpdateBy(),
-											HawkResources.HISTORY_COMPONENT_ANSWER, changeHistoryList));
-						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
-						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
-					}
-				} else {
-					resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
-					resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+							Answer ans = new Answer();
+							if (v.startsWith("Q_")) {
+								ObjectMapper mapper = new ObjectMapper();
+								try {
+									ans.setAnsValue(mapper.readValue(String.valueOf(answers.get("answers")), Map.class)
+											.get(v).toString());
+								} catch (Exception e) {
+									logger.error("while getting error  on  setAnswer answersList>>>> " + e.getMessage());
+									resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
+									resultMapper.setMessage(e.getMessage());
+								}
+							} else {
+								ans.setAnsValue(v);
+							}
+							ans.setQTag(k);
+							ans.setType("Native");
+							answersList.add(ans);
+						});
+						answerList.add(new AnswerDTO(dataMaping.getTargetWebPageId(), dataMaping.getTargetViewId(),
+								answersList, AnswerStatus));
+					});
 				}
 			}
-			updateDataLinkAnswers(viewDTO.getId());
+			// AnswerDTO answerInfoDTO =
+			answerList.forEach(answerInfoDTO -> {
+				ViewDTO viewDTO = viewService.getAllQuestionsByViewid(answerInfoDTO.getViewId());
+				viewDTO.setApplicableQtagList(new ArrayList<>());
+				viewDTO.getApplicableQtagMap().values().forEach(question -> {
+					if (question != null  && question.getUnique() == 1)
+						viewDTO.getApplicableQtagList().add(question.getQTag());
+				});
 
+				List qTags = new ArrayList<>();
+				List ansValues = new ArrayList<>();
+
+				answerInfoDTO.getAnswers().forEach(answer -> {
+					if (answer != null && answer.getQTag() != null && viewDTO != null
+							&& viewDTO.getApplicableQtagList().contains(answer.getQTag())) {
+						qTags.add(answer.getQTag());
+						ansValues.add(answer.getAnsValue());
+					}
+				});
+
+				List<AnswersDTO> answersDTOList = answerInfoRepository.getUniqueQuestionsValues(qTags, ansValues);
+				if (answerInfoDTO != null && answerInfoDTO.getAnswers() != null && resultMapper.isSessionStatus()) {
+					if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
+							|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {
+						boolean isExistRecord = (answerInfoRepository.isExist(answerInfoDTO.getId())) == 0 ? false
+								: true;
+						if (!isExistRecord) {
+
+							if (answersDTOList != null && !answersDTOList.isEmpty()) {
+								resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
+								QuestionDTO questionDTO = questionService.getByQtag(answersDTOList.get(0).getQTag());
+								resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
+										+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
+										+ answersDTOList.get(0).getAnsValue());
+							}
+
+							ResultMapper autoGenerateResponce = questionService.getQtagsByAutoGenerate();
+							if (autoGenerateResponce.getStatusCode() == EnMessages.SUCCESS_STATUS) {
+								Map<String, String> autoGenerateqTagMap = (Map<String, String>) autoGenerateResponce
+										.getResponceObject();
+
+								autoGenerateqTagMap.forEach((k, v) -> {
+
+									answerInfoDTO.getAnswers().stream().filter(answer -> k.equals(answer.getQTag()))
+											.findFirst().ifPresent(answer -> {
+												answer.setAnsValue(answerInfoRepository.generateCustomID(v));
+											});
+								});
+							}
+
+							answerInfoDTO.setCreateBy(resultMapper.getBy());
+							answerInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
+							answerInfoRepository.saveAndFlush(answerInfoDTO.AnswerInfoDTO());
+							resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+							resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
+
+						} else if (isExistRecord) {
+							AnswerInfo exitAnswerInfo = answerInfoRepository.findById(answerInfoDTO.getId()).get();
+
+							List<AnswersDTO> ansList = answersDTOList.stream()
+									.filter(ans -> (!ans.getAnswerInfo_Id().equals(exitAnswerInfo.getId())))
+									.collect(Collectors.toList());
+							if (ansList != null && !ansList.isEmpty()) {
+								resultMapper.setStatusCode(EnMessages.ALREDYEXIST_REQUEST);
+								QuestionDTO questionDTO = questionService.getByQtag(ansList.get(0).getQTag());
+								resultMapper.setMessage(EnMessages.ALREDYEXIST_REQUEST_MSG + " : "
+										+ ((questionDTO != null) ? questionDTO.getName().toString() : "") + " : "
+										+ answersDTOList.get(0).getAnsValue());
+
+							}
+
+							List changeHistoryList = exitAnswerInfo.update(answerInfoDTO.AnswerInfoDTO());
+							exitAnswerInfo.setUpdateBy(resultMapper.getBy());
+							exitAnswerInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+							answerInfoRepository.saveAndFlush(exitAnswerInfo);
+							if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
+								fieldUpdateHistoryService
+										.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitAnswerInfo.getId(),
+												exitAnswerInfo.getUpdateDate(), exitAnswerInfo.getUpdateBy(),
+												HawkResources.HISTORY_COMPONENT_ANSWER, changeHistoryList));
+							resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
+							resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
+						}
+					} else {
+						resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
+						resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
+					}
+				}
+				updateDataLinkAnswers(viewDTO.getId());
+			});
 		} catch (Exception e) {
 			logger.error("while getting error  on  setAnswer>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
@@ -190,7 +260,7 @@ public class BizAnswerService implements AnswerService {
 			if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 					|| HawkResources.PDADMIN.equals(resultMapper.getUserRole())
 					|| HawkResources.ADMIN.equals(resultMapper.getUserRole())) {
-				answerInfoRepository.deleteById(id);
+				answerInfoRepository.invalidateById(id);
 				resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				resultMapper.setMessage(id + EnMessages.RECORD_DELETED_MSG);
 			} else {
@@ -200,7 +270,7 @@ public class BizAnswerService implements AnswerService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getAnswer>>>> " + e.getMessage());
+			logger.error("while getting error  on  deleteAnswer>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -302,7 +372,7 @@ public class BizAnswerService implements AnswerService {
 				List<AnswerDTO> answerDTOList = getAnswerListsByViewId(
 						webPageService.getWebPageInfoByCode_1(dataLinkDTO.getSourceWebPageCode()).getId(),
 						Long.valueOf(dataLinkDTO.getSourceViewId()));
-				
+
 				answerDTOList.forEach(answerDTO -> {
 					JSONObject jsonObj = new JSONObject(dataLinkDTO.getQtagMap());
 					answerDTO.setStatus(jsonObj.getInt("statusCode"));

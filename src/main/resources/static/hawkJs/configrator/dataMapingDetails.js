@@ -23,7 +23,7 @@ function getAllViewIdDetails(status) {
 function setDataMapingDetails() {
 	var formElement = document.forms.namedItem(dataMapingDetailsForm);
 	var oData = new FormData(formElement);
-	doApiAction(4050, oData);
+	doApiAction(6050, oData);
 }
 
 function fillDataMapingDetails(response) {
@@ -40,9 +40,9 @@ function fillDataMapingDetails(response) {
 			columns.push("Name");
 			columns.push("description");
 
-			columns.push("LinkCode");
-			columns.push("SourceWebPageCode");
-			columns.push("TargetWebPageCode");
+			columns.push("DataMapCode");
+			columns.push("SourceWebPageId");
+			columns.push("TargetWebPageId");
 			columns.push("SourceViewId");
 			columns.push("TargetViewId");
 			columns.push("QtagMaping");
@@ -62,9 +62,9 @@ function fillDataMapingDetails(response) {
 				fields.push(row.status);;
 				fields.push(row.name);
 				fields.push("<p  style='max-width: 150px;'>" + row.description + "</p>")
-				fields.push(row.linkCode);
-				fields.push(row.sourceWebPageCode);
-				fields.push(row.targetWebPageCode);
+				fields.push(row.dataMapCode);
+				fields.push(row.sourceWebPageId);
+				fields.push(row.targetWebPageId);
 				fields.push(row.sourceViewId);
 				fields.push(row.targetViewId);
 				fields.push(row.qtagMap);
@@ -88,20 +88,20 @@ function fillWebPageCode(response) {
 			progressBar(true);
 			webPageResponseData = response.responceObject;
 
-			$("#sourceWebPageCode").empty();
-			$("#targetWebPageCode").empty();
+			$("#sourceWebPageId").empty();
+			$("#targetWebPageId").empty();
 			$("#sourceViewId").empty();
 			$("#targetViewId").empty();
 
-			$("#sourceWebPageCode").append("<option value='' selected disabled>Select one</option>");
-			$("#targetWebPageCode").append("<option value='' selected disabled>Select one</option>");
+			$("#sourceWebPageId").append("<option value='' selected disabled>Select one</option>");
+			$("#targetWebPageId").append("<option value='' selected disabled>Select one</option>");
 
 			$("#sourceViewId").append("<option value='' selected disabled>Select one</option>");
 			$("#targetViewId").append("<option value='' selected disabled>Select one</option>");
 
 			$.each(webPageResponseData, function(key, val) {
-				$("#sourceWebPageCode").append("<option class='option' value='" + key + "'>" + (key) + "</option>");
-				$("#targetWebPageCode").append("<option class='option' value='" + key + "'>" + (key) + "</option>");
+				$("#sourceWebPageId").append("<option class='option' value='" + val.pid + "'>" + (val.pid+"_"+val.pageCode) + "</option>");
+				$("#targetWebPageId").append("<option class='option' value='" + val.pid + "'>" + (val.pid+"_"+val.pageCode) + "</option>");
 			});
 		}
 	}
@@ -118,10 +118,14 @@ function sourceWebpagechange() {
 		progressBar(true);
 		$("#sourceViewId").empty();
 		$("#sourceViewId").append("<option value='' selected disabled>Select one</option>");
-		var selectltedVal = $("#sourceWebPageCode").find(":selected").val();
-		$.each(webPageResponseData[selectltedVal], function(index, val) {
-			$("#sourceViewId").append("<option class='option' value='" + val + "'>" + (val) + "</option>");
-		});
+		var selectedVal = $("#sourceWebPageId").find(":selected").val();
+var selectedData = findObjectBykey(webPageResponseData,'pid',selectedVal);
+if (selectedData && selectedData.vid_list) {
+    $.each(selectedData.vid_list.split(","), function(index, val) {
+        var option = new Option(val, val);
+        $("#sourceViewId")[0].options.add(option);
+    });
+}
 	}
 	catch (err) {
 		errorTost(err);
@@ -137,10 +141,17 @@ function targetWebpagechange() {
 		progressBar(true);
 		$("#targetViewId").empty();
 		$("#targetViewId").append("<option value='' selected disabled>Select one</option>");
-		var selectltedVal = $("#targetWebPageCode").find(":selected").val();
-		$.each(webPageResponseData[selectltedVal], function(index, val) {
-			$("#targetViewId").append("<option class='option' value='" + val + "'>" + (val) + "</option>");
-		});
+		
+		
+		var selectedVal = $("#targetWebPageId").find(":selected").val();
+		var selectedData = findObjectBykey(webPageResponseData,'pid',selectedVal);
+if (selectedData && selectedData.vid_list) {
+    $.each(selectedData.vid_list.split(","), function(index, val) {
+		        var option = new Option(val, val);
+        $("#targetViewId")[0].options.add(option);
+        //$("#targetViewId").append("<option class='option' value='" + val + "'>" + (val) + "</option>");
+    });
+	}
 	}
 	catch (err) {
 		errorTost(err);
@@ -153,7 +164,7 @@ function targetWebpagechange() {
 
 
 /*
-$('#targetWebPageCode').on('change', 'select', function() {
+$('#targetWebPageId').on('change', 'select', function() {
 	$("#targetViewId").empty();
 	$("#targetViewId").append("<option value='' selected disabled>Select one</option>");
 	var selectltedVal = $(this).find(":selected").val();
@@ -170,7 +181,7 @@ function dataMapingDelete(btnDelete) {
 	try {
 		var oData = new FormData();
 		oData.append("id", btnDelete.getAttribute("rowId"));
-		doApiAction(4051, oData);
+		doApiAction(6051, oData);
 	}
 	catch (err) {
 		errorTost(err);

@@ -3,9 +3,9 @@ package sudo.configrator.dtos;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import sudo.configrator.entities.QuestionInfo;
 import lombok.Getter;
 import lombok.Setter;
+import sudo.configrator.entities.QuestionInfo;
 
 @Setter
 @Getter
@@ -39,7 +39,9 @@ public class QuestionDTO {
 	String onClick;
 	String onChange;
 	String attributes;
-	Integer unique;
+	int unique;
+	int readOnly;
+	String autoGenerate;
 	String jscript;
 	public QuestionDTO(QuestionInfo questionInfo) {
 		if (questionInfo != null) {
@@ -62,18 +64,20 @@ public class QuestionDTO {
 			this.defaultValue = questionInfo.getDefaultValue();
 			this.name = questionInfo.getName();
 			this.description = questionInfo.getDescription();
-			this.status = questionInfo.getStatus();
+			this.status = Objects.requireNonNullElse(questionInfo.getStatus(), this.status);
 			this.answerType = questionInfo.getAnswerType();
-			// this.trigerAction = questionInfo.getTrigerAction();
-			this.style = questionInfo.getStyle();
-			this.required = questionInfo.getRequired();
+			this.style = questionInfo.getStyle();			
+			this.required = Objects.requireNonNullElse(questionInfo.getRequired(), this.required);
 			this.options = questionInfo.getOptions();
 			this.cssClass = questionInfo.getCssClass();
 			this.onClick = questionInfo.getOnClick();
 			this.onChange = questionInfo.getOnChange();
-			this.attributes= questionInfo.getAttributes();
-			this.unique=questionInfo.getUnique();
-			this.jscript=questionInfo.getJscript();
+			this.attributes = questionInfo.getAttributes();
+			this.unique = Objects.requireNonNullElse(questionInfo.getUnique(), this.unique);
+			this.readOnly = Objects.requireNonNullElse(questionInfo.getReadOnly(), this.readOnly);
+			this.autoGenerate = questionInfo.getAutoGenerate();
+			this.jscript = questionInfo.getJscript();
+
 			
 		}
 	}
@@ -130,6 +134,10 @@ public class QuestionDTO {
 			questionInfo.setAttributes(attributes);
 		if (Objects.nonNull(unique))
 			questionInfo.setUnique(unique);
+		if (Objects.nonNull(readOnly))
+			questionInfo.setReadOnly(readOnly);
+		if (Objects.nonNull(autoGenerate))
+			questionInfo.setAutoGenerate(autoGenerate);
 		if (Objects.nonNull(jscript))
 			questionInfo.setJscript(jscript);		
 		
