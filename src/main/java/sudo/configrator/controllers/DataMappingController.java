@@ -14,43 +14,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import sudo.configrator.dtos.DataMapingDTO;
-import sudo.configrator.services.DataMapingService;
+import sudo.configrator.services.DataMappingService;
 import sudo.dtos.ResultMapper;
 
 @RestController
 @RequestMapping("${ApiVersion}")
-public class DataMapingController {
- 	Logger logger = LoggerFactory.getLogger(DataMapingController.class);
+public class DataMappingController {
+ 	Logger logger = LoggerFactory.getLogger(DataMappingController.class);
  	@Autowired
- 	DataMapingService DataMapingService;
+ 	DataMappingService DataMappingService;
 
  	@GetMapping("/getAllDataMaping")
  	public ResultMapper getDataMapingInfo() {
  		logger.info("getDataMapingInfo method called...");
- 		return DataMapingService.getDataMaping();
+ 		return DataMappingService.getDataMaping();
  	} 
  	@GetMapping("/getAllDataMapingName")
  	public ResultMapper getAllDataMapingName() {
  		logger.info("getQuestionInfo method called...");
- 		return DataMapingService.getAllDataMapingName();
+ 		return DataMappingService.getAllDataMapingName();
  	} 
  	
  	@GetMapping("/getDataMaping/{linkCode}")
  	public ResultMapper getDataMapingByViewCode(@PathVariable String linkCode) {
  		logger.info("getWebPageInfo method called...");
- 		return DataMapingService.getDataMapingBydataMapCode(linkCode);
+ 		return DataMappingService.getDataMapingBydataMapCode(linkCode);
  	} 
  	
  	
 @PostMapping("/setDataMaping")
 public ResultMapper  setDataMapingInfo(DataMapingDTO DataMapingDTO,Model model) {
 	logger.info("setDataMapingInfo method called..."+DataMapingDTO);
-	return DataMapingService.setDataMaping(DataMapingDTO);
+	return DataMappingService.setDataMaping(DataMapingDTO);
 }
 @PostMapping("/deleteDataMaping")
 public ResultMapper  deleteDataMapingInfo(Long id,Model model) {
 	logger.info("setDataMapingInfo method called..."+id);
-	return DataMapingService.deleteDataMaping(id);
+	return DataMappingService.deleteDataMaping(id);
 }
 
 }

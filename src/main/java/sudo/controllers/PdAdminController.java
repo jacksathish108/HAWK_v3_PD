@@ -23,7 +23,7 @@ import sudo.utils.HawkResources;
 
 @Controller
 @RequestMapping("${ViewVersion}")
-public class AdminController {
+public class PdAdminController {
 
 	static UsersInfo hawk_Login;
 	/** The base path. */
@@ -33,7 +33,7 @@ public class AdminController {
 	@Autowired
 	UsersService userService;
 
-	Logger logger = LoggerFactory.getLogger(AdminController.class);
+	Logger logger = LoggerFactory.getLogger(PdAdminController.class);
 
 	public ModelAndView userSessionCheck() {
 		logger.info("userSessionCheck method called...");
@@ -127,11 +127,21 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/dataMaping")
-	public ModelAndView DataMaping() {
+	public ModelAndView dataMaping() {
 		logger.info("dataMaping method called....");
 		ModelAndView modelAndView = userSessionCheck();
 		if (modelAndView.getViewName() == null) {
 			modelAndView.setViewName(base_path + "configrator/dataMapingDetails");
+		}
+		return modelAndView;
+	}
+	
+	@RequestMapping("/tableMapping")
+	public ModelAndView pTabledataMaping() {
+		logger.info("pTabledataMaping method called....");
+		ModelAndView modelAndView = userSessionCheck();
+		if (modelAndView.getViewName() == null) {
+			modelAndView.setViewName(base_path + "configrator/tableMappingDetails");
 		}
 		return modelAndView;
 	}

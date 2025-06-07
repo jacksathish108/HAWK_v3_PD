@@ -6,7 +6,7 @@ import sudo.configrator.dtos.DataMapingDTO;
 import sudo.configrator.entities.DataMapingInfo;
 import sudo.dtos.ResultMapper;
 
-public interface DataMapingService {
+public interface DataMappingService {
 	ResultMapper setDataMaping(DataMapingDTO viewDTO);
 
 	ResultMapper getDataMaping();

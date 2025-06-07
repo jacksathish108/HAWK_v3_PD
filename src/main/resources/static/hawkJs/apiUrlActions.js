@@ -50,7 +50,9 @@ var actionUrl={
 6050:{'requestUrl':'/setDataMaping','requestType':'POST','onSuccess':'getAllDataMapingDetails(true)'},
 6051:{'requestUrl':'/deleteDataMaping','requestType':'POST','onSuccess':'getAllDataMapingDetails(true)'},
 
-
+7000:{'requestUrl':'/getAllTableMapping','requestType':'GET','onSuccess':'fillTableMappingDetails(response)'},
+7050:{'requestUrl':'/setTableMapping','requestType':'POST','onSuccess':'getAllTableMappingDetails(true)'},
+7051:{'requestUrl':'/deleteTableMapping','requestType':'POST','onSuccess':'getAllTableMappingDetails(true)'},
 
 //////////////////////////
 10000:{'requestUrl':'/getAllMenuItems','requestType':'GET','onSuccess':'fillmenuItems(response)'},

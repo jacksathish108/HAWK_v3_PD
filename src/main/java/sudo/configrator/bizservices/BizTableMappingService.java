@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sudo.configrator.dtos.DataMapingDTO;
-import sudo.configrator.entities.DataMapingInfo;
-import sudo.configrator.jparepositorys.DataMapingInfoRepository;
-import sudo.configrator.services.DataMappingService;
+import sudo.configrator.dtos.TableMappingDTO;
+import sudo.configrator.entities.TableMappingInfo;
+import sudo.configrator.jparepositorys.TableMappingInfoRepository;
+import sudo.configrator.services.TableMappingService;
 import sudo.configrator.services.WebPageService;
 import sudo.dtos.ResultMapper;
 import sudo.entities.FieldUpdateHistoryInfo;
@@ -24,15 +24,15 @@ import sudo.utils.EnMessages;
 import sudo.utils.HawkResources;
 
 @Service
-public class BizDataMapingService implements DataMappingService {
+public class BizTableMappingService implements TableMappingService {
 	/** The logger. */
-	static Logger logger = LoggerFactory.getLogger(BizDataMapingService.class);
+	static Logger logger = LoggerFactory.getLogger(BizTableMappingService.class);
 
 	@Autowired
 	UsersService clientService;
 
 	@Autowired
-	DataMapingInfoRepository dataMapInfoRepository;
+	TableMappingInfoRepository dataMapInfoRepository;
 	@Autowired
 	WebPageService webPageService;
 
@@ -41,7 +41,7 @@ public class BizDataMapingService implements DataMappingService {
 	ResultMapper resultMapper;
 
 	@Override
-	public ResultMapper getDataMaping() {
+	public ResultMapper getTableMapping() {
 		logger.info("getQuestion method called...");
 		try {
 			resultMapper = clientService.getuserSession();
@@ -50,9 +50,9 @@ public class BizDataMapingService implements DataMappingService {
 				 * if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())||
 				 * HawkResources.PDADMIN.equals(resultMapper.getUserRole()))
 				 */ {
-					List<DataMapingDTO> dataMapInfoList = new ArrayList<>();
+					List<TableMappingDTO> dataMapInfoList = new ArrayList<>();
 					dataMapInfoRepository.findAll().forEach(dataMapInfo -> {
-						dataMapInfoList.add(new DataMapingDTO(dataMapInfo));
+						dataMapInfoList.add(new TableMappingDTO(dataMapInfo));
 					});
 					resultMapper.setResponceList(dataMapInfoList);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
@@ -67,7 +67,7 @@ public class BizDataMapingService implements DataMappingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getDataMaping>>>> " + e.getMessage());
+			logger.error("while getting error  on  getTableMapping>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -75,8 +75,8 @@ public class BizDataMapingService implements DataMappingService {
 	}
 
 	@Override
-	public ResultMapper deleteDataMaping(Long id) {
-		logger.info("getDataMaping method called..." + id);
+	public ResultMapper deleteTableMapping(Long id) {
+		logger.info("getTableMapping method called..." + id);
 		try {
 			resultMapper = clientService.getuserSession();
 			if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
@@ -91,7 +91,7 @@ public class BizDataMapingService implements DataMappingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getDataMaping>>>> " + e.getMessage());
+			logger.error("while getting error  on  getTableMapping>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -99,7 +99,7 @@ public class BizDataMapingService implements DataMappingService {
 	}
 
 	@Override
-	public ResultMapper setDataMaping(DataMapingDTO dataMapDTO) {
+	public ResultMapper setTableMapping(TableMappingDTO dataMapDTO) {
 		logger.info("setWebPage method called..." + dataMapDTO);
 		try {
 			resultMapper = clientService.getuserSession();
@@ -110,20 +110,20 @@ public class BizDataMapingService implements DataMappingService {
 					if (!isExistRecord) {
 						dataMapDTO.setCreateBy(resultMapper.getBy());
 						dataMapDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
-						DataMapingInfo newDataMapingInfo = dataMapDTO.DataMapingDetailsDTO();
-						dataMapInfoRepository.saveAndFlush(newDataMapingInfo);
+						TableMappingInfo newTableMappingInfo = dataMapDTO.TableMappingDetailsDTO();
+						dataMapInfoRepository.saveAndFlush(newTableMappingInfo);
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
 					} else if (isExistRecord) {
-						DataMapingInfo exitDataMapingInfo = dataMapInfoRepository.findById(dataMapDTO.getId()).get();
-						List changeHistoryList = exitDataMapingInfo.update(dataMapDTO.DataMapingDetailsDTO());
-						exitDataMapingInfo.setUpdateBy(resultMapper.getBy());
-						exitDataMapingInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
-						dataMapInfoRepository.saveAndFlush(exitDataMapingInfo);
+						TableMappingInfo exitTableMappingInfo = dataMapInfoRepository.findById(dataMapDTO.getId()).get();
+						List changeHistoryList = exitTableMappingInfo.update(dataMapDTO.TableMappingDetailsDTO());
+						exitTableMappingInfo.setUpdateBy(resultMapper.getBy());
+						exitTableMappingInfo.setUpdateDate(new Timestamp(System.currentTimeMillis()));
+						dataMapInfoRepository.saveAndFlush(exitTableMappingInfo);
 						if (!changeHistoryList.isEmpty() && changeHistoryList.size() > 0)
 							fieldUpdateHistoryService
-									.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitDataMapingInfo.getId(),
-											exitDataMapingInfo.getUpdateDate(), exitDataMapingInfo.getUpdateBy(),
+									.setFieldUpdateHistory(new FieldUpdateHistoryInfo(exitTableMappingInfo.getId(),
+											exitTableMappingInfo.getUpdateDate(), exitTableMappingInfo.getUpdateBy(),
 											HawkResources.HISTORY_COMPONENT_PACKAGE, changeHistoryList));
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
@@ -135,7 +135,7 @@ public class BizDataMapingService implements DataMappingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  setDataMaping>>>> " + e.getMessage());
+			logger.error("while getting error  on  setTableMapping>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -143,18 +143,18 @@ public class BizDataMapingService implements DataMappingService {
 	}
 
 	@Override
-	public ResultMapper getDataMapingByid(Long id) {
+	public ResultMapper getTableMappingByid(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public DataMapingInfo getDataMapingInfoByid(Long id) {
+	public TableMappingInfo getTableMappingInfoByid(Long id) {
 		return dataMapInfoRepository.findById(id).get();
 	}
 
 	@Override
-	public DataMapingInfo getDataMapingInfoByCode(String code) {
+	public TableMappingInfo getTableMappingInfoByCode(String code) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -170,7 +170,7 @@ public class BizDataMapingService implements DataMappingService {
 				 */ {
 					List dataMapInfoList = new ArrayList<>();
 					dataMapInfoRepository.findAll().forEach(dataMapInfo -> {
-						dataMapInfoList.add(dataMapInfo.getQtagMap());
+						dataMapInfoList.add(dataMapInfo.getColumnMap());
 					});
 					resultMapper.setResponceList(dataMapInfoList);
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
@@ -193,8 +193,8 @@ public class BizDataMapingService implements DataMappingService {
 	}
 
 	@Override
-	public ResultMapper getAllDataMapingName() {
-		logger.info("getAllDataMapingName method called...");
+	public ResultMapper getAllTableMappingName() {
+		logger.info("getAllTableMappingName method called...");
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
@@ -210,7 +210,7 @@ public class BizDataMapingService implements DataMappingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getAllDataMapingName>>>> " + e.getMessage());
+			logger.error("while getting error  on  getAllTableMappingName>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
@@ -218,8 +218,8 @@ public class BizDataMapingService implements DataMappingService {
 	}
 
 	@Override
-	public ResultMapper getDataMapingBydataMapCode(String linkCode) {
-		logger.info("getDataMapingByLinkCode method called..." + linkCode);
+	public ResultMapper getTableMappingBydataMapCode(String linkCode) {
+		logger.info("getTableMappingByLinkCode method called..." + linkCode);
 		try {
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
@@ -229,7 +229,7 @@ public class BizDataMapingService implements DataMappingService {
 				 */ {
 
 					resultMapper
-							.setResponceObject(new DataMapingDTO(dataMapInfoRepository.findByDataMapingCode(linkCode)));
+							.setResponceObject(new TableMappingDTO(dataMapInfoRepository.findByTableMappingCode(linkCode)));
 					resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 				} /*
 					 * else { resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
@@ -242,26 +242,26 @@ public class BizDataMapingService implements DataMappingService {
 			}
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getDataMapingByLinkCode>>>> " + e.getMessage());
+			logger.error("while getting error  on  getTableMappingByLinkCode>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}
 		return resultMapper;
 	}
 	@Override
-	public ResultMapper getDataMapingBySourcePageIdandViewId(Long sourcePageId,Long sourceViewId) {
-		logger.info("getDataMapingByTargetViewId method called..." + sourcePageId +" : "+sourceViewId);
+	public ResultMapper getTableMappingBySourcePageIdandViewId(Long sourcePageId,Long sourceViewId) {
+		logger.info("getTableMappingByTargetViewId method called..." + sourcePageId +" : "+sourceViewId);
 		resultMapper = clientService.getuserSession();
 		try {
-						List<DataMapingDTO> dataMapInfoList = new ArrayList<>();
+						List<TableMappingDTO> dataMapInfoList = new ArrayList<>();
 						dataMapInfoRepository.findBySourceData(1,sourcePageId,sourceViewId).forEach(dataMapInfo -> {
-							dataMapInfoList.add(new DataMapingDTO(dataMapInfo));
+							dataMapInfoList.add(new TableMappingDTO(dataMapInfo));
 						});
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setResponceList(dataMapInfoList);
 
 		} catch (Exception e) {
-			logger.error("while getting error  on  getDataMapingByLinkCode>>>> " + e.getMessage());
+			logger.error("while getting error  on  getTableMappingByLinkCode>>>> " + e.getMessage());
 			resultMapper.setStatusCode(EnMessages.ERROR_STATUS);
 			resultMapper.setMessage(e.getMessage());
 		}

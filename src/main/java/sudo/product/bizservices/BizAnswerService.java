@@ -25,7 +25,7 @@ import sudo.configrator.dtos.ListViewAnswerDTO;
 import sudo.configrator.dtos.QuestionDTO;
 import sudo.configrator.dtos.ViewDTO;
 import sudo.configrator.services.DataLinkService;
-import sudo.configrator.services.DataMapingService;
+import sudo.configrator.services.DataMappingService;
 import sudo.configrator.services.QtagGeneratorService;
 import sudo.configrator.services.QuestionService;
 import sudo.configrator.services.ViewService;
@@ -65,7 +65,7 @@ public class BizAnswerService implements AnswerService {
 	@Autowired
 	QtagGeneratorService qtagGeneratorService;
 	@Autowired
-	DataMapingService dataMapingService;
+	DataMappingService dataMappingService;
 	ResultMapper resultMapper;
 	int AnswerStatus = 0;
 
@@ -80,7 +80,7 @@ public class BizAnswerService implements AnswerService {
 			{
 				AnswerDTO sourceAnswer = new AnswerDTO(answers);
 				answerList.add(sourceAnswer);
-				ResultMapper dataMapingResponce = dataMapingService
+				ResultMapper dataMapingResponce = dataMappingService
 						.getDataMapingBySourcePageIdandViewId(sourceAnswer.getPageId(), sourceAnswer.getViewId());
 				if (dataMapingResponce.getStatusCode() == EnMessages.SUCCESS_STATUS) {
 
