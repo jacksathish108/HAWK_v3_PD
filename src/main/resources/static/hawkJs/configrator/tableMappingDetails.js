@@ -65,7 +65,7 @@ function fillTableMappingDetails(response) {
 				fields.push(row.sourceWebPageId);
 				fields.push(row.sourceViewId);
 				fields.push(row.targetTable);
-				fields.push(row.SqlQuery);
+				fields.push(row.sqlQuery);
 				fields.push(row.columnMap);
 
 				$("#" + tableMappingReportTable + " tbody").append(tableRowMaker(fields));

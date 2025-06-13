@@ -26,7 +26,7 @@ public class TableMappingDTO {
 	private String description;
 	private int status;
 	private Long sourceWebPageId;
-	private Long targetTable;
+	private String targetTable;
 	private Long sourceViewId;
 	private String sqlQuery;
 
