@@ -24,7 +24,7 @@ public class TableMappingController {
 	@Autowired
 	TableMappingService TableMappingService;
 
-	@GetMapping("/getTableMapping")
+	@GetMapping("/getAllTableMapping")
 	public ResultMapper getTableMappingInfo() {
 		logger.info("getTableMappingInfo method called...");
 		return TableMappingService.getTableMapping();

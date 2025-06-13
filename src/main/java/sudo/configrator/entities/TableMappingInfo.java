@@ -65,7 +65,7 @@ public class TableMappingInfo implements Serializable {
 	Long sourceViewId;
 	@Column(name = "Target_Table")
 	@NotNull(message = "Target_Table is required")
-	Long targetTable;
+	String targetTable;
 
 	@Column(name = "Name")
 	@NotNull(message = "Name is required")
