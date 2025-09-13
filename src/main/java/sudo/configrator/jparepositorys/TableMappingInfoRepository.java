@@ -23,8 +23,8 @@ public interface TableMappingInfoRepository extends JpaRepository<TableMappingIn
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT datamaping.* FROM table_mapping_info datamaping WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<TableMappingInfo> findAlldatamaping();
+//	@Query(value = "SELECT datamaping.* FROM table_mapping_info datamaping WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+//	public List<TableMappingInfo> findAlldatamaping();
 
 	@Query(value = "SELECT datamaping.* FROM table_mapping_info datamaping WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and
