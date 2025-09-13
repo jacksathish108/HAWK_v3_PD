@@ -24,9 +24,9 @@ public interface ListViewInfoRepository extends JpaRepository<ListViewInfo, Long
 	@Query(value = "SELECT EXISTS(SELECT views.* FROM listview_info views WHERE Id=:id)", nativeQuery = true) // Status=:status
 	// and
 	public long isExist(Long id);
-
-	@Query(value = "SELECT views.* FROM listview_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<ListViewInfo> findAllViews();
+//
+//	@Query(value = "SELECT views.* FROM listview_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+//	public List<ListViewInfo> findAllViews();
 
 	@Query(value = "SELECT views.* FROM listview_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and

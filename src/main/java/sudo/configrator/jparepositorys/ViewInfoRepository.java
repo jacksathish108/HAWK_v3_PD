@@ -23,8 +23,8 @@ public interface ViewInfoRepository extends JpaRepository<ViewInfo, Long> {
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT views.* FROM view_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<ViewInfo> findAllViews();
+//	@Query(value = "SELECT views.* FROM view_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+//	public List<ViewInfo> findAllViews();
 
 	@Query(value = "SELECT views.* FROM view_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and

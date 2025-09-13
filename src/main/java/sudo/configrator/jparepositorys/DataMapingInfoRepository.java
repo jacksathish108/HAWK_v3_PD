@@ -23,8 +23,8 @@ public interface DataMapingInfoRepository extends JpaRepository<DataMapingInfo, 
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<DataMapingInfo> findAlldatamaping();
+//	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+//	public List<DataMapingInfo> findAlldatamaping();
 
 	@Query(value = "SELECT datamaping.* FROM datamaping_info datamaping WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and

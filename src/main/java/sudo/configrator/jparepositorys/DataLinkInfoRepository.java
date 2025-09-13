@@ -23,8 +23,8 @@ public interface DataLinkInfoRepository extends JpaRepository<DataLinkInfo, Long
 	// and
 	public long isExist(Long id);
 
-	@Query(value = "SELECT views.* FROM datalink_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
-	public List<DataLinkInfo> findAllViews();
+//	@Query(value = "SELECT views.* FROM datalink_info views WHERE  Status=0 ORDER BY ", nativeQuery = true) // Status=:status																														// and
+//	public List<DataLinkInfo> findAllViews();
 
 	@Query(value = "SELECT views.* FROM datalink_info views WHERE  Status=:status", nativeQuery = true) // Status=:status
 // and
