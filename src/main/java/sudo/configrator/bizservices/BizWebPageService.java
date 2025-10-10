@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -158,7 +159,7 @@ public class BizWebPageService implements WebPageService {
 					List<WebPageInfoDTO> WebPageInfoList = new ArrayList<>();
 
 					webPageInfoRepository.findPageOnly((long) 1).forEach(WebPageInfo -> {
-						WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo.get(0), WebPageInfo.get(1)));
+						WebPageInfoList.add(new WebPageInfoDTO(WebPageInfo.get(0),WebPageInfo.get(1), WebPageInfo.get(2)));
 					});
 
 					resultMapper.setResponceList(WebPageInfoList);
@@ -295,11 +296,11 @@ public class BizWebPageService implements WebPageService {
 	                        .forEach(question -> {
 	                            question.setOptions(question.getOptions());
 
-	                            ListViewDTO lsvDTO = listViewDTO.stream()
-	                                    .filter(listViewAns -> targetQtagList.contains(listViewAns.getTargetQtag()))
-	                                    .findFirst().orElse(null);
+	                           // ListViewDTO lsvDTO = listViewDTO.stream().filter(listViewAns -> targetQtagList.contains(listViewAns.getTargetQtag())) .findFirst().orElse(null);
+	                            ListViewDTO  lsvDTO = listViewDTO.stream() .filter(dto -> dto.getSourceQtag().equals(question.getQTag())).findFirst().orElse(null);;
 
-	                            if (lsvDTO != null && lsvDTO.getDependencyCondition() != null&&lsvDTO.getSourceQtag().equals(question.getQTag())) {
+	                            if (lsvDTO != null &&lsvDTO.getSourceQtag().equals(question.getQTag())) {
+	                            	
 	                            	Map<String, String> dependencyConditionMap = Arrays.stream(
 	                            	        lsvDTO.getDependencyCondition().split(","))
 	                            	    .map(String::trim)
@@ -327,18 +328,23 @@ public class BizWebPageService implements WebPageService {
 	                                    }
 
 	                                    try {
-	                                    	StringBuilder htmlSelectlist = new StringBuilder();
-	                                    	htmlSelectlist.append("<option class='option' listView='")
-	                                    	              .append(new JSONObject(attributes))
-	                                    	              .append("' value='")
-	                                    	              .append(options)
-	                                    	              .append("'>")
-	                                    	              .append(options)
-	                                    	              .append("</option>");
+	                                    	if(options!=null && !options.isEmpty()&&options!="") {
+	                                    	
+	                                    		StringBuilder htmlSelectlist = new StringBuilder();
+		                                    	htmlSelectlist.append("<option class='option' listView='")
+		                                    	              .append(new JSONObject(attributes))
+		                                    	              .append("' value='")
+		                                    	              .append(options)
+		                                    	              .append("'>")
+		                                    	              .append(options)
+		                                    	              .append("</option>");
 
-	                                    	question.setOptions(question.getOptions() + htmlSelectlist.toString());
-	                                    	 	System.out.println(htmlSelectlist);
-	                                    } catch (Exception e) {
+		                                    	question.setOptions(question.getOptions() + htmlSelectlist.toString());
+		                                    	 	System.out.println(htmlSelectlist);
+	                                    	
+	                                    	
+	                                    } 
+	                                }catch (Exception e) {
 	                                        e.printStackTrace();
 	                                    }
 	                                });

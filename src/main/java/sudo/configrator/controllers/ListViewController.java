@@ -37,7 +37,7 @@ public class ListViewController {
  	
  	@GetMapping("/getListView/{code}")
  	public ResultMapper getListViewByViewCode(@PathVariable String code) {
- 		logger.info("getWebPageInfo method called...");
+ 		logger.info("getListViewByViewCode method called...");
  		return listViewService.getListViewByCode(code);
  	} 
  	

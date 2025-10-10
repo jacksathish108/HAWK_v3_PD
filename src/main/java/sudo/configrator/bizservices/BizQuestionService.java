@@ -1,5 +1,6 @@
 package sudo.configrator.bizservices;
 
+import java.net.MalformedURLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import sudo.configrator.entities.QuestionInfo;
 import sudo.configrator.jparepositorys.QuestionInfoRepository;
 import sudo.configrator.services.QtagGeneratorService;
 import sudo.configrator.services.QuestionService;
+import sudo.configuration.DynamicResourceHandlerMapping;
 import sudo.dtos.ResultMapper;
 import sudo.entities.FieldUpdateHistoryInfo;
 import sudo.services.FieldUpdateHistoryService;
@@ -38,6 +40,10 @@ public class BizQuestionService implements QuestionService {
 	@Autowired
 	QtagGeneratorService qtagGeneratorService;
 	ResultMapper resultMapper;
+	@Autowired
+	private DynamicResourceHandlerMapping dynamicResourceHandlerMapping;
+	
+	
 
 	@Override
 	public ResultMapper setQuestion(QuestionDTO questionInfoDTO) {
@@ -71,6 +77,8 @@ public class BizQuestionService implements QuestionService {
 						resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 						resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
 					}
+					
+					dynamicResourceHandlerMapping.registerResourceHandler(questionInfoDTO);
 				} else {
 					resultMapper.setStatusCode(EnMessages.ACCESS_DENIED_STATUS);
 					resultMapper.setMessage(EnMessages.ACCESS_DENIED_MSG);
@@ -84,6 +92,7 @@ public class BizQuestionService implements QuestionService {
 		}
 		return resultMapper;
 	}
+
 	@Override
 	public ResultMapper setQuestion(List<QuestionDTO> questionInfoDTOList) {
 		logger.info("setQuestion method called..." + questionInfoDTOList);
@@ -92,17 +101,23 @@ public class BizQuestionService implements QuestionService {
 			if (questionInfoDTOList != null && resultMapper.isSessionStatus()) {
 				if (HawkResources.SUPPERUSER.equals(resultMapper.getUserRole())
 						|| HawkResources.PDADMIN.equals(resultMapper.getUserRole())) {
-					
+
 					{
-						questionInfoDTOList.forEach(questionInfoDTO->
-						{
+						questionInfoDTOList.forEach(questionInfoDTO -> {
+
 							questionInfoDTO.setCreateBy(resultMapper.getBy());
 							questionInfoDTO.setCreateDate(new Timestamp(System.currentTimeMillis()));
 							questionInfoDTO.setQTag(qtagGeneratorService.genarateQtag("Q_"));
 							questionInfoRepository.saveAndFlush(questionInfoDTO.QuestionInfoDTO());
 							resultMapper.setStatusCode(EnMessages.SUCCESS_STATUS);
 							resultMapper.setMessage(EnMessages.ENTRY_SUCCESS_MSG);
-							
+							try {
+								dynamicResourceHandlerMapping.registerResourceHandler(questionInfoDTO);
+							} catch (MalformedURLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 						});
 					}
 
@@ -119,6 +134,7 @@ public class BizQuestionService implements QuestionService {
 		}
 		return resultMapper;
 	}
+
 	@Override
 	public ResultMapper getQuestion() {
 		logger.info("getQuestion method called...");
@@ -255,10 +271,10 @@ public class BizQuestionService implements QuestionService {
 
 	@Override
 	public ResultMapper getQtagsByElementType(String elementType) {
-		logger.info("getAllOptionQtags method called...");
+		logger.info("getQtagsByElementType method called...");
 		try {
 			resultMapper = clientService.getuserSession();
-			
+
 			if (resultMapper.isSessionStatus()) {
 				Map<String, String> qTagMap = new HashMap<String, String>();
 				questionInfoRepository.findByElementType(elementType).forEach(QuestionInfo -> {
@@ -278,12 +294,31 @@ public class BizQuestionService implements QuestionService {
 		}
 		return resultMapper;
 	}
+
+	@Override
+	public List<QuestionDTO>  getQtagsByDataType(String dataType, long status) {
+		logger.info("getQtagsByDataType method called...");
+		try {
+
+			List<QuestionDTO> qTagMap = new ArrayList<QuestionDTO>();
+			questionInfoRepository.findByDataType(dataType, status).forEach(QuestionInfo -> {
+				qTagMap.add(new QuestionDTO(QuestionInfo));
+			});
+			return qTagMap;
+
+		} catch (Exception e) {
+			logger.error("while getting error  on  getAllQtag>>>> " + e.getMessage());
+
+		}
+		return null;
+	}
+
 	@Override
 	public ResultMapper getQtagsByAutoGenerate() {
-		logger.info("getAllOptionQtags method called...");
+		logger.info("getQtagsByAutoGenerate method called...");
 		try {
 			resultMapper = clientService.getuserSession();
-			
+
 			if (resultMapper.isSessionStatus()) {
 				Map<String, String> qTagMap = new HashMap<String, String>();
 				questionInfoRepository.findByAutoGenerate().forEach(QuestionInfo -> {
@@ -303,5 +338,4 @@ public class BizQuestionService implements QuestionService {
 		}
 		return resultMapper;
 	}
-
 }

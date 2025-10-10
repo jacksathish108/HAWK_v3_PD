@@ -324,7 +324,6 @@ function toString(JsonData) {
 function setFocus(id) {
 	$("#" + id).focus();
 }
-
 function setValueByName(formName, fieldName, value) {
 	try {
 		var $form = $('form[name="' + formName + '"]');
@@ -341,13 +340,34 @@ function setValueByName(formName, fieldName, value) {
 			$field.prop('checked', !!value).trigger('change');
 		} else if (type === 'radio') {
 			$form.find('input[name="' + fieldName + '"][value="' + value + '"]').prop('checked', true).trigger('change');
+		} else if (type === 'file') {
+			const accept = $field.attr('accept');
+
+			// Case 1: Value is a File object
+			if (value instanceof File && accept?.includes('image')) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					$('#' + fieldName + '_preview')
+						.attr('src', e.target.result)
+						.css('display', 'block');
+				};
+				reader.readAsDataURL(value);
+			}
+			// Case 2: Value is a file name string (e.g., from server)
+			else if (typeof value === 'string' && accept?.includes('image')) {
+				const imagePath = "/files/"+fieldName+"/" + value;  // Adjust this path as needed
+				$('#preview_' + fieldName )
+					.attr('src', imagePath)
+					.css('display', 'block');
+			}
 		} else {
 			$field.val(value).trigger('input');
 		}
 	} catch (err) {
-		console.log(err);
+		console.error('Error in setValueByName:', err);
 	}
 }
+
 
 
 

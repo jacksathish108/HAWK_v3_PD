@@ -34,7 +34,7 @@ public class ViewDTO {
 	private String name;
 	private String description;
 	private int status;
-	private Map<String, QuestionDTO> applicableQtagMap = new HashMap<>();
+	 Map<String, QuestionDTO> applicableQtagMap = new HashMap<>();
 	List<String> applicableQtagList;
 
 	public ViewDTO(ViewInfo newViewInfo) {

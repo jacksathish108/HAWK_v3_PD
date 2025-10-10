@@ -16,7 +16,7 @@ import jakarta.persistence.OrderBy;
 @Repository
 public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> {
 
-	@Query(value = "(SELECT webpage.* FROM webpage_info webpage WHERE Page_Code=:code)", nativeQuery = true) // Status=:status
+	@Query(value = "(SELECT webpage.* FROM webpage_info webpage WHERE Id=:code)", nativeQuery = true) // Status=:status
 																												// and
 	public WebPageInfo findByCode(String code);
 
@@ -32,7 +32,7 @@ public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> 
 	@OrderBy(value = "Tab_Order asc ")
 	public List<WebPageInfo> findByStatus(Long status);
 
-	@Query(value = "SELECT webpage.Name, webpage.Page_Code  FROM webpage_info webpage WHERE  Status=:status order by Tab_Order asc", nativeQuery = true) // Status=:status
+	@Query(value = "SELECT webpage.Id,webpage.Name, webpage.Page_Code  FROM webpage_info webpage WHERE  Status=:status order by Tab_Order asc", nativeQuery = true) // Status=:status
 																																							// //
 																																							// and
 	public List<List<String>> findPageOnly(Long status);
@@ -40,19 +40,22 @@ public interface WebPageInfoRepository extends JpaRepository<WebPageInfo, Long> 
 	@Query(value = "SELECT webpage.* FROM webpage_info webpage WHERE Id=:id or Page_Code=:code", nativeQuery = true) // Status=:status
 																														// and
 	public WebPageInfo findByIdorPageCode(Long id, String code);
-	    @Query(value = "SELECT " +
-	            "    WebPages.Id AS pid, " +
-	            "    WebPages.Page_Code AS pageCode, " +
-	            "    GROUP_CONCAT(vinfo.id ORDER BY vinfo.id) AS vid_list " +
-	            "FROM " +
-	            "    webpage_info WebPages " +
-	            "INNER JOIN " +
-	            "    applicableviews apView ON apView.WebPageInfo_Id = WebPages.id " +
-	            "INNER JOIN " +
-	            "    view_info vinfo ON vinfo.id = apView.applicableViews_Id " +
-	            "WHERE " +
-	            "    WebPages.STATUS = 1 " +
-	            "GROUP BY " +
-	            "    WebPages.Id, WebPages.Page_Code", nativeQuery = true)
-	    List<Map<String, Object>> getAllWebPageCodeAndId();
+	@Query(value = "SELECT " +
+	        "    WebPages.Id AS pid, " +
+	        "    WebPages.Page_Code AS pageCode, " +
+	        "    GROUP_CONCAT(vinfo.id ORDER BY vinfo.id) AS vid_list, " +
+	        "    GROUP_CONCAT(vinfo.name ORDER BY vinfo.id) AS view_names " +
+	        "FROM " +
+	        "    webpage_info WebPages " +
+	        "INNER JOIN " +
+	        "    applicableviews apView ON apView.WebPageInfo_Id = WebPages.id " +
+	        "INNER JOIN " +
+	        "    view_info vinfo ON vinfo.id = apView.applicableViews_Id " +
+	        "WHERE " +
+	        "    WebPages.STATUS = 1 " +
+	        "GROUP BY " +
+	        "    WebPages.Id, WebPages.Page_Code", 
+	        nativeQuery = true)
+	List<Map<String, Object>> getAllWebPageCodeAndId();
+
 	}

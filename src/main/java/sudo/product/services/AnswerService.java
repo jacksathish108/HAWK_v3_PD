@@ -3,12 +3,14 @@ package sudo.product.services;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import sudo.configrator.dtos.ListViewAnswerDTO;
 import sudo.dtos.ResultMapper;
 import sudo.product.dtos.AnswerDTO;
 
 public interface AnswerService {
-	ResultMapper setAnswer(Map answerMap);
+	ResultMapper setAnswer(Map<String, String> requestParams, Map<String, MultipartFile> fileMap);
 	ResultMapper getAnswer();
 	//ResultMapper getAnswerByid(Long id);
 	ResultMapper getAnswersByViewId(Long pageId,Long viewId);

@@ -53,7 +53,7 @@ function fillTableMappingDetails(response) {
 			$.each(tableMappingResponseData, function(index, row) {
 				var fields = [];
 				var actions = "<div class='btn-group btn-group-sm'>";
-				actions = actions + "<a  id='" + row.id + "'  onClick='loadTableMappingEditModal(this.id)' class='btn btn-info'><i class='fas fa-eye'></i></a>";
+				actions = actions + "<a  id='" + row.id + "'  onClick='loadTableMappingEditModal(this.id)' class='btn btn-info'><i class='fas fa-edit'></i></a>";
 				actions = actions + "<a  rowId='" + row.id + "' rowName='" + row.name + "'    id='" + row.pageCode + "' onConform='tableMappingDelete'  onClick='deleteConformation(this)' class='btn btn-danger'><i class='fas fa-trash'></i></a>";
 				actions = actions + " </div>";
 				fields.push(actions);

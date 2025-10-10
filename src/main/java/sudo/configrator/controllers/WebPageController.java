@@ -36,7 +36,7 @@ public class WebPageController {
  	} 
  	@GetMapping("/getAllMenuItems")
  	public ResultMapper getAllMenuItems() {
- 		logger.info("getWebPageInfo method called...");
+ 		logger.info("getAllMenuItems method called...");
  		return WebPageService.getPageCode();
  	} 
 @PostMapping("/setWebPage")

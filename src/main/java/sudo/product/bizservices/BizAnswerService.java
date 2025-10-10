@@ -15,9 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sudo.configrator.dtos.DataMapingDTO;
@@ -40,7 +39,9 @@ import sudo.product.jparepositorys.AnswerInfoRepository;
 import sudo.product.services.AnswerService;
 import sudo.services.FieldUpdateHistoryService;
 import sudo.services.UsersService;
+import sudo.utils.CommonUtil;
 import sudo.utils.EnMessages;
+import sudo.utils.FileStorageService;
 import sudo.utils.HawkResources;
 
 @Service
@@ -68,17 +69,24 @@ public class BizAnswerService implements AnswerService {
 	DataMappingService dataMappingService;
 	ResultMapper resultMapper;
 	int AnswerStatus = 0;
+	@Autowired
+	FileStorageService fileStorageService;
+	
 
 	@Override
 	@Transactional(rollbackFor = { SQLException.class })
-	public ResultMapper setAnswer(Map answers) {
+	public ResultMapper setAnswer(Map<String, String> answers, Map<String, MultipartFile> fileMap) {
 		logger.info("setAnswer method called..." + answers);
 		try {
+			
 			resultMapper = clientService.getuserSession();
 			List<AnswerDTO> answerList = new ArrayList<>();
-
 			{
-				AnswerDTO sourceAnswer = new AnswerDTO(answers);
+				long viewId=0L;
+				if (CommonUtil.isStringNumeric(answers.get("viewId")))
+					viewId = Long.valueOf(answers.get("viewId"));
+				ViewDTO viewDTO = viewService.getAllQuestionsByViewid(viewId);
+				AnswerDTO sourceAnswer = new AnswerDTO(answers,fileMap,fileStorageService,viewDTO.getApplicableQtagMap());
 				answerList.add(sourceAnswer);
 				ResultMapper dataMapingResponce = dataMappingService
 						.getDataMapingBySourcePageIdandViewId(sourceAnswer.getPageId(), sourceAnswer.getViewId());
@@ -307,6 +315,7 @@ public class BizAnswerService implements AnswerService {
 	public List<AnswerDTO> getAnswerListsByViewId(Long pageId, Long viewId) {
 		logger.info("getAnswersByViewId method called...pageId: " + pageId + " :viewId: " + viewId);
 		try {
+		
 			resultMapper = clientService.getuserSession();
 			if (resultMapper.isSessionStatus()) {
 				List<AnswerDTO> AnswerInfoList = new ArrayList<>();

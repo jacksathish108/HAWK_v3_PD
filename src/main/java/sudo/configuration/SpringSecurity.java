@@ -48,7 +48,7 @@ public class SpringSecurity {
          .requestMatchers("**/resources**").permitAll()
          .requestMatchers("**/*.js").permitAll()
          .requestMatchers("/Hawk_api_01/**","/pages/v1/**","**/admin/**","/authorization/**","/getClientDashbord/**", "/home", "/login/oauth2/**", "/logout",
-        		 "**/loginFailure", "/").authenticated().and().formLogin()
+        		 "**/loginFailure","/files/**", "/").authenticated().and().formLogin()
          .loginPage("/login").successHandler(new CustomSuccessHandler(userService)).permitAll()
 			.and().oauth2Login().loginPage("/login")
 			.successHandler(new CustomSuccessHandler(userService)).permitAll().

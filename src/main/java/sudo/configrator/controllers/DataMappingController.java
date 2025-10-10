@@ -37,7 +37,7 @@ public class DataMappingController {
  	
  	@GetMapping("/getDataMaping/{linkCode}")
  	public ResultMapper getDataMapingByViewCode(@PathVariable String linkCode) {
- 		logger.info("getWebPageInfo method called...");
+ 		logger.info("getDataMapingByViewCode method called...");
  		return DataMappingService.getDataMapingBydataMapCode(linkCode);
  	} 
  	

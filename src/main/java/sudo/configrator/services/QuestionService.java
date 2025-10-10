@@ -18,5 +18,6 @@ public interface QuestionService {
 	ResultMapper getQtagsByAutoGenerate();
 	QuestionDTO getByQtag(String qTag);
 	ResultMapper deleteQuestion(Long id);
+	List<QuestionDTO> getQtagsByDataType(String dataType, long status);
 	
 }

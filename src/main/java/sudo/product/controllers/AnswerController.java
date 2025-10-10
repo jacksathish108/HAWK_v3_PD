@@ -3,7 +3,7 @@
  */
 package sudo.product.controllers;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import sudo.dtos.ResultMapper;
 import sudo.product.services.AnswerService;
@@ -37,9 +38,10 @@ public class AnswerController {
  	} 
  	
 @PostMapping("/setAnswer")
-public ResultMapper  setAnswerInfo(@RequestParam HashMap answerMap,Model model) {
-	logger.info("setAnswerInfo method called..."+answerMap);
-	return AnswerService.setAnswer(answerMap);
+public ResultMapper  setAnswerInfo(@RequestParam Map<String, String> requestParams, @RequestParam(required = false) Map<String, MultipartFile> fileMap,Model model) {
+		
+	logger.info("setAnswerInfo method called..."+requestParams);
+	return AnswerService.setAnswer(requestParams,fileMap);
 }
 @PostMapping("/deleteAnswer")
 public ResultMapper deleteAnswerInfo(Long id, Model model) {

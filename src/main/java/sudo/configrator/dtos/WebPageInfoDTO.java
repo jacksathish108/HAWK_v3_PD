@@ -111,8 +111,9 @@ public class WebPageInfoDTO {
 		return webPageInfo;
 	}
 
-	public WebPageInfoDTO(String name, String pageCode) {
+	public WebPageInfoDTO(String id,String name, String pageCode) {
 		super();
+		this.id = Long.parseLong(id);
 		this.name = name;
 		this.pageCode = pageCode;
 	}

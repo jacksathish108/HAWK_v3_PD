@@ -3,6 +3,10 @@ package sudo.utils;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,4 +86,22 @@ public class CommonUtil {
 			isNumeric = false;		
 		return isNumeric;
 	}
+    public static String extractAttributes(String attributes) {
+        if (attributes == null || attributes.trim().isEmpty()) {
+            return null;
+        }
+
+        // Pattern to match key='value' or key="value"
+        Pattern pattern = Pattern.compile("(\\w+)\\s*=\\s*['\"]([^'\"]*)['\"]");
+        Matcher matcher = pattern.matcher(attributes);
+
+        Map<String, String> attrMap = new HashMap<>();
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String value = matcher.group(2);
+            attrMap.put(key, value);
+        }
+
+        return attrMap.get("dir");  // Return value of "dir" or null
+    }
 }

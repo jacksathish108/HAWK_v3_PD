@@ -49,7 +49,7 @@ function fillmenuItems(response) {
 				var menuItem = "<div class='sidebar'>";
 				menuItem = menuItem + "<nav class='mt-2'>";
 				menuItem = menuItem + "<ul class='nav nav-pills nav-sidebar flex-column' data-widget='treeview' role='menu' data-accordion='false'>";
-				menuItem = menuItem + "<li class='nav-item'><a id='" + row.pageCode + "' onclick='loadWebPage(this.id)' class='nav-link'> <i class='far fa-circle nav-icon'></i>";
+				menuItem = menuItem + "<li class='nav-item'><a id='" + row.id + "' onclick='loadWebPage(this.id)' class='nav-link'> <i class='far fa-circle nav-icon'></i>";
 				menuItem = menuItem + "<p>" + row.name + "</p>";
 				menuItem = menuItem + "</a></li></ul></nav></div>";
 				$("#" + menuItemcontainer).append(menuItem);
@@ -90,224 +90,284 @@ function fillListView(response) {
 	}
 }
 function fillWebPage(response) {
-	if (response && response.responceObject) {
-		progressBar(true);
-		webPageResponseData = response.responceObject;
-		try {
+    if (!(response && response.responceObject)) return;
 
-			$("input[name=id]").val("");
-			var getDatasByIds = [{}];
-			reportTableHeaders = {};
-			var pageViewDiv = ""
-			var singleObject = webPageResponseData;
-			if (singleObject) {
-				$.each(singleObject.applicableViews, function(key, val) {
-					pageViewDiv = "<div class='col-md-12' id=viewDetails_" + val.id + ">";
-					pageViewDiv = pageViewDiv + "<div class='card-body'>";
-					pageViewDiv = pageViewDiv + "<div class='card card-secondary'>";
-					pageViewDiv = pageViewDiv + "<div class='card-header'>";
-					pageViewDiv = pageViewDiv + "<h3 class='card-title'>Report</h3>";
-					pageViewDiv = pageViewDiv + "<div class='card-tools'>";
-					pageViewDiv = pageViewDiv + "<button class='btn btn-success' id='loadModal_" + val.id + "' onclick=calendarRendaring();loadViewEditModal('" + val.id + "DetailsModal','" + val.id + "DetailsForm')>New</button>";
-					pageViewDiv = pageViewDiv + "<button type='button' class='btn btn-tool'";
-					pageViewDiv = pageViewDiv + "data-card-widget='collapse' title='Collapse'>";
-					pageViewDiv = pageViewDiv + "<i class='fas fa-minus'></i>";
-					pageViewDiv = pageViewDiv + "</button>";
-					pageViewDiv = pageViewDiv + "</div>";
-					pageViewDiv = pageViewDiv + "</div>";
-					pageViewDiv = pageViewDiv + "<div class='card-body table-responsive' id='" + val.id + "ReportDiv'>";
-					pageViewDiv = pageViewDiv + "</div>";
-					pageViewDiv = pageViewDiv + "</div>";
-					pageViewDiv = pageViewDiv + "</div>";
-					pageViewDiv = pageViewDiv + "</div>";
-					var modalDiv = "<div class='modal fade' id='" + val.id + "DetailsModal' tabindex='-1'";
-					modalDiv = modalDiv + "role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-					modalDiv = modalDiv + "<div class='modal-dialog' role='document'>";
-					modalDiv = modalDiv + "<div class='modal-content'>";
-					modalDiv = modalDiv + "<div class='modal-header'>";
-					modalDiv = modalDiv + "<div class='row'>";
-					modalDiv = modalDiv + "<h5 class='modal-title' id='exampleModalLabel'>General Information</h5>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "<button type='button' class='close' data-dismiss='modal'";
-					modalDiv = modalDiv + "aria-label='Close'>";
-					modalDiv = modalDiv + "<span aria-hidden='true'>&times;</span>";
-					modalDiv = modalDiv + "</button>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "<div class='modal-body overflow-auto'>";
-					modalDiv = modalDiv + "<div class='box clearfix'>";
-					modalDiv = modalDiv + "<form name='" + val.id + "DetailsForm' id='" + val.id + "DetailsForm'>";
-					modalDiv = modalDiv + "<input id='id' name='id' type='hidden'>";
-					modalDiv = modalDiv + "<div class='row'>";
-					modalDiv = modalDiv + "<div class='col-md-12'>";
-					modalDiv = modalDiv + "<div class='card card-primary'>";
-					modalDiv = modalDiv + "<div class='card-body'>";
-					modalDiv = modalDiv + "<div class='row'>";
+    progressBar(true);
+    let singleObject = response.responceObject;
+    webPageResponseData = singleObject;
 
-					var columsHeaderList = {};
-					
-					
-const applicableQ=(val.applicableQtagMap)
-let sortedArray = Object.entries(applicableQ).sort(([,a], [,b]) => a.index - b.index);
-let sortedObject = {};
-for (let [key, value] of sortedArray) {
-  sortedObject[key] = value;
+    try {
+        $("input[name=id]").val("");
+        let getDatasByIds = [{}];
+        let pageViewDiv = "";
+        reportTableHeaders = {};
+
+        $.each(singleObject.applicableViews, function (_, view) {
+            const viewId = view.id;
+            pageViewDiv += createViewCard(viewId);
+            const formId = `${viewId}DetailsForm`;
+            const modalId = `${viewId}DetailsModal`;
+            const columsHeaderList = {};
+
+            // Sort applicable questions
+            const sortedQtags = Object.entries(view.applicableQtagMap)
+                .sort(([, a], [, b]) => a.index - b.index);
+
+            let formFieldsHTML = "";
+            sortedQtags.forEach(([qtag, qConfig]) => {
+                    formFieldsHTML += createFormField(qConfig);
+                    columsHeaderList[qtag] = qConfig;
+
+            });
+
+            // Store headers for future use
+            reportTableHeaders[viewId] = columsHeaderList;
+
+            const modalHTML = createModal(formId, modalId, singleObject.id, viewId, formFieldsHTML);
+            pageViewDiv += modalHTML;
+
+            getDatasByIds.push({ pageId: singleObject.id, viewid: viewId });
+        });
+
+        // Fetch data for views
+        getDatasByIds.forEach(({ pageId, viewid }) => {
+            window.pageId = pageId;
+            window.viewId = viewid;
+            getAnswersByViewId();
+        });
+
+        UserDashboardRendar(singleObject.pageCode, pageViewDiv);
+        setFocus('name');
+    } catch (err) {
+        errorTost(err);
+        console.error("ERROR:", err);
+    } finally {
+        progressBar(false);
+    }
 }
-					$.each(sortedObject, function(key, val) {
-						if (val.elementType != "button") {
-							modalDiv = modalDiv + "<div class='col-md-6'>";
-							modalDiv = modalDiv + "<div class='form-group'>";
-							modalDiv = modalDiv + "<label for='" + val.name + "'>" + val.name + "</label> ";
-							if (val.required == 1)
-								modalDiv = modalDiv + "<label>*</label>";
-
-							if (val.elementType == "calendar") {
-
-								modalDiv = modalDiv + "<div class='input-group date ' id='c_" + val.qtag + "' data-target-input='nearest'>";
-								modalDiv = modalDiv + "<input  type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
-								if( val.readOnly==1)
-								{
-									modalDiv = modalDiv +" readonly='readonly' ";
-								}
-								
-
-							}
-							else {
-								modalDiv = modalDiv + "<" + val.elementType + " type='" + val.dataType + "' " + val.attributes + "  name='" + val.qtag + "' id='" + val.qtag + "' style='" + val.style + "'";
-								if( val.readOnly==1)
-								{
-									modalDiv = modalDiv +" readonly='readonly'  ";
-								}
-							}
-
-
-
-							if (val.elementType == "calendar") {
-
-								modalDiv = modalDiv + " data-target='#c_" + val.qtag + "'";
-							}
-
-
-
-
-
-							if (val.onChange)
-								modalDiv = modalDiv + " onchange='" + val.onChange + "(this)'"
-
-							if (val.cssClass) {
-								modalDiv = modalDiv + " class='" + val.cssClass
-								if (val.cssClass.includes("disabled"))
-									modalDiv = modalDiv + " disabled ";
-							}
-
-							if (val.required == 1)
-								modalDiv = modalDiv + "' required='required' value='" + val.defaultValue + "'>";
-							else
-								modalDiv = modalDiv + "value='" + val.defaultValue + "'>";
-							if( val.readOnly==1)
-								{
-									modalDiv = modalDiv +" readonly='readonly'  ";
-								}
-							if (val.elementType == "select") {
-							modalDiv += "<option disabled selected value> -- select an option -- </option>";
-
-		if(val.options.includes("<option"))
-		{
-        modalDiv += val.options;
-		}
-		else
-		{
-	$.each(val.options.split(","), function(index, optionValue) {
-		console.log(index + " :: " + optionValue);
-
-        modalDiv += "<option value='" + optionValue + "'>" + optionValue + "</option>";
-  			  
-			});
+function createViewCard(viewId) {
+    return `
+    <div class='col-md-12' id='viewDetails_${viewId}'>
+        <div class='card-body'>
+            <div class='card card-secondary'>
+                <div class='card-header'>
+                    <h3 class='card-title'>Report</h3>
+                    <div class='card-tools'>
+                        <button class='btn btn-success' id='loadModal_${viewId}' onclick="calendarRendaring();loadViewEditModal('${viewId}DetailsModal','${viewId}DetailsForm')">New</button>
+                        <button type='button' class='btn btn-tool' data-card-widget='collapse' title='Collapse'>
+                            <i class='fas fa-minus'></i>
+                        </button>
+                    </div>
+                </div>
+                <div class='card-body table-responsive' id='${viewId}ReportDiv'></div>
+            </div>
+        </div>
+    </div>`;
 }
 
-
-							}
-							if (val.elementType == "calendar") {
-								modalDiv = modalDiv + "</input>";
-
-
-									modalDiv = modalDiv + "<script>$(document).ready(function() {calendarRendaring(); $('#"+ val.qtag+"').datetimepicker({format : 'YYYY-MM-DD'});});</script>";
-
-
-
-							} else {
-								modalDiv = modalDiv + "</" + val.elementType + ">";
-							}
-
-
-							if (val.elementType == "calendar") {
-
-								modalDiv = modalDiv + "<div class='input-group-append' data-target='#c_" + val.qtag + "' data-toggle='datetimepicker'>";
-								modalDiv = modalDiv + "<div class='input-group-text'>";
-								if( val.readOnly==1)
-								{
-									modalDiv = modalDiv +" readonly='readonly'  ";
-								}
-								modalDiv = modalDiv + "<i class='fa fa-calendar' ></i>";
-								modalDiv = modalDiv + "</div>";
-								modalDiv = modalDiv + "</div>";
-								modalDiv = modalDiv + "</div>";
-
-								//	modalDiv = modalDiv + "<script>$('#' + val.qtag).datetimepicker({format: 'YYYY-MM-DD'});</script>";
-
-							}
-
-							modalDiv = modalDiv + "</div>";
-							modalDiv = modalDiv + "</div>";
-							modalDiv = modalDiv + "<script> " + val.jscript + " </script>";
-
-						}
-						//if (val.elementType != "button") {
-
-						columsHeaderList[val.qtag] = (val);
-						//}
-
-					});
-					//console.log(modalDiv);
-					reportTableHeaders[val.id] = columsHeaderList;
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</form>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "<div class='modal-footer'>";
-					modalDiv = modalDiv + "<button type='button' class='btn btn-secondary btn-success' pageId=" + singleObject.id + " viewId=" + val.id;
-					modalDiv = modalDiv + " onclick=\" if(formValidation(\'" + val.id + "DetailsForm\')){setAnswersDetails(this);}\">Submit</button>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					modalDiv = modalDiv + "</div>";
-					pageViewDiv = pageViewDiv + modalDiv;
-					getDatasByIds.push({ "pageId": singleObject.id, "viewid": val.id });
-				});
-				$.each(getDatasByIds, function(index, val) {
-					pageId = val.pageId;
-					viewId = val.viewid;
-					getAnswersByViewId();
-				});
-			}
-			UserDashboardRendar(singleObject.pageCode, pageViewDiv)
-			setFocus('name');
-		}
-		catch (err) {
-			errorTost(err);
-			console.log("ERROR :  " + err);
-		}
-		finally {
-			progressBar(false);
-
-
-		}
-		progressBar(false);
-	}
+function createModal(formId, modalId, pageId, viewId, formFieldsHTML) {
+    return `
+    <div class='modal fade' id='${modalId}' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <div class='row'>
+                        <h5 class='modal-title' id='exampleModalLabel'>General Information</h5>
+                    </div>
+                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+                <div class='modal-body overflow-auto'>
+                    <div class='box clearfix'>
+                        <form name='${formId}' id='${formId}'>
+                            <input id='id' name='id' type='hidden'>
+                            <div class='row'>
+                                <div class='col-md-12'>
+                                    <div class='card card-primary'>
+                                        <div class='card-body'>
+                                            <div class='row'>
+                                                ${formFieldsHTML}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary btn-success' pageId='${pageId}' viewId='${viewId}' onclick="if(formValidation('${formId}')) { setAnswersDetails(this); }">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
 }
+
+function createFormField(field) {
+    const {
+        qtag, name, dataType = "text", style = "", attributes = "", required,
+        readOnly, elementType, defaultValue = "", options = "", onClick = "",cssClass = "", onChange = "", jscript = ""
+    } = field;
+
+    const readonlyAttr = readOnly == 1 ? "readonly='readonly'" : "";
+    const requiredAttr = required == 1 ? "required='required'" : "";
+    const changeHandler = onChange ? `onchange='${onChange}(this)'` : "";
+    const fullClass = cssClass ? `class='${cssClass}'` : "";
+    const label = `<label for='${name}'>${name}${required == 1 ? "<label>*</label>" : ""}</label>`;
+	
+	const onclickHandler = onClick ? `onclick="${onClick}(this)"` : "";
+
+    let inputHTML = "";
+
+    // BUTTON SUPPORT
+	console.log("button field::", elementType);
+    if (elementType === "button") {
+		console.log("button field::", field);
+        inputHTML = `
+        <div class='col-md-6'>
+            <div class='form-group'>
+                <button 
+                    type="button" 
+                    name='${qtag}' 
+                    id='${qtag}' 
+                    ${fullClass} 
+                    ${readonlyAttr} 
+                    ${attributes}
+                    style='${style}'
+                     ${onclickHandler}
+                >
+                    ${name}
+                </button>
+                <script>${jscript}</script>
+            </div>
+        </div>`;
+        return inputHTML; // Done, don't wrap again
+    }
+
+    // START INPUT FIELD WRAPPER
+    let fieldWrapper = `
+    <div class='col-md-6'>
+        <div class='form-group'>
+            ${label}`;
+
+    // SELECT
+    if (elementType === "select") {
+        let optionHTML = "<option disabled selected value> -- select an option -- </option>";
+        if (options.includes("<option")) {
+            optionHTML += options;
+        } else {
+            options.split(",").forEach(optionVal => {
+                optionHTML += `<option value='${optionVal.trim()}'>${optionVal.trim()}</option>`;
+            });
+        }
+
+        inputHTML = `<select 
+            name='${qtag}' 
+            id='${qtag}' 
+            ${fullClass} 
+            ${readonlyAttr} 
+            ${requiredAttr} 
+            ${changeHandler} 
+            style='${style}' 
+            ${attributes}
+        >
+            ${optionHTML}
+        </select>`;
+    }
+
+    // CALENDAR
+    else if (elementType === "calendar") {
+        inputHTML = `
+        <div class='input-group date' id='c_${qtag}' data-target-input='nearest'>
+            <input 
+                type='${dataType}' 
+                name='${qtag}' 
+                id='${qtag}' 
+                ${fullClass} 
+                ${readonlyAttr} 
+                ${requiredAttr} 
+                ${changeHandler} 
+                value='${defaultValue}' 
+                style='${style}' 
+                ${attributes} 
+                data-target='#c_${qtag}'
+            />
+            <div class='input-group-append' data-target='#c_${qtag}' data-toggle='datetimepicker'>
+                <div class='input-group-text'><i class='fa fa-calendar'></i></div>
+            </div>
+        </div>
+        <script>$(document).ready(function() {
+            calendarRendaring(); 
+            $('#${qtag}').datetimepicker({ format: 'YYYY-MM-DD' }); 
+        });</script>`;
+    }
+
+    // IMAGE
+    else if (elementType === "image") {
+        inputHTML = `
+        <input 
+            type='file' 
+            accept='image/*' 
+            name='${qtag}' 
+            id='${qtag}' 
+            ${fullClass} 
+            ${readonlyAttr} 
+            ${requiredAttr} 
+            ${changeHandler} 
+            style='${style}' 
+            ${attributes}
+        />
+        <img 
+            id='preview_${qtag}' 
+            style='max-width: 150px; margin-top: 10px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 5px;'
+        />
+        <script>
+            $(document).ready(function() {
+                $('#${qtag}').on('change', function() {
+                    const file = this.files[0];
+                    if (!file) return;
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select a valid image file.');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#preview_${qtag}').attr('src', e.target.result).show();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        </script>`;
+    }
+
+    // DEFAULT INPUT
+    else {
+        inputHTML = `<${elementType} 
+            type='${dataType}' 
+            name='${qtag}' 
+            id='${qtag}' 
+            ${fullClass} 
+            ${readonlyAttr} 
+            ${requiredAttr} 
+            ${changeHandler} 
+            value='${defaultValue}' 
+            style='${style}' 
+            ${attributes}
+        ></${elementType}>`;
+    }
+
+    // FINISH FIELD WRAPPER
+    fieldWrapper += `
+        ${inputHTML}
+        <script>${jscript}</script>
+        </div>
+    </div>`;
+
+    return fieldWrapper;
+}
+
+
 function setAnswersDetails(submitBtn) {
 	var formElement = document.forms.namedItem($(submitBtn).attr("viewid") + "DetailsForm");
 	var oData = new FormData(formElement);
@@ -336,85 +396,98 @@ function getAnswersByViewId() {
 }
 function fillAnswerDetails(response) {
 	try {
-		if (response && response.responceList && response.responceList[0]) {
-			//	formResetById(viewDetailsForm);
-			progressBar(true);
-			answerResponseData = response.responceList;
-			var columns = [];
-			var viewQtagList = [];
-			var buttonQtagList = [];
-			columns.push("Actions");
-			columns.push("Last Change");
-			columns.push("ChangeBy");
-			columns.push("Status");
-			$("#" + answerResponseData[0].viewId + "ReportDiv").empty();
-			$("#" + answerResponseData[0].viewId + "ReportDiv").append(tableCreator(answerResponseData[0].viewId + "ReportTable"));
-			$.each(reportTableHeaders[answerResponseData[0].viewId], function(qtag, val) {
+		if (!(response && response.responceList && response.responceList[0])) return;
 
-				if (val.elementType == 'button') {
-					//	console.log("val ::" + JSON.stringify(val))
-					buttonQtagList.push(val);
-				}
-				else {
-					viewQtagList.push(qtag);
-					columns.push(val.name);
-				}
+		progressBar(true);
+		answerResponseData = response.responceList;
+		const viewId = answerResponseData[0].viewId;
+		const $reportDiv = $("#" + viewId + "ReportDiv").empty();
 
+		const columns = ["Actions", "Last Change", "ChangeBy", "Status"];
+		const viewQtagList = [];
+		const buttonQtagList = [];
+
+		// Separate button fields and normal fields
+		$.each(reportTableHeaders[viewId], function(qtag, val) {
+			if (val.elementType === 'button') {
+				buttonQtagList.push(val);
+			} else {
+				viewQtagList.push(qtag);
+				columns.push(val.name);
+			}
+		});
+
+		// Create and append table
+		const tableId = viewId + "ReportTable";
+		$reportDiv.append(tableCreator(tableId));
+		$("#" + tableId + " thead").append(tableHeaderMaker(columns));
+
+		// Populate rows
+		answerResponseData.forEach(row => {
+			const fields = [];
+
+			// Build action buttons
+			let actions = `<div class='btn-group btn-group-sm'>`;
+
+			// View button
+			actions += `
+				<a id='${row.id}' 
+				   onClick="loadViewEditModal('${row.viewId}DetailsModal','${row.viewId}DetailsForm', this.id)" 
+				   class='btn btn-info'>
+					<i class='fas fa-edit'></i>
+				</a>`;
+
+			// Delete button
+			actions += `
+				<a rowId='${row.id}' 
+				   pageId='${row.pageId}' 
+				   viewId='${row.viewId}' 
+				   rowName='${row.viewId}' 
+				   onConform='answerDelete' 
+				   onClick='deleteConformation(this)' 
+				   class='btn btn-danger'>
+					<i class='fas fa-trash'></i>
+				</a>`;
+
+			// Custom button fields
+			buttonQtagList.forEach(btn => {
+				actions += `
+				<a rowId='${row.id}' 
+				   pageId='${row.pageId}' 
+				   viewId='${row.viewId}' 
+				   rowName='${row.viewId}' 
+				   id='${row.id}' 
+				   ${btn.attributes || ''} 
+				   onClick='${btn.onClick}(this)' 
+				   class='${btn.cssClass || ''}'>
+					<i class='fas fa-grin-alt'></i>
+				</a>`;
 			});
-			$("#" + answerResponseData[0].viewId + "ReportDiv" + " thead").append(tableHeaderMaker(columns));
 
-			$.each(answerResponseData, function(index, row) {
-				var fields = [];
-				var actions = "<div class='btn-group btn-group-sm'>";
-				actions = actions + "<a  id='" + row.id + "'  onClick=\"loadViewEditModal(\'" + row.viewId + "DetailsModal\',\'" + row.viewId + "DetailsForm\',this.id)\" class='btn btn-info'><i class='fas fa-eye'></i></a>";
-				actions = actions + "<a  rowId='" + row.id + "' pageId=" + row.pageId + "  viewId=" + row.viewId + "  rowName='" + row.viewId + "'    id='" + row.id + "' onConform='answerDelete'  onClick='deleteConformation(this)' class='btn btn-danger'><i class='fas fa-trash'></i></a>";
+			actions += `</div>`;
 
+			// If status == 3, show only description, else action buttons
+			fields.push(row.status == 3 ? row.discription : actions);
+			fields.push(sqlTDateToDateDDMMYYHHMMSS(row.updateDate));
+			fields.push(row.updateBy);
+			fields.push(row.status);
 
-				$.each(buttonQtagList, function(index, val) {
-					if (val) {
-						actions = actions + "<a  rowId='" + row.id + "'  pageId=" + row.pageId + " pageId=" + row.pageId + "  " + val.attributes + "   viewId=" + row.viewId + "  rowName='" + row.viewId + "'    id='" + row.id + "'  onClick=" + val.onClick + "(this); class='" + val.cssClass + "'><i class='fas fa-grin-alt'></i></a>";
-					}
-				});
-				actions = actions + " </div>";
-
-if(row.status==3)
-{
-fields.push(row.discription);
-}
-else
-{
-fields.push(actions);
-}
-				
-				fields.push(sqlTDateToDateDDMMYYHHMMSS(row.updateDate));
-				fields.push(row.updateBy);
-				fields.push(row.status);
-				
-				
-				
-				
-
-				$.each(viewQtagList, function(index, val) {
-					var Object = getObjects(row.answers, "qtag", val);
-					if (Object && Object.ansValue) {
-						fields.push(Object.ansValue);
-					}
-					else {
-						fields.push("-");
-					}
-				});
-
-				$("#" + answerResponseData[0].viewId + "ReportTable" + " tbody").append(tableRowMaker(fields));
-
+			// Add answers
+			viewQtagList.forEach(qtag => {
+				const obj = getObjects(row.answers, "qtag", qtag);
+				fields.push(obj?.ansValue || "-");
 			});
-			tableRendaring(answerResponseData[0].viewId + "ReportTable");
-		}
-	}
-	catch (err) {
+
+			// Append row
+			$("#" + tableId + " tbody").append(tableRowMaker(fields));
+		});
+
+		// Render table
+		tableRendaring(tableId);
+	} catch (err) {
 		errorTost(err);
-		console.log("ERROR :  " + err);
-	}
-	finally {
+		console.error("ERROR:", err);
+	} finally {
 		progressBar(false);
 	}
 }

@@ -53,7 +53,7 @@ function fillQuestionDetails(response) {
 
 				var fields = [];
 				var actions = "<div class='btn-group btn-group-sm'>";
-				actions = actions + "<a  id='" + row.qtag + "'  onClick='loadQuestionEditModal(this.id)' class='btn btn-info'><i class='fas fa-eye'></i></a>";
+				actions = actions + "<a  id='" + row.qtag + "'  onClick='loadQuestionEditModal(this.id)' class='btn btn-info'><i class='fas fa-edit'></i></a>";
 				actions = actions + "<a  rowId='" + row.id + "' rowName='" + row.name + "'    id='" + row.qtag + "' onConform='questionDelete'  onClick='deleteConformation(this)' class='btn btn-danger'><i class='fas fa-trash'></i></a>";
 				actions = actions + " </div>";
 				fields.push(actions);

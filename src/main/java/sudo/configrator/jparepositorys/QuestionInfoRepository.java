@@ -29,6 +29,10 @@ public interface QuestionInfoRepository extends JpaRepository<QuestionInfo, Long
 	@Query(value = "SELECT question.* FROM question_info question WHERE  Element_Type=:elementType", nativeQuery = true) // Status=:status
 	// and
 	public List<QuestionInfo> findByElementType(String elementType);
+	
+	@Query(value = "SELECT question.* FROM question_info question WHERE  Data_Type=:dataType and status=:status", nativeQuery = true) // Status=:status
+	// and
+	public List<QuestionInfo> findByDataType(String dataType, Long status);
 
 	
 	@Query(value = "SELECT question.* FROM question_info question WHERE Auto_Generate IS NOT NULL AND TRIM(Auto_Generate) != ''", nativeQuery = true) // Status=:status

@@ -2,17 +2,25 @@ package sudo.product.dtos;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Getter;
 import lombok.Setter;
+import sudo.configrator.dtos.QuestionDTO;
+import sudo.configrator.dtos.ViewDTO;
 import sudo.product.entities.Answer;
 import sudo.product.entities.AnswerInfo;
 import sudo.utils.CommonUtil;
+import sudo.utils.FileStorageService;
 
 @Setter
 @Getter
@@ -49,10 +57,9 @@ public class AnswerDTO {
 			else
 				this.updateBy = answerInfo.getUpdateBy();
 
-			
 			this.discription = answerInfo.getDiscription();
 			this.status = answerInfo.getStatus();
-			this.deleteStatus=answerInfo.getDeleteStatus();
+			this.deleteStatus = answerInfo.getDeleteStatus();
 			this.pageId = answerInfo.getPageId();
 			this.viewId = answerInfo.getViewId();
 			this.answers = answerInfo.getAnswers();
@@ -64,42 +71,73 @@ public class AnswerDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AnswerDTO(Map answers) {
+	public AnswerDTO(Map<String, String> answersMap) {
 		try {
-			if (answers != null && answers.get("viewId") != null && answers.get("pageId") != null
-					&& answers.get("answers") != null) {
+			if (answersMap != null) {
 				Long viewId = null;
-				Long ansId = null;
 				Long pageId = null;
-				String discription="";
-				if (CommonUtil.isStringNumeric((String) answers.get("viewId")))
-					viewId = Long.valueOf((String) answers.get("viewId"));
-				if (CommonUtil.isStringNumeric((String) answers.get("pageId")))
-					pageId = Long.valueOf((String) answers.get("pageId"));
-				ObjectMapper mapper = new ObjectMapper();
-				Map<String, String> map = mapper.readValue(String.valueOf(answers.get("answers")), Map.class);
-				if (CommonUtil.isStringNumeric((String) map.get("id")))
-					ansId = Long.valueOf((String) map.get("id"));
-				this.answers = new ArrayList<>();
+				Long ansId = null;
+
+				if (CommonUtil.isStringNumeric(answersMap.get("viewId")))
+					viewId = Long.valueOf(answersMap.get("viewId"));
+				if (CommonUtil.isStringNumeric(answersMap.get("pageId")))
+					pageId = Long.valueOf(answersMap.get("pageId"));
+
 				this.pageId = pageId;
 				this.viewId = viewId;
-				this.id = ansId;
-				this.discription=discription;
-				map.forEach((key, value) -> {
-					{
-						if(key.contains("Q"))
-						{
-						Answer ans = new Answer();
-						ans.setAnsValue(value);
-						ans.setQTag(key);
-						ans.setType("Native");
-						this.answers.add(ans);
-						}
-					}
-				});
+				
+				this.answers = new ArrayList<>();
+
+				 ObjectMapper objectMapper = new ObjectMapper();
+
+			        // ✅ Parse JSON string into Map
+			        Map<String, String> map = objectMapper.readValue(answersMap.get("answers"), Map.class);
+
+			        // ✅ Prepare answer listw
+
+					if (CommonUtil.isStringNumeric(map.get("id")))
+						ansId = Long.valueOf(map.get("id"));
+					this.id = ansId;
+
+			        for (Map.Entry<String, String> entry : map.entrySet()) {
+			            String key = entry.getKey();
+			            String value = entry.getValue();
+
+			            if (key.startsWith("Q_")) {
+			                Answer ans = new Answer();
+			                ans.setQTag(key);
+			                ans.setAnsValue(value);
+			                ans.setType("Native");
+			                answers.add(ans);
+			            }
+			        }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public AnswerDTO(Map<String, String> answersMap, Map<String, MultipartFile> filesMap,
+			FileStorageService fileStorageService, Map<String, QuestionDTO> qtagMap) {
+		this(answersMap); // call base constructor first
+
+		if (filesMap != null) {
+
+			for (Map.Entry<String, MultipartFile> entry : filesMap.entrySet()) {
+				String key = entry.getKey();
+				MultipartFile file = entry.getValue();
+				if (!file.isEmpty() && key.startsWith("Q_")) {
+
+					String dirValue = CommonUtil.extractAttributes(qtagMap.get(key).getAttributes());
+
+					String fileUrl = fileStorageService.save(file, dirValue.trim());
+					Answer fileAnswer = new Answer();
+					fileAnswer.setQTag(key);
+					fileAnswer.setAnsValue(fileUrl); // Save file path or URL
+					fileAnswer.setType("File");
+					this.answers.add(fileAnswer);
+				}
+			}
 		}
 	}
 
@@ -129,7 +167,7 @@ public class AnswerDTO {
 		return answerInfo;
 	}
 
-	public AnswerDTO(Long pageId,Long viewId, List<Answer> answers, int status) {
+	public AnswerDTO(Long pageId, Long viewId, List<Answer> answers, int status) {
 		super();
 		this.viewId = viewId;
 		this.pageId = pageId;
